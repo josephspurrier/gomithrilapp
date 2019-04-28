@@ -2,17 +2,13 @@
 
 This is an application that uses Vue on the frontend (UI) and Go on the backend (API).
 
-```bash
-# Start the UI.
-cd ui
-npm run dev
+## Current Versions
 
-# Start the API.
-cd api
-go run main.go
-```
+These are the current versions:
 
-## Reference
+- nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes).
+- Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
+- vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
 
 ```bash
 # Upgrade nuxt to the latest version.
@@ -23,4 +19,16 @@ export PATH=$PATH:$(npm bin)
 
 # Check the version of nuxt.
 nuxt --version
+```
+
+## Getting Started
+
+```bash
+# Start the UI.
+cd ui
+npm run dev
+
+# Start the API.
+cd api
+go run main.go
 ```
