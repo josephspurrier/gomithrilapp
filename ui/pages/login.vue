@@ -115,6 +115,8 @@ export default {
         .then(response => {
           if (response.data.success === true) {
             f.success('Login successful.')
+          } else if (response.data.success === undefined) {
+            f.failed('Response received is not in the correct format.')
           } else {
             f.failed('Credentials are not correct.')
           }
