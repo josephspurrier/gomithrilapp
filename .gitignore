@@ -1,3 +1,7 @@
+# OS files
+.DS_Store
+thumbs.db
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
