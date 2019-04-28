@@ -18,7 +18,7 @@
     "@nuxtjs/bulma": "^1.2.1",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",
-    "nuxt": "^2.4.0",
+    "nuxt": "^2.6.3",
     "shortid": "^2.2.14",
     "vee-validate": "^2.2.3"
   },

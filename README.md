@@ -11,3 +11,16 @@ npm run dev
 cd api
 go run main.go
 ```
+
+## Reference
+
+```bash
+# Upgrade nuxt to the latest version.
+npm upgrade nuxt
+
+# Run NPM apps from terminal.
+export PATH=$PATH:$(npm bin)
+
+# Check the version of nuxt.
+nuxt --version
+```
