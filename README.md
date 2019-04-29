@@ -26,6 +26,7 @@ nuxt --version
 ```bash
 # Start the UI.
 cd ui
+npm install
 npm run dev
 
 # Start the API.
@@ -33,14 +34,15 @@ cd api
 go run main.go
 ```
 
-## Auth
+## References
+
+These are notes on the project.
 
 ```bash
 # Reference: https://scotch.io/tutorials/implementing-authentication-in-nuxtjs-app
-npm install @nuxtjs/auth --save
+# I didn't use Auth, but I did use the examples of the getters.
 
 # Reference: https://nuxtjs.org/examples/auth-external-jwt/
 npm install cookieparser --save
-
 npm install js-cookie --save
 ```
