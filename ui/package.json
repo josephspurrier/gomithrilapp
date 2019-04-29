@@ -17,7 +17,9 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/bulma": "^1.2.1",
     "@nuxtjs/pwa": "^2.6.0",
+    "cookieparser": "^0.1.0",
     "cross-env": "^5.2.0",
+    "js-cookie": "^2.2.0",
     "nuxt": "^2.6.3",
     "shortid": "^2.2.14",
     "vee-validate": "^2.2.3"

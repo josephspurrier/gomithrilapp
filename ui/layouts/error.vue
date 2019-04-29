@@ -12,12 +12,15 @@
   </div>
 </template>
 
-
 <script>
-export default { name: 'nuxt-error', props: ['error'], head() { return { title:
-this.error.message || 'An error occured' } } }
+export default {
+  name: 'NuxtError',
+  props: ['error'],
+  head() {
+    return { title: this.error.message || 'An error occured' }
+  }
+}
 </script>
-
 
 <style scoped>
 .error-page {
@@ -28,7 +31,7 @@ this.error.message || 'An error occured' } } }
   left: 0;
   right: 0;
   position: absolute;
-  font-family: "SF UI Text", "Helvetica Neue", "Lucida Grande";
+  font-family: 'SF UI Text', 'Helvetica Neue', 'Lucida Grande';
   text-align: center;
   padding-top: 20%;
 }
@@ -59,7 +62,7 @@ this.error.message || 'An error occured' } } }
 }
 
 .error-link {
-  color: #00BCD4;
+  color: #00bcd4;
   font-weight: normal;
   text-decoration: none;
   font-size: 14px;

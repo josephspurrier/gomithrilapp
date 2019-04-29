@@ -12,12 +12,10 @@
         </div>
       </div>
     </section>
-    <div class="container">
-      <a class="button" @click="showModal">Show</a>
-    </div>
+    <br />
     <div class="container">
       <nuxt-link :to="note">
-        Notepad
+        Click here to access your Notepad.
       </nuxt-link>
     </div>
   </div>
@@ -27,19 +25,11 @@
 export default {
   data() {
     return {
-      message: 'Cool dude!',
-      title: 'Title',
-      subtitle: 'Subtitle',
-      second: '/second',
-      note: '/note',
-      about: '/about',
-      login: '/login'
+      title: 'Welcome',
+      subtitle: 'Login was successful',
+      note: '/note'
     }
   },
-  methods: {
-    showModal() {
-      alert('Cool!')
-    }
-  }
+  middleware: 'onlyAuthenticated'
 }
 </script>

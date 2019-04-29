@@ -32,3 +32,15 @@ npm run dev
 cd api
 go run main.go
 ```
+
+## Auth
+
+```bash
+# Reference: https://scotch.io/tutorials/implementing-authentication-in-nuxtjs-app
+npm install @nuxtjs/auth --save
+
+# Reference: https://nuxtjs.org/examples/auth-external-jwt/
+npm install cookieparser --save
+
+npm install js-cookie --save
+```

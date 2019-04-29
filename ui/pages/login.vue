@@ -65,6 +65,8 @@ import textfield from '~/components/textfield.vue'
 import { HTTP } from '~/modules/http-common'
 import Flash from '~/modules/flash.js'
 
+const Cookie = process.client ? require('js-cookie') : undefined
+
 export default {
   components: { textfield },
   $validates: true,
@@ -77,6 +79,7 @@ export default {
       isLoading: false
     }
   },
+  middleware: 'notAllowIfAuthenticated',
   methods: {
     // clear will clear the form.
     clear() {
@@ -109,12 +112,20 @@ export default {
       // Create the flash object.
       const f = new Flash()
       this.isLoading = true
+      let success = false
 
       // Send a login request to the server.
       HTTP.post(`data`, this.login)
         .then(response => {
           if (response.data.success === true) {
             f.success('Login successful.')
+            const auth = {
+              accessToken: response.data.token,
+              loggedIn: true
+            }
+            this.$store.commit('setAuth', auth) // mutating to store for client rendering
+            Cookie.set('auth', auth) // saving token in cookie for server rendering
+            success = true
           } else if (response.data.success === undefined) {
             f.failed('Response received is not in the correct format.')
           } else {
@@ -122,12 +133,15 @@ export default {
           }
         })
         .catch(err => {
-          // console.log(err)
           f.warning('There was an error. Please try again later.' + err)
         })
         .finally(() => {
           this.clear()
           this.isLoading = false
+
+          if (success) {
+            this.$router.push('/')
+          }
         })
     }
   }
