@@ -67,9 +67,11 @@ export default {
           customProperties: false
         }
       }
-    },
-    router: {
-      // middleware: 'authenticated'
     }
+  },
+  router: {
+    middleware: [
+      'onlyAuthenticated' // Ensure every route is protected unless whitelisted.
+    ]
   }
 }

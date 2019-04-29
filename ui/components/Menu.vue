@@ -2,12 +2,7 @@
   <nav class="navbar is-black" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <nuxt-link class="navbar-item" to="/">
-        <img
-          src="https://bulma.io/images/bulma-logo-white.png"
-          alt="Bulma: a modern CSS framework based on Flexbox"
-          width="112"
-          height="28"
-        />
+        <strong>govueapp</strong>
       </nuxt-link>
 
       <button class="button navbar-burger">
@@ -35,7 +30,7 @@
             >Logout</a
           >
           <div class="navbar-item">
-            Version 0.6.0
+            v0.5.0
           </div>
         </div>
       </div>

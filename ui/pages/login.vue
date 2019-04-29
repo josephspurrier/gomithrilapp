@@ -49,8 +49,8 @@
                   'is-light': true,
                   'is-loading': isLoading
                 }"
-                @click="cancel"
-                >Cancel</a
+                @click="clear"
+                >Clear</a
               >
             </p>
           </div>
@@ -86,12 +86,7 @@ export default {
       this.login.username = ''
       this.login.password = ''
     },
-    // cancel will redirect to the home page.
-    cancel() {
-      this.$router.push('/')
-    },
     submit() {
-      // console.log('asdf')
       // Create the flash object.
       const f = new Flash()
 

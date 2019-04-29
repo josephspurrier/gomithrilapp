@@ -6,9 +6,10 @@ This is an application that uses Vue on the frontend (UI) and Go on the backend 
 
 These are the current versions:
 
-- nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes).
+- nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
 - Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
 - vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
+- Bulma [v1.2.3](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.3) - you should use the [0.7.4 documentation](https://bulma.io/documentation/)
 
 ```bash
 # Upgrade nuxt to the latest version.
@@ -45,4 +46,11 @@ These are notes on the project.
 # Reference: https://nuxtjs.org/examples/auth-external-jwt/
 npm install cookieparser --save
 npm install js-cookie --save
+
+# Reference: https://nuxtjs.org/api/context/
+# The context provides additional objects that are available to Vue components
+# like the middleware.
+
+# Reference: https://vuex.vuejs.org/guide/getters.html
+# Getters for the vuex state.
 ```
