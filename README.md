@@ -6,9 +6,9 @@ This is an application that uses Vue on the frontend (UI) and Go on the backend 
 
 These are the current versions:
 
-- nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
+- Nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
 - Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
-- vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
+- Vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
 - Bulma [v1.2.3](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.3) - you should use the [0.7.4 documentation](https://bulma.io/documentation/)
 
 ```bash
