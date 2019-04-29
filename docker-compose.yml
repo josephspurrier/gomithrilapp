@@ -1,0 +1,35 @@
+# Docker Reference:
+# https://github.com/docker/docker.github.io/blob/master/compose/compose-file/compose-versioning.md#version-3
+# Requires: Docker Engine 17.09.0 and higher
+version: '3.4'
+
+# Microservice template.
+x-template: &service-template
+  restart: always
+  env_file:
+    - .env
+  networks:
+    - cnet
+
+# Networks.
+networks:
+  cnet:
+    driver: bridge
+
+# Services.
+services:
+  db:
+    <<: *service-template
+    image: "mysql:5.6"
+    ports:
+      - "3306:3306"
+  ui:
+    <<: *service-template
+    image: "govueapp-ui:${APP_VERSION}"
+    ports:
+      - "80:80"
+  api:
+    <<: *service-template
+    image: "govueapp-api:${APP_VERSION}"
+    ports:
+      - "8081:8081"
