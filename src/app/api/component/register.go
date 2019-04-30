@@ -4,40 +4,48 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
-	"github.com/josephspurrier/govueapp/api/model"
-	"github.com/josephspurrier/govueapp/api/pkg/app"
-	"github.com/josephspurrier/govueapp/api/pkg/webtoken"
+	"app/api/model"
 )
 
-// LoginEndpoint .
-type LoginEndpoint struct {
-	app.Core
+// RegisterEndpoint .
+type RegisterEndpoint struct {
+	Core
 }
 
-// SetupLogin .
-func SetupLogin(core app.Core) {
-	p := new(LoginEndpoint)
+// SetupRegister .
+func SetupRegister(core Core) {
+	p := new(RegisterEndpoint)
 	p.Core = core
 
-	p.Router.Post("/login", p.Login)
+	p.Router.Post("/register", p.Register)
 }
 
-// LoginRequest is the request object.
-type LoginRequest struct {
+// DB .
+type DB struct {
+	Users []User `json:"users"`
+}
+
+// User .
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// RegisterRequest is the request object.
+type RegisterRequest struct {
 	// Username for login.
 	Username string `json:"username"`
 	// Password for login.
 	Password string `json:"password"`
 }
 
-// Login .
-func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
+// Register .
+func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) {
 	// Convert the request to a struct.
-	var data LoginRequest
+	var data RegisterRequest
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	defer r.Body.Close()
@@ -47,9 +55,8 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create the response.
-	m := new(model.LoginResponse)
+	m := new(model.RegisterResponse)
 	m.Body.Success = false
-	m.Body.Token = ""
 
 	dbFile, err := ioutil.ReadFile("db.json")
 	if err != nil {
@@ -75,18 +82,37 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userFound := false
-
 	for _, v := range db.Users {
-		if strings.ToLower(v.Username) == strings.ToLower(data.Username) &&
-			v.Password == data.Password {
-			userFound = true
-			break
+		if strings.ToLower(v.Username) == strings.ToLower(data.Username) {
+			m.Body.Status = "user already exists"
+			m.Body.Success = false
+			// Send the response.
+			b, _ := json.Marshal(m.Body)
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprint(w, string(b))
+			return
 		}
 	}
 
-	if !userFound {
-		m.Body.Status = "access denied"
+	db.Users = append(db.Users, User{
+		Username: data.Username,
+		Password: data.Password,
+	})
+
+	bb, err := json.Marshal(db)
+	if err != nil {
+		m.Body.Status = err.Error()
+		m.Body.Success = false
+		// Send the response.
+		b, _ := json.Marshal(m.Body)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, string(b))
+		return
+	}
+
+	err = ioutil.WriteFile("db.json", bb, 0644)
+	if err != nil {
+		m.Body.Status = err.Error()
 		m.Body.Success = false
 		// Send the response.
 		b, _ := json.Marshal(m.Body)
@@ -97,22 +123,6 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 
 	m.Body.Status = http.StatusText(http.StatusOK)
 	m.Body.Success = true
-
-	// Generate the access tokens.
-	privateKey := []byte("asdfasdfasdf")
-	t := new(webtoken.JWTAuth)
-	t.Clock = webtoken.Clock{}
-	t.PrivateKey = &privateKey
-	u := new(webtoken.User)
-	u.ID = 12
-	at, _, err := t.GenerateTokens(u)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	m.Body.Token = at.Token
-	log.Println(at.Token)
 
 	// Send the response.
 	b, _ := json.Marshal(m.Body)

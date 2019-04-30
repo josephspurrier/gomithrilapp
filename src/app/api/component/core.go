@@ -1,4 +1,4 @@
-package app
+package component
 
 import "github.com/husobee/vestigo"
 

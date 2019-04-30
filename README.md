@@ -43,8 +43,11 @@ docker-compose down
 If you want to run any of the containers manually, you can build and run them using these commands.
 
 ```bash
+# Set the GOPATH to the current directory.
+export GOPATH=`pwd`
+
 # CD to the UI folder.
-cd ui
+cd $GOPATH/src/app/ui
 
 # Build the docker container.
 # Reference: https://vuejs.org/v2/cookbook/dockerize-vuejs-app.html
@@ -54,7 +57,7 @@ docker build -t govueapp-ui:1.0 .
 docker run -it -p 80:80 --rm --name govueapp-ui govueapp-ui:1.0
 
 # CD to the API folder.
-cd api
+cd $GOPATH/src/app/api
 
 # Build the docker container.
 docker build -t govueapp-api:1.0 .
@@ -69,13 +72,16 @@ docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpass --rm --name mysql56 mysq
 ## Getting Started with Development
 
 ```bash
+# Set the GOPATH to the current directory.
+export GOPATH=`pwd`
+
 # Start the UI.
-cd ui
+cd $GOPATH/src/app/ui
 npm install
 npm run dev
 
 # Start the API.
-cd api
+cd $GOPATH/src/app/api
 go run main.go
 ```
 

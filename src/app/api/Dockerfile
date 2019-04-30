@@ -1,6 +1,6 @@
 FROM golang:1.11.2
 
-WORKDIR /go/src/github.com/josephspurrier/govueapp/api
+WORKDIR /go/src/app/api
 COPY . .
 
 RUN go install -v ./...

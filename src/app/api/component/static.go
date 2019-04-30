@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
-	"github.com/josephspurrier/govueapp/api/pkg/app"
 )
 
 // StaticEndpoint .
 type StaticEndpoint struct {
-	app.Core
+	Core
 }
 
 // SetupStatic .
-func SetupStatic(core app.Core) {
+func SetupStatic(core Core) {
 	p := new(StaticEndpoint)
 	p.Core = core
 

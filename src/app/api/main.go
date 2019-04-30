@@ -4,10 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	"app/api/component"
+	"app/api/middleware"
+
 	"github.com/husobee/vestigo"
-	"github.com/josephspurrier/govueapp/api/component"
-	"github.com/josephspurrier/govueapp/api/middleware"
-	"github.com/josephspurrier/govueapp/api/pkg/app"
 )
 
 func init() {
@@ -33,7 +33,7 @@ func main() {
 
 // LoadRoutes will load the endpoints.
 func LoadRoutes() *vestigo.Router {
-	core := app.NewCore()
+	core := component.NewCore()
 
 	component.SetupStatic(core)
 	component.SetupLogin(core)
