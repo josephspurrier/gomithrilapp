@@ -65,8 +65,6 @@ import textfield from '~/components/textfield.vue'
 import { HTTP } from '~/modules/http-common'
 import Flash from '~/modules/flash.js'
 
-const Cookie = process.client ? require('js-cookie') : undefined
-
 export default {
   components: { textfield },
   $validates: true,
