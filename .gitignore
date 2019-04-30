@@ -2,6 +2,10 @@
 .DS_Store
 thumbs.db
 
+# Go build folders
+/pkg
+/bin
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
