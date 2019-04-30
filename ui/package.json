@@ -5,7 +5,7 @@
   "author": "Joseph Spurrier",
   "private": true,
   "scripts": {
-    "dev": "nuxt --port 80",
+    "dev": "nuxt --port 8080",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",

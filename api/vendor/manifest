@@ -10,6 +10,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/husobee/vestigo",
+			"repository": "https://github.com/husobee/vestigo",
+			"vcs": "git",
+			"revision": "93943aff3f8014c2740dd95ac5db602462162bbe",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
 			"vcs": "git",

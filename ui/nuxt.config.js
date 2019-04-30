@@ -73,5 +73,9 @@ export default {
     middleware: [
       'onlyAuthenticated' // Ensure every route is protected unless whitelisted.
     ]
+  },
+  workbox: {
+    cacheAssets: false, // for /*
+    offline: false // for /_nuxt/*
   }
 }

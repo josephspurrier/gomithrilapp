@@ -2,7 +2,7 @@
 // when the user is authenticated. For instance, a private page.
 export default function({ route, store, redirect }) {
   // Whitelist routes that don't require authentication.
-  for (const url of ['/login', '/about']) {
+  for (const url of ['/login', '/about', '/register']) {
     if (route.path === url) {
       return
     }

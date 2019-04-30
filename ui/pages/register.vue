@@ -3,10 +3,10 @@
     <section class="section">
       <div class="container">
         <h1 class="title">
-          Login
+          Register
         </h1>
         <h2 class="subtitle">
-          Enter your login information below.
+          Enter your information below.
         </h2>
       </div>
 
@@ -39,7 +39,7 @@
                   'is-loading': isLoading
                 }"
                 @click="submit"
-                >Submit</a
+                >Create Account</a
               >
             </p>
             <p class="control">
@@ -51,17 +51,6 @@
                 }"
                 @click="clear"
                 >Clear</a
-              >
-            </p>
-            <p class="control">
-              <a
-                :class="{
-                  button: true,
-                  'is-light': true,
-                  'is-loading': isLoading
-                }"
-                :href="register"
-                >Register</a
               >
             </p>
           </div>
@@ -87,8 +76,7 @@ export default {
         username: '',
         password: ''
       },
-      isLoading: false,
-      register: '/register'
+      isLoading: false
     }
   },
   middleware: 'notAllowIfAuthenticated',
@@ -122,21 +110,15 @@ export default {
       let success = false
 
       // Send a login request to the server.
-      HTTP.post(`login`, this.login)
+      HTTP.post(`register`, this.login)
         .then(response => {
           if (response.data.success === true) {
-            f.success('Login successful.')
-            const auth = {
-              accessToken: response.data.token,
-              loggedIn: true
-            }
-            this.$store.commit('setAuth', auth) // mutating to store for client rendering
-            Cookie.set('auth', auth) // saving token in cookie for server rendering
+            f.success('Registered.')
             success = true
           } else if (response.data.success === undefined) {
             f.failed('Response received is not in the correct format.')
           } else {
-            f.failed('Credentials are not correct.')
+            f.failed('User already exists.')
           }
         })
         .catch(err => {
