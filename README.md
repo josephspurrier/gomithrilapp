@@ -33,8 +33,8 @@ bash build-containers.sh
 # Launch the docker containers.
 docker-compose up
 
-# Open your browser for the UI: 127.0.0.1
-# Open your browser for the API: 127.0.0.1:8081
+# Open your browser for the UI: localhost
+# Open your browser for the API: localhost:8081
 
 # Bring down the docker containers.
 docker-compose down
