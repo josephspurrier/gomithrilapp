@@ -12,6 +12,8 @@ github.com/jmoiron/sqlx v1.2.0/go.mod h1:1FEQNm3xlJgrMD+FBdI9+xvCksHtbpVBBw5dYhB
 github.com/josephspurrier/rove v0.0.0-20190329133744-0fa8982fa316 h1:utgeOoweW8vRQUV/gNmnRX02acicTccqwT/Mz0pfKm0=
 github.com/josephspurrier/rove v0.0.0-20190329133744-0fa8982fa316/go.mod h1:JKALrNXHCKiTcFSlXhOkPdQIchFw94uABKAx0+5hhsU=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
+github.com/matryer/way v0.0.0-20180416093233-9632d0c407b0 h1:KWiqy3hl8yCUPAq1frD0DKXKyn7d9h2nVhj2r5ISq2o=
+github.com/matryer/way v0.0.0-20180416093233-9632d0c407b0/go.mod h1:stiJZfMq1xZPqvIyt2VsYMgLul8vf1nmL0D3KU70dEc=
 github.com/mattn/go-sqlite3 v1.9.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

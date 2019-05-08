@@ -14,6 +14,8 @@ github.com/josephspurrier/rove
 github.com/josephspurrier/rove/pkg/adapter/mysql
 github.com/josephspurrier/rove/pkg/changeset
 github.com/josephspurrier/rove/pkg/env
+# github.com/matryer/way v0.0.0-20180416093233-9632d0c407b0
+github.com/matryer/way
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v0.0.0-20190311161405-34c6fa2dc709

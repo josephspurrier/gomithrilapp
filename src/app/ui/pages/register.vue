@@ -110,17 +110,19 @@ export default {
       // Send a login request to the server.
       HTTP.post(`register`, this.login)
         .then(response => {
-          if (response.data.success === true) {
+          if (response.data.status === 'Created') {
             f.success('Registered.')
             success = true
-          } else if (response.data.success === undefined) {
-            f.failed('Response received is not in the correct format.')
           } else {
-            f.failed('User already exists.')
+            f.failed('Response received is not in the correct format.')
           }
         })
         .catch(err => {
-          f.warning('There was an error. Please try again later.' + err)
+          if (err.response.data.message !== undefined) {
+            f.warning(err.response.data.message)
+          } else {
+            f.warning('There was an error. Please try again later.' + err)
+          }
         })
         .finally(() => {
           this.clear()

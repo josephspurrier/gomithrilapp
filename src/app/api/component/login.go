@@ -2,7 +2,7 @@ package component
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"log"
 	"net/http"
 
@@ -33,15 +33,14 @@ type LoginRequest struct {
 }
 
 // Login .
-func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
+func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, error) {
 	// Convert the request to a struct.
 	var data LoginRequest
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	defer r.Body.Close()
 	if err != nil {
-		http.Error(w, "Error in request: "+err.Error(), http.StatusBadRequest)
-		return
+		return http.StatusBadRequest, err
 	}
 
 	// Create the response.
@@ -53,21 +52,9 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 	user := store.NewUser(p.DB, p.Q)
 	found, ID, err := user.ExistsByField(user, "email", data.Username)
 	if err != nil {
-		m.Body.Status = err.Error()
-		m.Body.Success = false
-		// Send the response.
-		b, _ := json.Marshal(m.Body)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(b))
-		return
+		return http.StatusInternalServerError, err
 	} else if !found {
-		m.Body.Status = "access denied (1)"
-		m.Body.Success = false
-		// Send the response.
-		b, _ := json.Marshal(m.Body)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(b))
-		return
+		return http.StatusBadRequest, errors.New("user not found (1)")
 	}
 
 	// Populate the user.
@@ -75,13 +62,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Ensure the user's password matches.
 	if !p.Password.MatchString(user.Password, data.Password) {
-		m.Body.Status = "access denied (2)"
-		m.Body.Success = false
-		// Send the response.
-		b, _ := json.Marshal(m.Body)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(b))
-		return
+		return http.StatusBadRequest, errors.New("user not found (2)")
 	}
 
 	m.Body.Status = http.StatusText(http.StatusOK)
@@ -96,15 +77,11 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 	u.ID = ID
 	at, _, err := t.GenerateTokens(u)
 	if err != nil {
-		log.Println(err)
-		return
+		return http.StatusInternalServerError, err
 	}
 
 	m.Body.Token = at.Token
 	log.Println(at.Token)
 
-	// Send the response.
-	b, _ := json.Marshal(m.Body)
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprint(w, string(b))
+	return p.Response.JSON(w, m.Body)
 }

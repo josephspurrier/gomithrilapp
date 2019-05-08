@@ -1,17 +1,23 @@
 package main
 
 import (
-	"app/api/iface"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"app/api/component"
+	"app/api/iface"
+	"app/api/internal/response"
 	"app/api/middleware"
+	"app/api/model"
 	"app/api/pkg/database"
+	"app/api/pkg/logger"
 	"app/api/pkg/passhash"
 	"app/api/pkg/query"
+	"app/api/pkg/router"
 
-	"github.com/husobee/vestigo"
 	"github.com/jmoiron/sqlx"
 	"github.com/josephspurrier/rove"
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
@@ -25,52 +31,106 @@ func init() {
 func main() {
 	port := "8081"
 
-	db, err := LoadMigrations()
+	// Create the logger.
+	//l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
+	l := logger.New(log.New(os.Stderr, "", log.Lshortfile))
+
+	db, err := LoadMigrations(l)
 	if err != nil {
-		log.Fatalln(err)
+		l.Fatalf(err.Error())
 	}
 
+	r := router.New()
 	db2 := database.New(db)
 	q := query.New(db2)
 	p := passhash.New()
+	resp := response.New()
 
-	router := LoadRoutes(db, q, p)
-	router.SetGlobalCors(&vestigo.CorsAccessControl{
-		AllowOrigin:  []string{"*"},
-		AllowHeaders: []string{"Content-Type", "Origin", "X-Requested-With", "Accept"},
-	})
+	LoadRoutes(l, r, db, q, resp, p)
 
-	log.Println("Server started.")
-	err = http.ListenAndServe(":"+port, middleware.Log(router))
+	l.Printf("Server started.")
+	err = http.ListenAndServe(":"+port, middleware.Log(middleware.CORS(r)))
 	if err != nil {
-		log.Println(err)
+		l.Printf(err.Error())
 	}
 }
 
 // LoadRoutes will load the endpoints.
-func LoadRoutes(db *sqlx.DB, q iface.IQuery, p iface.IPassword) *vestigo.Router {
-	core := component.NewCore(db, q, p)
+func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, resp iface.IResponse, p iface.IPassword) {
+	core := component.NewCore(l, r, db, q, resp, p)
 
 	component.SetupStatic(core)
 	component.SetupLogin(core)
 	component.SetupRegister(core)
 
-	return core.Router
+	// Set up the 404 page.
+	r.Instance().NotFound = router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (int, error) {
+			return http.StatusNotFound, nil
+		})
+
+	// Set the handling of all responses.
+	router.ServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, err error) {
+		// Handle only errors.
+		if status >= 400 {
+			resp := new(model.GenericResponse)
+			resp.Body.Status = http.StatusText(status)
+			if err != nil {
+				resp.Body.Message = err.Error()
+			}
+
+			// Write the content.
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(status)
+			err := json.NewEncoder(w).Encode(resp.Body)
+			if err != nil {
+				w.Write([]byte(`{"status":"Internal Server Error","message":"problem encoding JSON"}`))
+				return
+			}
+		}
+
+		// Display server errors.
+		if status >= 500 {
+			if err != nil {
+				core.Log.Printf("%v", err)
+			}
+		}
+	}
 }
 
 // LoadMigrations will run the database migrations.
-func LoadMigrations() (*sqlx.DB, error) {
-	// Create a new MySQL database object.
-	db, err := mysql.New(&mysql.Connection{
+func LoadMigrations(l logger.ILog) (*sqlx.DB, error) {
+	// Set the database connection information.
+	con := &mysql.Connection{
 		Hostname:  "127.0.0.1",
 		Username:  "root",
 		Password:  "password",
 		Name:      "main",
 		Port:      3306,
 		Parameter: "collation=utf8mb4_unicode_ci&parseTime=true&multiStatements=true",
-	})
+	}
+
+	// Connect to the database.
+	db, err := mysql.New(con)
 	if err != nil {
-		return nil, err
+		// Attempt to connect without the database name.
+		d, err := con.Connect(false)
+		if err != nil {
+			return nil, err
+		}
+
+		// Create the database.
+		_, err = d.Query(fmt.Sprintf(`CREATE DATABASE IF NOT EXISTS %v DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;`, con.Name))
+		if err != nil {
+			return nil, err
+		}
+		l.Printf("Database created.")
+
+		// Attempt to reconnect with the database name.
+		db, err = mysql.New(con)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Perform all migrations against the database.

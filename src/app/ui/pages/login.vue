@@ -124,7 +124,7 @@ export default {
       // Send a login request to the server.
       HTTP.post(`login`, this.login)
         .then(response => {
-          if (response.data.success === true) {
+          if (response.data.token !== undefined) {
             f.success('Login successful.')
             const auth = {
               accessToken: response.data.token,
@@ -133,14 +133,16 @@ export default {
             this.$store.commit('setAuth', auth) // mutating to store for client rendering
             Cookie.set('auth', auth) // saving token in cookie for server rendering
             success = true
-          } else if (response.data.success === undefined) {
-            f.failed('Response received is not in the correct format.')
           } else {
-            f.failed('Credentials are not correct.')
+            f.failed('Token is not in the correct format.')
           }
         })
         .catch(err => {
-          f.warning('There was an error. Please try again later.' + err)
+          if (err.response.data.message !== undefined) {
+            f.warning(err.response.data.message)
+          } else {
+            f.warning('There was an error. Please try again later.' + err)
+          }
         })
         .finally(() => {
           this.clear()

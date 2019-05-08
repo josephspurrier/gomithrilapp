@@ -1,7 +1,6 @@
 package component
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -21,17 +20,20 @@ func SetupStatic(core Core) {
 }
 
 // IndexGET .
-func (p StaticEndpoint) IndexGET(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"api": "ready"}`)
+func (p StaticEndpoint) IndexGET(w http.ResponseWriter, r *http.Request) (int, error) {
+	/*w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, `{"api": "ready"}`)*/
+	return http.StatusOK, nil
 }
 
 // StaticGET .
-func (p StaticEndpoint) StaticGET(w http.ResponseWriter, r *http.Request) {
+func (p StaticEndpoint) StaticGET(w http.ResponseWriter, r *http.Request) (int, error) {
 	if strings.HasSuffix(r.URL.Path, "/") {
-		http.Error(w, "404 page not found", http.StatusNotFound)
-		return
+		/*http.Error(w, "404 page not found", http.StatusNotFound)
+		return*/
+		return http.StatusNotFound, nil
 	}
 
 	http.ServeFile(w, r, r.URL.Path[1:])
+	return http.StatusOK, nil
 }
