@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/josephspurrier/govueapp/api/webtoken"
+	"app/api/pkg/webtoken"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -44,7 +44,7 @@ func TestBadClock(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, err := j.RefreshAccessToken("")
 	assert.NotEqual(t, nil, a)
@@ -71,7 +71,7 @@ func TestGoodGenerateVerifyToken(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -96,7 +96,7 @@ func TestBadGenerateVerifyToken(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -212,7 +212,7 @@ func TestTokenExpirationSameTime(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -239,7 +239,7 @@ func TestTokenExpirationAfter(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -280,7 +280,7 @@ func TestTokenRefresh(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -312,7 +312,7 @@ func TestTokenRefreshFail(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	a, r, err := j.GenerateTokens(u)
 
@@ -337,7 +337,7 @@ func TestTokenBadSecret(t *testing.T) {
 	}
 
 	u := new(webtoken.User)
-	u.ID = 100
+	u.ID = "100"
 
 	_, _, err := j.GenerateTokens(u)
 	assert.Equal(t, webtoken.ErrBadSecret, err)

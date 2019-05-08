@@ -27,7 +27,7 @@ var (
 // CustomClaims is the payload for the JWT.
 type CustomClaims struct {
 	jwt.StandardClaims
-	UserID int `json:"userID"`
+	UserID string `json:"userID"`
 }
 
 // JWTTokenExtractor extracts tokens from http header
@@ -83,7 +83,7 @@ type AuthToken struct {
 
 // User represents a person.
 type User struct {
-	ID int
+	ID string
 }
 
 // Verify verifies a token is valid.

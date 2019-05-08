@@ -65,8 +65,9 @@ docker build -t govueapp-api:1.0 .
 # Run the API docker container.
 docker run -it -p 8081:8081 --rm --name govueapp-api govueapp-api:1.0
 
-# Launch a test database.
-docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpass --rm --name mysql56 mysql:5.6
+# Launch a MySQL database.
+docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d --rm --name mysql56 mysql:5.6
+docker exec mysql56 sh -c 'exec mysql -uroot -ppassword -e "CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;"'
 ```
 
 ## Getting Started with Development
@@ -83,6 +84,30 @@ npm run dev
 # Start the API.
 cd $GOPATH/src/app/api
 go run main.go
+```
+
+## Database Migrations
+
+Migrations are perform at boot by Rove: https://github.com/josephspurrier/rove.
+
+## Go Dependency Management
+
+I was going to use gvt, but decided to use `go mod` instead.
+
+```bash
+# Example of how to vendor a dependency with the experimental module support in Go 1.11.X
+GO111MODULE=on go get github.com/josephspurrier/rove
+# Example of how to vendor all missing dependencies
+GO111MODULE=on go mod vendor
+```
+
+This is how I vendored the first dependencies.
+
+```bash
+# Reference: https://github.com/FiloSottile/gvt
+# Reference: https://github.com/golang/go/wiki/Modules
+GO111MODULE=on go mod init
+GO111MODULE=on go mod vendor
 ```
 
 ## References

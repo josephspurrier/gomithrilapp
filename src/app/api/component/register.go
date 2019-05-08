@@ -3,11 +3,10 @@ package component
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"app/api/model"
+	"app/api/store"
 )
 
 // RegisterEndpoint .
@@ -21,17 +20,6 @@ func SetupRegister(core Core) {
 	p.Core = core
 
 	p.Router.Post("/register", p.Register)
-}
-
-// DB .
-type DB struct {
-	Users []User `json:"users"`
-}
-
-// User .
-type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
 }
 
 // RegisterRequest is the request object.
@@ -58,8 +46,30 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) {
 	m := new(model.RegisterResponse)
 	m.Body.Success = false
 
-	dbFile, err := ioutil.ReadFile("db.json")
+	user := store.NewUser(p.DB, p.Q)
+	found, _, err := user.ExistsByField(user, "email", data.Username)
 	if err != nil {
+		m.Body.Status = err.Error()
+		m.Body.Success = false
+		// Send the response.
+		b, _ := json.Marshal(m.Body)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, string(b))
+		return
+	} else if found {
+		m.Body.Status = "user already exists"
+		m.Body.Success = false
+		// Send the response.
+		b, _ := json.Marshal(m.Body)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, string(b))
+		return
+	}
+
+	// Encrypt the password.
+	password, err := p.Password.HashString(data.Password)
+	if err != nil {
+		//return http.StatusInternalServerError, err
 		m.Body.Status = err.Error()
 		m.Body.Success = false
 		// Send the response.
@@ -69,48 +79,7 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := new(DB)
-
-	err = json.Unmarshal(dbFile, db)
-	if err != nil {
-		m.Body.Status = err.Error()
-		m.Body.Success = false
-		// Send the response.
-		b, _ := json.Marshal(m.Body)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(b))
-		return
-	}
-
-	for _, v := range db.Users {
-		if strings.ToLower(v.Username) == strings.ToLower(data.Username) {
-			m.Body.Status = "user already exists"
-			m.Body.Success = false
-			// Send the response.
-			b, _ := json.Marshal(m.Body)
-			w.Header().Set("Content-Type", "application/json")
-			fmt.Fprint(w, string(b))
-			return
-		}
-	}
-
-	db.Users = append(db.Users, User{
-		Username: data.Username,
-		Password: data.Password,
-	})
-
-	bb, err := json.Marshal(db)
-	if err != nil {
-		m.Body.Status = err.Error()
-		m.Body.Success = false
-		// Send the response.
-		b, _ := json.Marshal(m.Body)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(b))
-		return
-	}
-
-	err = ioutil.WriteFile("db.json", bb, 0644)
+	_, err = user.Create("first", "last", data.Username, password)
 	if err != nil {
 		m.Body.Status = err.Error()
 		m.Body.Success = false

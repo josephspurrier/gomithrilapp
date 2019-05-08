@@ -3,13 +3,12 @@ package component
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 
 	"app/api/model"
 	"app/api/pkg/webtoken"
+	"app/api/store"
 )
 
 // LoginEndpoint .
@@ -50,7 +49,9 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 	m.Body.Success = false
 	m.Body.Token = ""
 
-	dbFile, err := ioutil.ReadFile("db.json")
+	// Determine if the user exists.
+	user := store.NewUser(p.DB, p.Q)
+	found, ID, err := user.ExistsByField(user, "email", data.Username)
 	if err != nil {
 		m.Body.Status = err.Error()
 		m.Body.Success = false
@@ -59,13 +60,8 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, string(b))
 		return
-	}
-
-	db := new(DB)
-
-	err = json.Unmarshal(dbFile, db)
-	if err != nil {
-		m.Body.Status = err.Error()
+	} else if !found {
+		m.Body.Status = "access denied (1)"
 		m.Body.Success = false
 		// Send the response.
 		b, _ := json.Marshal(m.Body)
@@ -74,18 +70,12 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userFound := false
+	// Populate the user.
+	user.FindOneByID(user, ID)
 
-	for _, v := range db.Users {
-		if strings.ToLower(v.Username) == strings.ToLower(data.Username) &&
-			v.Password == data.Password {
-			userFound = true
-			break
-		}
-	}
-
-	if !userFound {
-		m.Body.Status = "access denied"
+	// Ensure the user's password matches.
+	if !p.Password.MatchString(user.Password, data.Password) {
+		m.Body.Status = "access denied (2)"
 		m.Body.Success = false
 		// Send the response.
 		b, _ := json.Marshal(m.Body)
@@ -103,7 +93,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) {
 	t.Clock = webtoken.Clock{}
 	t.PrivateKey = &privateKey
 	u := new(webtoken.User)
-	u.ID = 12
+	u.ID = ID
 	at, _, err := t.GenerateTokens(u)
 	if err != nil {
 		log.Println(err)
