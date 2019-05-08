@@ -122,7 +122,7 @@ export default {
       let success = false
 
       // Send a login request to the server.
-      HTTP.post(`login`, this.login)
+      HTTP.post(`v1/login`, this.login)
         .then(response => {
           if (response.data.token !== undefined) {
             f.success('Login successful.')

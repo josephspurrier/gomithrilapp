@@ -127,7 +127,7 @@ export default {
       let success = false
 
       // Send a login request to the server.
-      HTTP.post(`register`, this.login)
+      HTTP.post(`v1/register`, this.login)
         .then(response => {
           if (response.data.status === 'Created') {
             f.success('Registered.')

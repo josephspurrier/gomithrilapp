@@ -127,6 +127,13 @@ func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, b ifa
 
 // LoadMigrations will run the database migrations.
 func LoadMigrations(l logger.ILog) (*sqlx.DB, error) {
+	// If the host env var is set, use it.
+	host := os.Getenv("MYSQL_HOST")
+	if len(host) == 0 {
+		host = "127.0.0.1"
+	}
+
+	// If the password env var is set, use it.
 	password := os.Getenv("MYSQL_ROOT_PASSWORD")
 	if len(password) == 0 {
 		password = "password"
@@ -134,7 +141,7 @@ func LoadMigrations(l logger.ILog) (*sqlx.DB, error) {
 
 	// Set the database connection information.
 	con := &mysql.Connection{
-		Hostname:  "127.0.0.1",
+		Hostname:  host,
 		Username:  "root",
 		Password:  password,
 		Name:      "main",

@@ -52,9 +52,9 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	// Request validation.
 	fullRequest := new(request)
 	req := fullRequest.Body
-	if err := p.Bind.JSONUnmarshal(fullRequest, r); err != nil {
+	if err := p.Bind.JSONUnmarshal(&fullRequest.Body, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(fullRequest); err != nil {
+	} else if err = p.Bind.Validate(&fullRequest.Body); err != nil {
 		return http.StatusBadRequest, err
 	}
 
