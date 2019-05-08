@@ -17,34 +17,48 @@ func SetupRegister(core Core) {
 	p := new(RegisterEndpoint)
 	p.Core = core
 
-	p.Router.Post("/register", p.Register)
+	p.Router.Post("/v1/register", p.Register)
 }
 
 // Register .
+// swagger:route POST /v1/register user UserRegister
+//
+// Create a user.
+//
+// Security:
+//   token:
+//
+// Responses:
+//   201: CreatedResponse
+//   400: BadRequestResponse
+//   401: UnauthorizedResponse
+//   500: InternalServerErrorResponse
 func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int, error) {
-	// swagger:parameters AuthLogin
+	// swagger:parameters UserRegister
 	type request struct {
-		// Required: true
-		FirstName string `json:"first_name" validate:"required"`
-		// in: formData
-		// Required: true
-		LastName string `json:"last_name" validate:"required"`
-		// in: formData
-		// Required: true
-		Email string `json:"email" validate:"required,email"`
-		// in: formData
-		// Required: true
-		Password string `json:"password" validate:"required"`
+		// in: body
+		Body struct {
+			// Required: true
+			FirstName string `json:"first_name" validate:"required"`
+			// Required: true
+			LastName string `json:"last_name" validate:"required"`
+			// Required: true
+			Email string `json:"email" validate:"required,email"`
+			// Required: true
+			Password string `json:"password" validate:"required"`
+		}
 	}
 
 	// Request validation.
-	req := new(request)
-	if err := p.Bind.JSONUnmarshal(req, r); err != nil {
+	fullRequest := new(request)
+	req := fullRequest.Body
+	if err := p.Bind.JSONUnmarshal(fullRequest, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	} else if err = p.Bind.Validate(fullRequest); err != nil {
 		return http.StatusBadRequest, err
 	}
 
+	// Determine if the user already exists.
 	user := store.NewUser(p.DB, p.Q)
 	found, _, err := user.ExistsByField(user, "email", req.Email)
 	if err != nil {

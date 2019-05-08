@@ -15,15 +15,21 @@ func SetupStatic(core Core) {
 	p := new(StaticEndpoint)
 	p.Core = core
 
-	p.Router.Get("/", p.IndexGET)
+	p.Router.Get("/v1", p.IndexGET)
 	p.Router.Get("/static/*", p.StaticGET)
 }
 
 // IndexGET .
+// swagger:route GET /v1 healthcheck Ready
+//
+// API is ready.
+//
+// Responses:
+//   200: OKResponse
 func (p StaticEndpoint) IndexGET(w http.ResponseWriter, r *http.Request) (int, error) {
 	/*w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, `{"api": "ready"}`)*/
-	return http.StatusOK, nil
+	return p.Response.OK(w, "ready")
 }
 
 // StaticGET .

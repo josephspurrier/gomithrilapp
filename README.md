@@ -110,6 +110,40 @@ GO111MODULE=on go mod init
 GO111MODULE=on go mod vendor
 ```
 
+## Swagger
+
+This projects uses [Swagger v2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) to document the API. The entire Swagger spec is generated from the code in this repository.
+
+### Install Swagger
+
+This tool will generate the Swagger spec from annotations in the Go code. It will read the comments in the code and will pull types from structs.
+
+```bash
+go get github.com/go-swagger/go-swagger/cmd/swagger
+```
+
+### Generate Swagger Spec
+
+```bash
+# CD to the webapi folder.
+cd src/app/api
+
+# Generate the swagger spec.
+swagger generate spec -o ./swagger.json
+
+# Replace 'example' with 'x-example' in the swagger spec.
+## MacOS
+sed -i '' -e 's/example/x\-example/' ./swagger.json
+## Linux
+sed -i'' -e 's/example/x\-example/' ./swagger.json
+
+# Validate the swagger spec.
+swagger validate ./swagger.json
+
+# Serve the spec for the browser.
+swagger serve -F=swagger ./swagger.json
+```
+
 ## References
 
 These are notes on the project.

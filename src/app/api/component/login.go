@@ -20,26 +20,37 @@ func SetupLogin(core Core) {
 	p := new(LoginEndpoint)
 	p.Core = core
 
-	p.Router.Post("/login", p.Login)
+	p.Router.Post("/v1/login", p.Login)
 }
 
 // Login .
+// swagger:route POST /v1/login user UserLogin
+//
+// Authentication a user.
+//
+// Responses:
+//   201: LoginResponse
+//   400: BadRequestResponse
+//   401: UnauthorizedResponse
+//   500: InternalServerErrorResponse
 func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, error) {
-	// swagger:parameters AuthLogin
+	// swagger:parameters UserLogin
 	type request struct {
-		// in: formData
-		// Required: true
-		Email string `json:"email" validate:"required,email"`
-		// in: formData
-		// Required: true
-		Password string `json:"password" validate:"required"`
+		// in: body
+		Body struct {
+			// Required: true
+			Email string `json:"email" validate:"required,email"`
+			// Required: true
+			Password string `json:"password" validate:"required"`
+		}
 	}
 
 	// Request validation.
-	req := new(request)
-	if err := p.Bind.JSONUnmarshal(req, r); err != nil {
+	fullRequest := new(request)
+	req := fullRequest.Body
+	if err := p.Bind.JSONUnmarshal(fullRequest, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	} else if err = p.Bind.Validate(fullRequest); err != nil {
 		return http.StatusBadRequest, err
 	}
 
