@@ -11,20 +11,23 @@ import (
 // Core represents the core for all the endpoints.
 type Core struct {
 	Log      logger.ILog
+	Router   *router.Mux
 	DB       iface.IDatabase
 	Q        iface.IQuery
-	Router   *router.Mux
+	Bind     iface.IBind
 	Response iface.IResponse
 	Password iface.IPassword
 }
 
 // NewCore returs a core for all the endpoints.
 func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery,
-	resp iface.IResponse, p iface.IPassword) Core {
+	b iface.IBind, resp iface.IResponse, p iface.IPassword) Core {
 	return Core{
+		Log:      l,
+		Router:   r,
 		DB:       db,
 		Q:        q,
-		Router:   r,
+		Bind:     b,
 		Response: resp,
 		Password: p,
 	}

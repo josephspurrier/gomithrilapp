@@ -1,7 +1,6 @@
 package component
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -24,33 +23,29 @@ func SetupLogin(core Core) {
 	p.Router.Post("/login", p.Login)
 }
 
-// LoginRequest is the request object.
-type LoginRequest struct {
-	// Username for login.
-	Username string `json:"username"`
-	// Password for login.
-	Password string `json:"password"`
-}
-
 // Login .
 func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, error) {
-	// Convert the request to a struct.
-	var data LoginRequest
+	// swagger:parameters AuthLogin
+	type request struct {
+		// in: formData
+		// Required: true
+		Email string `json:"email" validate:"required,email"`
+		// in: formData
+		// Required: true
+		Password string `json:"password" validate:"required"`
+	}
 
-	err := json.NewDecoder(r.Body).Decode(&data)
-	defer r.Body.Close()
-	if err != nil {
+	// Request validation.
+	req := new(request)
+	if err := p.Bind.JSONUnmarshal(req, r); err != nil {
+		return http.StatusBadRequest, err
+	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
 	}
 
-	// Create the response.
-	m := new(model.LoginResponse)
-	m.Body.Success = false
-	m.Body.Token = ""
-
 	// Determine if the user exists.
 	user := store.NewUser(p.DB, p.Q)
-	found, ID, err := user.ExistsByField(user, "email", data.Username)
+	found, ID, err := user.ExistsByField(user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if !found {
@@ -61,12 +56,14 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	user.FindOneByID(user, ID)
 
 	// Ensure the user's password matches.
-	if !p.Password.MatchString(user.Password, data.Password) {
+	if !p.Password.MatchString(user.Password, req.Password) {
 		return http.StatusBadRequest, errors.New("user not found (2)")
 	}
 
+	// Create the response.
+	m := new(model.LoginResponse)
+	m.Body.Token = ""
 	m.Body.Status = http.StatusText(http.StatusOK)
-	m.Body.Success = true
 
 	// Generate the access tokens.
 	privateKey := []byte("asdfasdfasdf")

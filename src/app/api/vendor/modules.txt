@@ -2,10 +2,13 @@
 github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v0.0.0-20180921172315-3af4c746e1c2
 github.com/dgrijalva/jwt-go
+# github.com/go-playground/locales v0.12.1
+github.com/go-playground/locales
+github.com/go-playground/locales/currency
+# github.com/go-playground/universal-translator v0.16.0
+github.com/go-playground/universal-translator
 # github.com/go-sql-driver/mysql v1.4.0
 github.com/go-sql-driver/mysql
-# github.com/husobee/vestigo v0.0.0-20180514151641-93943aff3f80
-github.com/husobee/vestigo
 # github.com/jmoiron/sqlx v1.2.0
 github.com/jmoiron/sqlx
 github.com/jmoiron/sqlx/reflectx
@@ -14,6 +17,8 @@ github.com/josephspurrier/rove
 github.com/josephspurrier/rove/pkg/adapter/mysql
 github.com/josephspurrier/rove/pkg/changeset
 github.com/josephspurrier/rove/pkg/env
+# github.com/leodido/go-urn v1.1.0
+github.com/leodido/go-urn
 # github.com/matryer/way v0.0.0-20180416093233-9632d0c407b0
 github.com/matryer/way
 # github.com/pmezard/go-difflib v1.0.0
@@ -25,3 +30,5 @@ golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 # google.golang.org/appengine v1.5.0
 google.golang.org/appengine/cloudsql
+# gopkg.in/go-playground/validator.v9 v9.28.0
+gopkg.in/go-playground/validator.v9

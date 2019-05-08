@@ -1,7 +1,6 @@
 package component
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -21,27 +20,33 @@ func SetupRegister(core Core) {
 	p.Router.Post("/register", p.Register)
 }
 
-// RegisterRequest is the request object.
-type RegisterRequest struct {
-	// Username for login.
-	Username string `json:"username"`
-	// Password for login.
-	Password string `json:"password"`
-}
-
 // Register .
 func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int, error) {
-	// Convert the request to a struct.
-	var data RegisterRequest
+	// swagger:parameters AuthLogin
+	type request struct {
+		// Required: true
+		FirstName string `json:"first_name" validate:"required"`
+		// in: formData
+		// Required: true
+		LastName string `json:"last_name" validate:"required"`
+		// in: formData
+		// Required: true
+		Email string `json:"email" validate:"required,email"`
+		// in: formData
+		// Required: true
+		Password string `json:"password" validate:"required"`
+	}
 
-	err := json.NewDecoder(r.Body).Decode(&data)
-	defer r.Body.Close()
-	if err != nil {
+	// Request validation.
+	req := new(request)
+	if err := p.Bind.JSONUnmarshal(req, r); err != nil {
+		return http.StatusBadRequest, err
+	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
 	}
 
 	user := store.NewUser(p.DB, p.Q)
-	found, _, err := user.ExistsByField(user, "email", data.Username)
+	found, _, err := user.ExistsByField(user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if found {
@@ -49,13 +54,13 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Encrypt the password.
-	password, err := p.Password.HashString(data.Password)
+	password, err := p.Password.HashString(req.Password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 
 	// Create the user.
-	ID, err := user.Create("first", "last", data.Username, password)
+	ID, err := user.Create(req.FirstName, req.LastName, req.Email, password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

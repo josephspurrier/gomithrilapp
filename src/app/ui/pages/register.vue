@@ -13,13 +13,28 @@
       <div class="container" style="margin-top: 1em;">
         <form name="login">
           <textfield
-            v-model="login.username"
-            label="Username"
-            name="username"
+            v-model="login.first_name"
+            label="First Name"
+            name="first_name"
             type="text"
             :disabled="isLoading"
             required
-            @enter="submit"
+          ></textfield>
+          <textfield
+            v-model="login.last_name"
+            label="Last Name"
+            name="last_name"
+            type="text"
+            :disabled="isLoading"
+            required
+          ></textfield>
+          <textfield
+            v-model="login.email"
+            label="Email"
+            name="email"
+            type="text"
+            :disabled="isLoading"
+            required
           ></textfield>
           <textfield
             v-model="login.password"
@@ -71,7 +86,9 @@ export default {
   data() {
     return {
       login: {
-        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
         password: ''
       },
       isLoading: false
@@ -81,7 +98,9 @@ export default {
   methods: {
     // clear will clear the form.
     clear() {
-      this.login.username = ''
+      this.login.first_name = ''
+      this.login.last_name = ''
+      this.login.email = ''
       this.login.password = ''
     },
     submit() {
@@ -118,7 +137,12 @@ export default {
           }
         })
         .catch(err => {
-          if (err.response.data.message !== undefined) {
+          if (err.response === undefined) {
+            f.warning(
+              'There was an error reaching the server. Please try again later.' +
+                err
+            )
+          } else if (err.response.data.message !== undefined) {
             f.warning(err.response.data.message)
           } else {
             f.warning('There was an error. Please try again later.' + err)

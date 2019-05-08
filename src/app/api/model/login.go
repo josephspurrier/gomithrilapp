@@ -8,8 +8,6 @@ type LoginResponse struct {
 		// Required: true
 		Status string `json:"status"`
 		// Required: true
-		Success bool `json:"success"`
-		// Required: true
 		Token string `json:"token"`
 	}
 }

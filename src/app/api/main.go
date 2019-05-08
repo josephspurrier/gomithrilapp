@@ -9,6 +9,7 @@ import (
 
 	"app/api/component"
 	"app/api/iface"
+	"app/api/internal/bind"
 	"app/api/internal/response"
 	"app/api/middleware"
 	"app/api/model"
@@ -45,8 +46,9 @@ func main() {
 	q := query.New(db2)
 	p := passhash.New()
 	resp := response.New()
+	b := bind.New()
 
-	LoadRoutes(l, r, db, q, resp, p)
+	LoadRoutes(l, r, db, q, b, resp, p)
 
 	l.Printf("Server started.")
 	err = http.ListenAndServe(":"+port, middleware.Log(middleware.CORS(r)))
@@ -56,8 +58,8 @@ func main() {
 }
 
 // LoadRoutes will load the endpoints.
-func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, resp iface.IResponse, p iface.IPassword) {
-	core := component.NewCore(l, r, db, q, resp, p)
+func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, b iface.IBind, resp iface.IResponse, p iface.IPassword) {
+	core := component.NewCore(l, r, db, q, b, resp, p)
 
 	component.SetupStatic(core)
 	component.SetupLogin(core)
