@@ -26,7 +26,7 @@ func SetupLogin(core Core) {
 // Login .
 // swagger:route POST /v1/login user UserLogin
 //
-// Authentication a user.
+// Authenticate a user.
 //
 // Responses:
 //   201: LoginResponse

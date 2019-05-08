@@ -23,7 +23,7 @@ func SetupRegister(core Core) {
 // Register .
 // swagger:route POST /v1/register user UserRegister
 //
-// Create a user.
+// Register a new user.
 //
 // Security:
 //   token:

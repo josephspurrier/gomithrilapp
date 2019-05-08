@@ -36,7 +36,7 @@
         "tags": [
           "user"
         ],
-        "summary": "Authentication a user.",
+        "summary": "Authenticate a user.",
         "operationId": "UserLogin",
         "parameters": [
           {
@@ -87,7 +87,7 @@
         "tags": [
           "user"
         ],
-        "summary": "Create a user.",
+        "summary": "Register a new user.",
         "operationId": "UserRegister",
         "parameters": [
           {

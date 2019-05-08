@@ -27,16 +27,12 @@ func SetupStatic(core Core) {
 // Responses:
 //   200: OKResponse
 func (p StaticEndpoint) IndexGET(w http.ResponseWriter, r *http.Request) (int, error) {
-	/*w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"api": "ready"}`)*/
 	return p.Response.OK(w, "ready")
 }
 
 // StaticGET .
 func (p StaticEndpoint) StaticGET(w http.ResponseWriter, r *http.Request) (int, error) {
 	if strings.HasSuffix(r.URL.Path, "/") {
-		/*http.Error(w, "404 page not found", http.StatusNotFound)
-		return*/
 		return http.StatusNotFound, nil
 	}
 
