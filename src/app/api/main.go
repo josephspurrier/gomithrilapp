@@ -1,4 +1,4 @@
-// Package api Web API
+// Package api API
 //
 // This is the API for the application.
 //

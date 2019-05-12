@@ -1,0 +1,40 @@
+language: go
+
+go_import_path: project-root
+
+services:
+  - mysql
+
+go:
+  - "1.8"
+  - "1.9"
+  - "1.10"
+  - "tip"
+
+cache:
+  directories:
+    - $(npm config get prefix)/lib/node_modules
+
+before_install:
+  - mysql -e 'CREATE DATABASE main;'
+  - export GOPATH=$HOME/gopath/src/project-root
+  - export PATH=$HOME/gopath/src/project-root/bin:$PATH
+  - cd $GOPATH/src/app/api
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/mattn/goveralls
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/go-swagger/go-swagger/cmd/swagger
+  - swagger generate spec -o ./swagger.json
+  - sed -i'' -e 's/example/x\-example/' ./swagger.json
+  - swagger validate ./swagger.json
+  #- go get github.com/snikch/goodman/cmd/goodman
+  #- npm install -g dredd@5.1.11
+  - go build -o ./cmd/api/api app/api
+  #- go build -o ./cmd/hooks/hooks app/api/cmd/hooks
+  #- cp testdata/config.json ./config.json
+
+#before_script:
+#  - dredd
+
+script:
+  - $GOPATH/bin/goveralls
