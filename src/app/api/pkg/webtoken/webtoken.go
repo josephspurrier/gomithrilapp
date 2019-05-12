@@ -27,12 +27,13 @@ var (
 // CustomClaims is the payload for the JWT.
 type CustomClaims struct {
 	jwt.StandardClaims
+
+	// UserID is the unique ID of the user.
 	UserID string `json:"userID"`
 }
 
 // JWTTokenExtractor extracts tokens from http header
-type JWTTokenExtractor struct {
-}
+type JWTTokenExtractor struct{}
 
 // GetToken gets token out of http header
 func (e *JWTTokenExtractor) GetToken(authHeader string) (string, error) {
@@ -56,15 +57,9 @@ func (Clock) Now() time.Time {
 	return time.Now()
 }
 
-// After returns the time after.
-/*func (Clock) After(d time.Duration) <-chan time.Time {
-	return time.After(d)
-}*/
-
 // IClock represents a real clock.
 type IClock interface {
 	Now() time.Time
-	//After(d time.Duration) <-chan time.Time
 }
 
 // JWTAuth is the struct that verifies and generates jwt access tokens
@@ -122,7 +117,6 @@ func (p *JWTAuth) Verify(token string) (string, error) {
 	}
 
 	// Return the user ID.
-	//return fmt.Sprint(accessClaims["UserID"]), nil
 	return fmt.Sprint(accessClaims.UserID), nil
 }
 
@@ -188,13 +182,6 @@ func (p *JWTAuth) GenerateTokens(user *User) (accessToken *AuthToken, refreshTok
 	if p.PrivateKey == nil || *p.PrivateKey == nil || len(*p.PrivateKey) == 0 {
 		return nil, nil, ErrBadSecret
 	}
-
-	// This is not required for this package. It never gets called so it
-	// is never tested.
-	// Sync the clock of the package.
-	/*jwt.TimeFunc = func() time.Time {
-		return p.Clock.Now()
-	}*/
 
 	// Create a clock to use.
 	clock := p.Clock.Now()
