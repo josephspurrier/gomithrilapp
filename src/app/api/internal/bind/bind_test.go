@@ -166,8 +166,7 @@ func TestJSONSuccess(t *testing.T) {
 				}
 			}
 
-			fullRequest := new(request)
-			req := fullRequest.Body
+			req := new(request).Body
 
 			b := bind.New()
 
@@ -214,8 +213,7 @@ func TestJSONFailure(t *testing.T) {
 				}
 			}
 
-			fullRequest := new(request)
-			req := fullRequest.Body
+			req := new(request).Body
 
 			b := bind.New()
 
@@ -261,8 +259,7 @@ func TestJSONFailureNil(t *testing.T) {
 				}
 			}
 
-			fullRequest := new(request)
-			req := fullRequest.Body
+			req := new(request).Body
 
 			b := bind.New()
 

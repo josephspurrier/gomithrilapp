@@ -50,8 +50,7 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Request validation.
-	fullRequest := new(request)
-	req := fullRequest.Body
+	req := new(request).Body
 	if err := p.Bind.Unmarshal(&req, r); err != nil {
 		return http.StatusBadRequest, err
 	} else if err = p.Bind.Validate(&req); err != nil {
