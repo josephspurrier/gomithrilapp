@@ -1,6 +1,9 @@
 package webtoken_test
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -9,342 +12,195 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNoToken(t *testing.T) {
-	j := webtoken.JWTTokenExtractor{}
+type NowFn func() time.Time
 
-	s, err := j.GetToken("")
-	assert.Equal(t, webtoken.ErrNoToken, err)
+type MockClock struct {
+	nowfn NowFn
+}
+
+func (c *MockClock) SetNow(fn NowFn) {
+	c.nowfn = fn
+}
+
+func (c *MockClock) Now() time.Time {
+	if c.nowfn == nil {
+		return time.Now()
+	}
+	return c.nowfn()
+}
+
+func TestValidJWT(t *testing.T) {
+	mc := new(MockClock)
+
+	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
+
+	// Generate a token.
+	token := webtoken.New(secret)
+	token.SetClock(mc)
+	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, ss)
+
+	// Verify the token.
+	s, err := token.Verify(ss)
+	assert.Nil(t, err)
+	assert.Equal(t, "jsmith", s)
+}
+
+func TestInvalidSecret(t *testing.T) {
+	mc := new(MockClock)
+
+	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
+	secret2 := []byte("0123456789ABCDEF0123456789ABCDEF3")
+
+	// Generate a token.
+	token := webtoken.New(secret)
+	token.SetClock(mc)
+	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, ss)
+
+	// Verify the token.
+	token2 := webtoken.New(secret2)
+	token.SetClock(mc)
+	s, err := token2.Verify(ss)
+	assert.Equal(t, webtoken.ErrSignatureInvalid, err)
 	assert.Equal(t, "", s)
 }
 
-func TestBadTokenFormat(t *testing.T) {
-	j := webtoken.JWTTokenExtractor{}
+func TestNoSecret(t *testing.T) {
+	mc := new(MockClock)
 
-	s, err := j.GetToken("bad")
-	assert.Equal(t, webtoken.ErrBadTokenFormat, err)
+	// Generate a token.
+	token := webtoken.New([]byte(""))
+	token.SetClock(mc)
+	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	assert.Equal(t, webtoken.ErrSecretTooShort, err)
+	assert.Equal(t, "", ss)
+
+	// Verify the token.
+	s, err := token.Verify(ss)
+	assert.Equal(t, webtoken.ErrMalformed, err)
 	assert.Equal(t, "", s)
 }
 
-func TestGoodToken(t *testing.T) {
-	j := webtoken.JWTTokenExtractor{}
+func TestFutureJWT(t *testing.T) {
+	mc := new(MockClock)
 
-	s, err := j.GetToken("Bearer foo")
-	assert.Equal(t, nil, err)
-	assert.Equal(t, "foo", s)
-}
+	// Set the clock in the future.
+	mc.SetNow(func() time.Time {
+		return time.Now().Add(5 * time.Minute)
+	})
 
-func TestBadClock(t *testing.T) {
-	b := []byte("s3cr3tp@$$w0rdk33")
+	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
-	j := &webtoken.JWTAuth{
-		Clock:                nil,
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
+	// Generate a token.
+	token := webtoken.New(secret)
+	token.SetClock(mc)
+	ss, err := token.Generate("jsmith", 24*time.Hour)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, ss)
 
-	u := new(webtoken.User)
-	u.ID = "100"
+	// Set the the clock for now.
+	mc.SetNow(func() time.Time {
+		return time.Now()
+	})
 
-	a, err := j.RefreshAccessToken("")
-	assert.NotEqual(t, nil, a)
-	assert.Equal(t, webtoken.ErrBadClock, err)
-
-	a, r, err := j.GenerateTokens(u)
-	assert.NotEqual(t, nil, a)
-	assert.NotEqual(t, nil, r)
-	assert.Equal(t, webtoken.ErrBadClock, err)
-
-	s, err := j.Verify("")
-	assert.NotEqual(t, nil, s)
-	assert.Equal(t, webtoken.ErrBadClock, err)
-}
-
-func TestGoodGenerateVerifyToken(t *testing.T) {
-	b := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                webtoken.Clock{},
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	s, err := j.Verify(a.Token)
-	assert.NotNil(t, s)
-	t.Log(err)
-	assert.Equal(t, nil, err)
-}
-
-func TestBadGenerateVerifyToken(t *testing.T) {
-	b := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                webtoken.Clock{},
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	s, err := j.Verify("bad")
+	// Verify the token.
+	s, err := token.Verify(ss)
+	assert.Equal(t, webtoken.ErrNotValidYet, err)
 	assert.Equal(t, "", s)
-	assert.NotEqual(t, nil, err)
+}
 
-	s, err = j.Verify("")
+func TestPastJWT(t *testing.T) {
+	mc := new(MockClock)
+
+	// Set the clock in the past.
+	mc.SetNow(func() time.Time {
+		return time.Now().Add(-5 * time.Minute)
+	})
+
+	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
+
+	// Generate a token.
+	token := webtoken.New(secret)
+	token.SetClock(mc)
+	ss, err := token.Generate("jsmith", 1*time.Minute)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, ss)
+
+	// Set the the clock for now.
+	mc.SetNow(func() time.Time {
+		return time.Now()
+	})
+
+	// Verify the token.
+	s, err := token.Verify(ss)
+	assert.Equal(t, webtoken.ErrExpired, err)
 	assert.Equal(t, "", s)
-	assert.NotEqual(t, nil, err)
 }
 
-func TestBadGenerateVerifyTokenReal(t *testing.T) {
-	b := []byte("Pa$$w0rd")
+func TestErrorJWT(t *testing.T) {
+	mc := new(MockClock)
 
-	j := &webtoken.JWTAuth{
-		Clock:                webtoken.Clock{},
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
+	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6Mn0.rN-m8KD3oLK_-kW3vKaialQ06Fy_k_d95cPQJyalTJE")
+	// Generate a token object.
+	token := webtoken.New(secret)
+	token.SetClock(mc)
+
+	// Random text in three sections.
+	s, err := token.Verify("this.is.randomtext")
+	assert.Equal(t, webtoken.ErrMalformed, err)
 	assert.Equal(t, "", s)
-	assert.NotEqual(t, nil, err)
-}
 
-func TestNotValidGenerateVerifyToken(t *testing.T) {
-	b := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                webtoken.Clock{},
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
-
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6Mn0.rN-m8KD3oLK_-kW3vKaialQ06Fy_k_d95cPQJyalTJE")
+	// Random text.
+	s, err = token.Verify("this is randomtext")
+	assert.Equal(t, webtoken.ErrMalformed, err)
 	assert.Equal(t, "", s)
-	assert.NotEqual(t, nil, err)
-}
 
-func TestGoodGenerateVerifyTokenReal(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	b := []byte("s3cr3tp@$$w0rdk33")
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
-
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjExMzczMjg0NDUsInVzZXJJRCI6IjEwMCJ9.R6qxT1sZbpprJYnMvlhoIC1K5Fljc68WBgkBp3fW7HY")
-	assert.Equal(t, "100", s)
-	assert.Equal(t, nil, err)
-}
-
-func TestMissingExpiration(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	b := []byte("s3cr3tp@$$w0rdk33")
-
-	j := &webtoken.JWTAuth{
-		Clock:                webtoken.Clock{},
-		PrivateKey:           &b,
-		RefreshTokenDuration: time.Hour * 24 * 7,
-		AccessTokenDuration:  time.Hour * 2,
-	}
-
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6IjIifQ.RKV01hVEDOFuMsj-aXzMYpLduXimU6QesUXtAFLTROA")
+	// Invalid signature.
+	txt := `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqc3B1cnJpZXIiLCJleHAiOjE1Mjk0NTA4MDMsImp0aSI6ImRhNWI0NzZjLTM2ZGYtMzkxNS0yMjU2LTJlYjg1MWYxZjMzMyIsImlhdCI6MTUyOTM2NDQwMywibmJmIjoxNTI5MzY0NDAzfQ.YCcAp7QQ9L0F_OIzEFWQu4v4fiERGvWCAJANO5S229`
+	s, err = token.Verify(txt)
+	assert.Equal(t, webtoken.ErrSignatureInvalid, err)
 	assert.Equal(t, "", s)
-	assert.Equal(t, webtoken.ErrMissingExpiration, err)
 
-	r, err := j.RefreshAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6IjIifQ.RKV01hVEDOFuMsj-aXzMYpLduXimU6QesUXtAFLTROA")
-	assert.Nil(t, r)
-	assert.Equal(t, webtoken.ErrMissingExpiration, err)
-}
-
-// CustomerClock implements the IClock interface.
-type CustomClock struct {
-	t time.Time
-}
-
-// Now sets the current time.
-func (c *CustomClock) Set(t time.Time) {
-	c.t = t
-}
-
-// Now returns the current time.
-func (c *CustomClock) Now() time.Time {
-	return c.t
-}
-
-func TestTokenExpirationSameTime(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	bb := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           &bb,
-		RefreshTokenDuration: time.Second * 5,
-		AccessTokenDuration:  time.Second * 5,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	s, err := j.Verify(a.Token)
-	assert.Equal(t, "100", s)
-	assert.Equal(t, nil, err)
-}
-
-func TestTokenExpirationAfter(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	bb := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           &bb,
-		RefreshTokenDuration: time.Second * 5,
-		AccessTokenDuration:  time.Second * 5,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	// Set the clock to exact expiration a year prior.
-	clock.Set(time.Date(2005, 01, 15, 12, 34, 5, 0, time.UTC))
-	s, err := j.Verify(a.Token)
-	assert.Equal(t, "100", s)
-	assert.Equal(t, nil, err)
-
-	// Set the clock to exact expiration.
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 5, 0, time.UTC))
-	s, err = j.Verify(a.Token)
-	assert.Equal(t, "100", s)
-	assert.Equal(t, nil, err)
-
-	// Set the clock to a second after the expiration.
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 6, 0, time.UTC))
-	s, err = j.Verify(a.Token)
+	// Invalid expiration.
+	txt = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqc3B1cnJpZXIiLCJqdGkiOiJjOTU5ZTYzMC1lOWU5LTAwZjYtOWU1OS01ZDAzYTViMjczNDkiLCJpYXQiOjE1MjkzNzAzNDAsIm5iZiI6MTUyOTM3MDM0MH0.SGdZ50vAcBq_EuW8UkqGmjpBkQJJWGwLmOdMw1hcH2I`
+	s, err = token.Verify(txt)
+	assert.Equal(t, webtoken.ErrExpirationInvalid, err)
 	assert.Equal(t, "", s)
-	assert.NotEqual(t, nil, err)
+
+	// Invalid not before date.
+	txt = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqc3B1cnJpZXIiLCJleHAiOjUxMjkzNjY3NjUsImp0aSI6IjQ1MjRiZjBlLTkwZDYtOTQwMS1hZTc4LTc2YmFlMjlhMmZmOSIsImlhdCI6MTUyOTM3MDM2NX0.VE7bPbSh3ZKLkWjJPTbVyqFQF4dIo8NBBPZIWJ92ch4`
+	s, err = token.Verify(txt)
+	assert.Equal(t, webtoken.ErrNotBeforeInvalid, err)
+	assert.Equal(t, "", s)
+
+	// Invalid issued at date.
+	txt = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJqc3B1cnJpZXIiLCJleHAiOjUxMjkzNjY3ODksImp0aSI6IjI4YWUxOGVlLTM4NmItZDY1ZC1hZDNjLTZiYjFlNmVlNzNlNCIsIm5iZiI6MTUyOTM3MDM4OX0.muVGPA1nsXrZkG2RauY5aoFEdsr7gLObzYkBJyLj0l4`
+	s, err = token.Verify(txt)
+	assert.Equal(t, webtoken.ErrIssuedAtInvalid, err)
+	assert.Equal(t, "", s)
+
+	// Invalid audience.
+	txt = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjUxMjkzNjY4MTcsImp0aSI6IjZmYTcwZjdkLWQ0ODMtZGJhZC0xNzkzLTQwMzc5ZDJjM2UxNiIsImlhdCI6MTUyOTM3MDQxNywibmJmIjoxNTI5MzcwNDE3fQ.VTsuIKug9LGfP7oz8LVKT8iBwCUsNyTfV8ftAuT5jn0`
+	s, err = token.Verify(txt)
+	assert.Equal(t, webtoken.ErrAudienceInvalid, err)
+	assert.Equal(t, "", s)
 }
 
-func TestTokenRefresh(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	bb := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           &bb,
-		RefreshTokenDuration: time.Second * 5,
-		AccessTokenDuration:  time.Second * 5,
+func TestUnmarshal(t *testing.T) {
+	type container struct {
+		JWT webtoken.Configuration `json:"JWT"`
 	}
+	config := new(container)
+	path := filepath.Join("testdata", "config.json")
+	b, err := ioutil.ReadFile(path)
+	assert.Nil(t, err)
 
-	u := new(webtoken.User)
-	u.ID = "100"
+	err = json.Unmarshal(b, &config)
+	assert.Nil(t, err)
 
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	b, err := j.RefreshAccessToken(a.Token)
-	assert.NotEqual(t, nil, b)
-	assert.Equal(t, nil, err)
-
-	// Ensure the user data is still available in the new token.
-	s, err := j.Verify(b.Token)
-	assert.Equal(t, "100", s)
-	assert.Equal(t, nil, err)
-}
-
-func TestTokenRefreshFail(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	bb := []byte("Pa$$w0rd")
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           &bb,
-		RefreshTokenDuration: time.Second * 5,
-		AccessTokenDuration:  time.Second * 5,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	a, r, err := j.GenerateTokens(u)
-
-	assert.NotNil(t, a)
-	assert.NotNil(t, r)
-	assert.Equal(t, nil, err)
-
-	b, err := j.RefreshAccessToken("bad")
-	assert.Nil(t, b)
-	assert.NotEqual(t, nil, err)
-}
-
-func TestTokenBadSecret(t *testing.T) {
-	clock := new(CustomClock)
-	clock.Set(time.Date(2006, 01, 15, 12, 34, 0, 0, time.UTC))
-
-	j := &webtoken.JWTAuth{
-		Clock:                clock,
-		PrivateKey:           nil,
-		RefreshTokenDuration: time.Second * 5,
-		AccessTokenDuration:  time.Second * 5,
-	}
-
-	u := new(webtoken.User)
-	u.ID = "100"
-
-	_, _, err := j.GenerateTokens(u)
-	assert.Equal(t, webtoken.ErrBadSecret, err)
-
-	_, err = j.RefreshAccessToken("bad")
-	assert.Equal(t, webtoken.ErrBadSecret, err)
-
-	_, err = j.Verify("bad")
-	assert.Equal(t, webtoken.ErrBadSecret, err)
+	assert.Equal(t, "0123456789ABCDEF0123456789ABCDEF", string(config.JWT.Secret))
 }

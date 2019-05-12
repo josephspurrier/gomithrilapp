@@ -43,6 +43,7 @@ import (
 	"app/api/pkg/passhash"
 	"app/api/pkg/query"
 	"app/api/pkg/router"
+	"app/api/pkg/webtoken"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/josephspurrier/rove"
@@ -66,6 +67,7 @@ func main() {
 		l.Fatalf(err.Error())
 	}
 
+	// Configure the services.
 	r := router.New()
 	db2 := database.New(db)
 	q := query.New(db2)
@@ -73,18 +75,23 @@ func main() {
 	resp := response.New()
 	b := bind.New()
 
-	LoadRoutes(l, r, db, q, b, resp, p)
+	// Setup middleware.
+	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
+	t := webtoken.New([]byte(secret))
+
+	// Load the routes.
+	LoadRoutes(l, r, db, q, b, resp, t, p)
 
 	l.Printf("Server started.")
-	err = http.ListenAndServe(":"+port, middleware.Log(middleware.CORS(r)))
+	err = http.ListenAndServe(":"+port, middleware.Wrap(r, l, t.Secret))
 	if err != nil {
 		l.Printf(err.Error())
 	}
 }
 
 // LoadRoutes will load the endpoints.
-func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, b iface.IBind, resp iface.IResponse, p iface.IPassword) {
-	core := component.NewCore(l, r, db, q, b, resp, p)
+func LoadRoutes(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery, b iface.IBind, resp iface.IResponse, token iface.IToken, p iface.IPassword) {
+	core := component.NewCore(l, r, db, q, b, resp, token, p)
 
 	component.SetupStatic(core)
 	component.SetupLogin(core)

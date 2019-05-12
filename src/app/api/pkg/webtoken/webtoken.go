@@ -1,221 +1,150 @@
 package webtoken
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"errors"
 	"fmt"
-	"strings"
+	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
 var (
-	// ErrBadTokenFormat is when the refresh token has expired.
-	ErrBadTokenFormat = errors.New("authorization header format must be Bearer {token}")
-	// ErrMissingExpiration is when the token is missing an expiration date.
-	ErrMissingExpiration = errors.New("token must contain an expiration")
-	// ErrNoToken is when the refresh token has expired.
-	ErrNoToken = errors.New("no access token provided")
-	// ErrBadToken is when the refresh token has expired.
-	ErrBadToken = errors.New("bad token")
-	// ErrBadClock is when the clock is not initialized.
-	ErrBadClock = errors.New("bad clock")
-	// ErrBadSecret is when the secret is left nil or blank which is unsecure.
-	ErrBadSecret = errors.New("secret cannot be nil or blank")
+	// ErrNotValidYet is when a token is used prior to the issue date.
+	ErrNotValidYet = errors.New("token is not valid yet")
+	// ErrExpired is when a token is used after the expiration date.
+	ErrExpired = errors.New("token is expired")
+	// ErrMalformed is when a token is malformed.
+	ErrMalformed = errors.New("token is malformed")
+	// ErrSignatureInvalid is when a signature is invalid.
+	ErrSignatureInvalid = errors.New("signature is invalid")
+	// ErrAudienceInvalid is when the audience is invalid.
+	ErrAudienceInvalid = errors.New("audience is invalid")
+	// ErrExpirationInvalid is when the expiration is invalid.
+	ErrExpirationInvalid = errors.New("expiration is invalid")
+	// ErrIssuedAtInvalid is when the issued date is invalid.
+	ErrIssuedAtInvalid = errors.New("issue date is invalid")
+	// ErrNotBeforeInvalid is when the before date is invalid.
+	ErrNotBeforeInvalid = errors.New("before date is invalid")
+	// ErrSecretTooShort is when the secret is not long enough.
+	ErrSecretTooShort = errors.New("secret must be 256 bit (32 bytes)")
 )
 
-// CustomClaims is the payload for the JWT.
-type CustomClaims struct {
-	jwt.StandardClaims
+// SecretKey is a byte array.
+type SecretKey []byte
 
-	// UserID is the unique ID of the user.
-	UserID string `json:"userID"`
-}
-
-// JWTTokenExtractor extracts tokens from http header
-type JWTTokenExtractor struct{}
-
-// GetToken gets token out of http header
-func (e *JWTTokenExtractor) GetToken(authHeader string) (string, error) {
-	if authHeader == "" {
-		return "", ErrNoToken
+// UnmarshalJSON will unmarshal the value from a base64 encoded value.
+func (k *SecretKey) UnmarshalJSON(b []byte) error {
+	unquoted, err := strconv.Unquote(string(b))
+	if err != nil {
+		return nil
 	}
 
-	authHeaderParts := strings.Split(authHeader, " ")
-	if len(authHeaderParts) != 2 || strings.ToLower(authHeaderParts[0]) != "bearer" {
-		return "", ErrBadTokenFormat
+	dec, err := base64.StdEncoding.DecodeString(unquoted)
+	if err != nil {
+		return nil
 	}
-
-	return authHeaderParts[1], nil
+	*k = SecretKey(dec)
+	return err
 }
 
-// Clock is a real clock.
-type Clock struct{}
-
-// Now returns the current time.
-func (Clock) Now() time.Time {
-	return time.Now()
+// Configuration contains the JWT dependencies.
+type Configuration struct {
+	clock  IClock
+	Secret SecretKey `json:"Secret"`
 }
 
-// IClock represents a real clock.
-type IClock interface {
-	Now() time.Time
-}
-
-// JWTAuth is the struct that verifies and generates jwt access tokens
-type JWTAuth struct {
-	Clock                IClock
-	PrivateKey           *[]byte
-	AccessTokenDuration  time.Duration
-	RefreshTokenDuration time.Duration
-}
-
-// AuthToken represents a JWT.
-type AuthToken struct {
-	Token  string
-	Expiry time.Time
-}
-
-// User represents a person.
-type User struct {
-	ID string
-}
-
-// Verify verifies a token is valid.
-func (p *JWTAuth) Verify(token string) (string, error) {
-	// Prevent crashing from the clock.
-	if p.Clock == nil {
-		return "", ErrBadClock
+// New creates a new JWT configuration.
+func New(secret []byte) *Configuration {
+	return &Configuration{
+		clock:  new(clock),
+		Secret: secret,
 	}
+}
 
-	// Don't allow an empty secret.
-	if p.PrivateKey == nil || *p.PrivateKey == nil || len(*p.PrivateKey) == 0 {
-		return "", ErrBadSecret
-	}
+// SetClock will set the clock.
+func (c *Configuration) SetClock(clock IClock) {
+	c.clock = clock
+}
 
-	// Sync the clock of the package.
-	jwt.TimeFunc = func() time.Time {
-		return p.Clock.Now()
-	}
-
-	// Create a map to store our claims.
-	accessClaims := new(CustomClaims)
-
-	// Parse the JWT.
-	t, err := jwt.ParseWithClaims(token, accessClaims, func(token *jwt.Token) (interface{}, error) {
-		return *p.PrivateKey, nil
-	})
-	// The parse with claims will always return an error, but won't always be
-	// valid because it could be null.
-	if err != nil || !t.Valid {
+// randomID generates a UUID for use as an ID.
+func randomID() (string, error) {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
 		return "", err
 	}
 
-	// Require an expiration date.
-	if accessClaims.ExpiresAt == 0 {
-		return "", ErrMissingExpiration
-	}
-
-	// Return the user ID.
-	return fmt.Sprint(accessClaims.UserID), nil
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:]), nil
 }
 
-// RefreshAccessToken generates a new access token off the old access token.
-func (p *JWTAuth) RefreshAccessToken(oldToken string) (accessToken *AuthToken, err error) {
-	// Prevent crashing from the clock.
-	if p.Clock == nil {
-		return nil, ErrBadClock
+// Generate will generate a JWT.
+func (c *Configuration) Generate(userID string, duration time.Duration) (string, error) {
+	// Ensure a secret is present.
+	if len(c.Secret) < 32 {
+		return "", ErrSecretTooShort
 	}
 
-	// Don't allow an empty secret.
-	if p.PrivateKey == nil || *p.PrivateKey == nil || len(*p.PrivateKey) == 0 {
-		return nil, ErrBadSecret
+	// Get the current time.
+	now := c.clock.Now()
+
+	// Generate a unique ID.
+	unique, err := randomID()
+	if err != nil {
+		return "", err
 	}
 
-	// Sync the clock of the package.
-	jwt.TimeFunc = func() time.Time {
-		return p.Clock.Now()
+	// Create the claims.
+	claims := &jwt.StandardClaims{
+		Id:        unique,
+		Audience:  userID,
+		NotBefore: now.Unix(),
+		IssuedAt:  now.Unix(),
+		ExpiresAt: now.Add(duration).Unix(),
 	}
 
-	// Create a map to store our claims.
-	accessClaims := new(CustomClaims)
+	// Create the token.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// Load old claims.
-	t, err := jwt.ParseWithClaims(oldToken, accessClaims, func(token *jwt.Token) (interface{}, error) {
-		return *p.PrivateKey, nil
+	// Signe the token.
+	return token.SignedString([]byte(c.Secret))
+}
+
+// Verify will ensure a JWT is valid.
+func (c *Configuration) Verify(s string) (string, error) {
+	token, err := jwt.ParseWithClaims(s, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(c.Secret), nil
 	})
-	// The parse with claims will always return an error, but won't always be
-	// valid because it could be null.
-	if err != nil || !t.Valid {
-		return nil, err
+	if err == nil {
+		// If a token is valid, return the audience.
+		if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
+			if claims.ExpiresAt == 0 {
+				return "", ErrExpirationInvalid
+			} else if claims.NotBefore == 0 {
+				return "", ErrNotBeforeInvalid
+			} else if claims.IssuedAt == 0 {
+				return "", ErrIssuedAtInvalid
+			} else if len(claims.Audience) == 0 {
+				return "", ErrAudienceInvalid
+			}
+			return claims.Audience, nil
+		}
 	}
 
-	// Require an expiration date.
-	if accessClaims.ExpiresAt == 0 {
-		return nil, ErrMissingExpiration
+	// Handle the error.
+	if ve, ok := err.(*jwt.ValidationError); ok {
+		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+			return "", ErrMalformed
+		} else if ve.Errors&(jwt.ValidationErrorSignatureInvalid) != 0 {
+			return "", ErrSignatureInvalid
+		} else if ve.Errors&(jwt.ValidationErrorExpired) != 0 {
+			return "", ErrExpired
+		} else if ve.Errors&(jwt.ValidationErrorNotValidYet) != 0 {
+			return "", ErrNotValidYet
+		}
 	}
 
-	// Update the token expiration.
-	accessTokenExpiry := p.Clock.Now().Add(p.AccessTokenDuration)
-	accessClaims.ExpiresAt = accessTokenExpiry.Unix()
-
-	// Create the token.
-	accToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessClaims)
-
-	// Sign the token with our secret.
-	aToken, err := accToken.SignedString(*p.PrivateKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return &AuthToken{Token: aToken, Expiry: accessTokenExpiry}, nil
-}
-
-// GenerateTokens will generate the access token and refresh token.
-func (p *JWTAuth) GenerateTokens(user *User) (accessToken *AuthToken, refreshToken *AuthToken, err error) {
-	// Prevent crashing from the clock.
-	if p.Clock == nil {
-		return nil, nil, ErrBadClock
-	}
-
-	// Don't allow an empty secret.
-	if p.PrivateKey == nil || *p.PrivateKey == nil || len(*p.PrivateKey) == 0 {
-		return nil, nil, ErrBadSecret
-	}
-
-	// Create a clock to use.
-	clock := p.Clock.Now()
-
-	// Create a map to store our claims.
-	accessClaims := CustomClaims{}
-	accessClaims.UserID = user.ID
-	accessTokenExpiry := clock.Add(p.AccessTokenDuration)
-	accessClaims.ExpiresAt = accessTokenExpiry.Unix()
-
-	// Create the token.
-	aToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessClaims)
-
-	// Sign the token with our secret.
-	accToken, err := aToken.SignedString(*p.PrivateKey)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// Create a map to store our claims.
-	refreshClaims := CustomClaims{}
-	refreshClaims.UserID = user.ID
-	refreshTokenExpiry := clock.Add(p.RefreshTokenDuration)
-	refreshClaims.ExpiresAt = refreshTokenExpiry.Unix()
-
-	// Create the token.
-	rToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims)
-
-	// Sign the token with our secret.
-	refToken, err := rToken.SignedString(*p.PrivateKey)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return &AuthToken{Token: accToken, Expiry: accessTokenExpiry},
-		&AuthToken{Token: refToken, Expiry: refreshTokenExpiry}, nil
+	return "", err
 }

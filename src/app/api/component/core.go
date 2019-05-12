@@ -16,12 +16,13 @@ type Core struct {
 	Q        iface.IQuery
 	Bind     iface.IBind
 	Response iface.IResponse
+	Token    iface.IToken
 	Password iface.IPassword
 }
 
 // NewCore returs a core for all the endpoints.
 func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery,
-	b iface.IBind, resp iface.IResponse, p iface.IPassword) Core {
+	b iface.IBind, resp iface.IResponse, token iface.IToken, p iface.IPassword) Core {
 	return Core{
 		Log:      l,
 		Router:   r,
@@ -29,6 +30,7 @@ func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery,
 		Q:        q,
 		Bind:     b,
 		Response: resp,
+		Token:    token,
 		Password: p,
 	}
 }
