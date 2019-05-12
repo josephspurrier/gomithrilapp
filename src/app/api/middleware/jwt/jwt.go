@@ -39,11 +39,7 @@ func (c *Config) Handler(next http.Handler) http.Handler {
 				r := new(model.UnauthorizedResponse)
 				r.Body.Status = http.StatusText(http.StatusUnauthorized)
 				r.Body.Message = "authorization token is missing"
-				err := json.NewEncoder(w).Encode(r.Body)
-				if err != nil {
-					w.Write([]byte(`{"status":"Internal Server Error","message":"problem encoding JSON"}`))
-					return
-				}
+				_ = json.NewEncoder(w).Encode(r.Body)
 				return
 			}
 
@@ -55,11 +51,7 @@ func (c *Config) Handler(next http.Handler) http.Handler {
 				r := new(model.UnauthorizedResponse)
 				r.Body.Status = http.StatusText(http.StatusUnauthorized)
 				r.Body.Message = "authorization token is invalid"
-				err := json.NewEncoder(w).Encode(r.Body)
-				if err != nil {
-					w.Write([]byte(`{"status":"Internal Server Error","message":"problem encoding JSON"}`))
-					return
-				}
+				_ = json.NewEncoder(w).Encode(r.Body)
 				return
 			}
 		}
