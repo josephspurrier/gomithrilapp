@@ -16,9 +16,9 @@ type LoginEndpoint struct {
 }
 
 // SetupLogin .
-func SetupLogin(core Core) {
+func SetupLogin(c Core) {
 	p := new(LoginEndpoint)
-	p.Core = core
+	p.Core = c
 
 	p.Router.Post("/v1/login", p.Login)
 }

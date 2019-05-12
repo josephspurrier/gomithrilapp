@@ -3,12 +3,12 @@ package store
 import (
 	"time"
 
-	"app/api/iface"
+	"app/api"
 	"app/api/pkg/securegen"
 )
 
 // NewUser returns a new query object.
-func NewUser(db iface.IDatabase, q iface.IQuery) *User {
+func NewUser(db api.IDatabase, q api.IQuery) *User {
 	return &User{
 		IQuery: q,
 		db:     db,
@@ -17,8 +17,8 @@ func NewUser(db iface.IDatabase, q iface.IQuery) *User {
 
 // User is a user of the system.
 type User struct {
-	iface.IQuery
-	db iface.IDatabase
+	api.IQuery
+	db api.IDatabase
 
 	ID        string     `db:"id"`
 	FirstName string     `db:"first_name"`

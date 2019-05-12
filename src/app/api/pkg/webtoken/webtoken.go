@@ -2,10 +2,8 @@ package webtoken
 
 import (
 	"crypto/rand"
-	"encoding/base64"
 	"errors"
 	"fmt"
-	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -36,7 +34,7 @@ var (
 type SecretKey []byte
 
 // UnmarshalJSON will unmarshal the value from a base64 encoded value.
-func (k *SecretKey) UnmarshalJSON(b []byte) error {
+/*func (k *SecretKey) UnmarshalJSON(b []byte) error {
 	unquoted, err := strconv.Unquote(string(b))
 	if err != nil {
 		return nil
@@ -48,19 +46,19 @@ func (k *SecretKey) UnmarshalJSON(b []byte) error {
 	}
 	*k = SecretKey(dec)
 	return err
-}
+}*/
 
 // Configuration contains the JWT dependencies.
 type Configuration struct {
 	clock  IClock
-	Secret SecretKey `json:"Secret"`
+	secret SecretKey
 }
 
 // New creates a new JWT configuration.
 func New(secret []byte) *Configuration {
 	return &Configuration{
 		clock:  new(clock),
-		Secret: secret,
+		secret: secret,
 	}
 }
 
@@ -83,7 +81,7 @@ func randomID() (string, error) {
 // Generate will generate a JWT.
 func (c *Configuration) Generate(userID string, duration time.Duration) (string, error) {
 	// Ensure a secret is present.
-	if len(c.Secret) < 32 {
+	if len(c.secret) < 32 {
 		return "", ErrSecretTooShort
 	}
 
@@ -109,13 +107,13 @@ func (c *Configuration) Generate(userID string, duration time.Duration) (string,
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Signe the token.
-	return token.SignedString([]byte(c.Secret))
+	return token.SignedString([]byte(c.secret))
 }
 
 // Verify will ensure a JWT is valid.
 func (c *Configuration) Verify(s string) (string, error) {
 	token, err := jwt.ParseWithClaims(s, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(c.Secret), nil
+		return []byte(c.secret), nil
 	})
 	if err == nil {
 		// If a token is valid, return the audience.
@@ -147,4 +145,9 @@ func (c *Configuration) Verify(s string) (string, error) {
 	}
 
 	return "", err
+}
+
+// Secret will return the secret.
+func (c *Configuration) Secret() []byte {
+	return c.secret
 }

@@ -1,7 +1,7 @@
 package component
 
 import (
-	"app/api/iface"
+	"app/api"
 	"app/api/pkg/logger"
 	"app/api/pkg/router"
 
@@ -12,17 +12,17 @@ import (
 type Core struct {
 	Log      logger.ILog
 	Router   *router.Mux
-	DB       iface.IDatabase
-	Q        iface.IQuery
-	Bind     iface.IBind
-	Response iface.IResponse
-	Token    iface.IToken
-	Password iface.IPassword
+	DB       api.IDatabase
+	Q        api.IQuery
+	Bind     api.IBind
+	Response api.IResponse
+	Token    api.IToken
+	Password api.IPassword
 }
 
 // NewCore returs a core for all the endpoints.
-func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q iface.IQuery,
-	b iface.IBind, resp iface.IResponse, token iface.IToken, p iface.IPassword) Core {
+func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q api.IQuery,
+	b api.IBind, resp api.IResponse, token api.IToken, p api.IPassword) Core {
 	return Core{
 		Log:      l,
 		Router:   r,

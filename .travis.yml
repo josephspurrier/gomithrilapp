@@ -30,7 +30,7 @@ before_install:
   - swagger validate ./swagger.json
   #- go get github.com/snikch/goodman/cmd/goodman
   #- npm install -g dredd@5.1.11
-  - go build -o ./cmd/api/api app/api
+  - go build -o ./cmd/api/api app/api/cmd/api
   #- go build -o ./cmd/hooks/hooks app/api/cmd/hooks
   #- cp testdata/config.json ./config.json
 
