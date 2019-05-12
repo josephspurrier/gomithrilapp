@@ -27,51 +27,36 @@ func (b *Binder) Validate(s interface{}) error {
 	return b.validator.Struct(s)
 }
 
-// JSONUnmarshal will perform an unmarshal on an interface using JSON.
-func (b *Binder) JSONUnmarshal(iface interface{}, r *http.Request) (err error) {
+// Unmarshal will perform an unmarshal on an interface using: form or JSON.
+func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 	// Check for errors.
 	v := reflect.ValueOf(iface)
 	if v.Kind() != reflect.Ptr {
 		return errors.New("must pass a pointer, not a value")
-	}
-
-	// Decode to a map.
-	m := make(map[string]interface{})
-	err = json.NewDecoder(r.Body).Decode(&m)
-	defer r.Body.Close()
-	if err != nil {
-		return
-	}
-
-	// Convert to JSON.
-	var data []byte
-	data, err = json.Marshal(m)
-	if err != nil {
-		return
-	}
-
-	// Unmarshal to the interface from JSON.
-	return json.Unmarshal(data, &iface)
-}
-
-// FormUnmarshal will perform an unmarshal on an interface using a form.
-func (b *Binder) FormUnmarshal(iface interface{}, r *http.Request) (err error) {
-	// Check for errors.
-	v := reflect.ValueOf(iface)
-	if v.Kind() != reflect.Ptr {
-		return errors.New("must pass a pointer, not a value")
-	}
-
-	// Parse the form.
-	err = r.ParseForm()
-	if err != nil {
-		return err
 	}
 
 	// Load the map.
 	m := make(map[string]interface{})
-	for k, vv := range r.Form {
-		m[k] = vv[0]
+
+	// Try to auto detect data type based on on the header.
+	switch r.Header.Get("Content-Type") {
+	case "", "application/x-www-form-urlencoded":
+		// Parse the form.
+		err = r.ParseForm()
+		if err != nil {
+			return err
+		}
+
+		for k, vv := range r.Form {
+			m[k] = vv[0]
+		}
+	case "application/json":
+		// Decode to the interface.
+		err = json.NewDecoder(r.Body).Decode(&m)
+		r.Body.Close()
+		if err != nil {
+			return
+		}
 	}
 
 	// Loop through each field to extract the URL parameter.

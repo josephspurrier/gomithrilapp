@@ -127,7 +127,12 @@ export default {
       let success = false
 
       // Send a login request to the server.
-      HTTP.post(`v1/register`, this.login)
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      HTTP.post(`v1/register`, this.login, headers)
         .then(response => {
           if (response.data.status === 'Created') {
             f.success('Registered.')

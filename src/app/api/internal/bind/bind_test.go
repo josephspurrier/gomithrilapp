@@ -1,6 +1,8 @@
 package bind_test
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -13,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSuccess(t *testing.T) {
+func TestFormSuccess(t *testing.T) {
 	called := false
 
 	mux := router.New()
@@ -37,7 +39,7 @@ func TestSuccess(t *testing.T) {
 			req := new(request)
 			b := bind.New()
 
-			assert.Nil(t, b.FormUnmarshal(&req, r))
+			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
 
 			assert.Equal(t, "10", req.UserID)
@@ -58,7 +60,7 @@ func TestSuccess(t *testing.T) {
 	assert.Equal(t, true, called)
 }
 
-func TestMissingPointer(t *testing.T) {
+func TestFormNil(t *testing.T) {
 	called := false
 
 	mux := router.New()
@@ -82,7 +84,47 @@ func TestMissingPointer(t *testing.T) {
 			req := request{}
 			b := bind.New()
 
-			assert.NotNil(t, b.FormUnmarshal(req, r))
+			assert.NotNil(t, b.Unmarshal(req, r))
+
+			assert.Equal(t, "", req.UserID)
+			assert.Equal(t, "", req.FirstName)
+			assert.Equal(t, "", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	r := httptest.NewRequest("POST", "/user/10", nil)
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
+func TestFormMissingPointer(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: path
+				UserID string `json:"user_id" validate:"required"`
+				// in: formData
+				// Required: true
+				FirstName string `json:"first_name" validate:"required"`
+				// in: formData
+				// Required: true
+				LastName string `json:"last_name" validate:"required"`
+			}
+
+			req := request{}
+			b := bind.New()
+
+			assert.NotNil(t, b.Unmarshal(req, r))
 
 			assert.Equal(t, "", req.UserID)
 			assert.Equal(t, "", req.FirstName)
@@ -100,4 +142,161 @@ func TestMissingPointer(t *testing.T) {
 	mux.ServeHTTP(w, r)
 
 	assert.Equal(t, true, called)
+}
+
+func TestJSONSuccess(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: body
+				Body struct {
+					// in: path
+					UserID string `json:"user_id" validate:"required"`
+					// Required: true
+					FirstName string `json:"first_name" validate:"required"`
+					// Required: true
+					LastName string `json:"last_name" validate:"required"`
+				}
+			}
+
+			fullRequest := new(request)
+			req := fullRequest.Body
+
+			b := bind.New()
+
+			assert.Nil(t, b.Unmarshal(&req, r))
+			assert.Nil(t, b.Validate(req))
+
+			assert.Equal(t, "10", req.UserID)
+			assert.Equal(t, "john", req.FirstName)
+			assert.Equal(t, "smith", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	form := url.Values{}
+	form.Add("first_name", "john")
+	form.Add("last_name", "smith")
+
+	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(toJSON(form)))
+	r.Header.Add("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
+func TestJSONFailure(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: body
+				Body struct {
+					// in: path
+					UserID string `json:"user_id" validate:"required"`
+					// Required: true
+					FirstName string `json:"first_name" validate:"required"`
+					// Required: true
+					LastName string `json:"last_name" validate:"required"`
+				}
+			}
+
+			fullRequest := new(request)
+			req := fullRequest.Body
+
+			b := bind.New()
+
+			assert.NotNil(t, b.Unmarshal(req, r))
+
+			assert.Equal(t, "", req.UserID)
+			assert.Equal(t, "", req.FirstName)
+			assert.Equal(t, "", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	form := url.Values{}
+	form.Add("first_name", "john")
+	form.Add("last_name", "smith")
+
+	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(form.Encode()))
+	r.Header.Add("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
+func TestJSONFailureNil(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: body
+				Body struct {
+					// in: path
+					UserID string `json:"user_id" validate:"required"`
+					// Required: true
+					FirstName string `json:"first_name" validate:"required"`
+					// Required: true
+					LastName string `json:"last_name" validate:"required"`
+				}
+			}
+
+			fullRequest := new(request)
+			req := fullRequest.Body
+
+			b := bind.New()
+
+			assert.NotNil(t, b.Unmarshal(req, r))
+
+			assert.Equal(t, "", req.UserID)
+			assert.Equal(t, "", req.FirstName)
+			assert.Equal(t, "", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	r := httptest.NewRequest("POST", "/user/10", nil)
+	r.Header.Add("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
+func toJSON(values url.Values) string {
+	m := make(map[string]string)
+
+	for k, v := range values {
+		if len(v) > 0 {
+			m[k] = v[0]
+		} else {
+			m[k] = ""
+		}
+	}
+
+	js, err := json.Marshal(m)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(js)
 }
