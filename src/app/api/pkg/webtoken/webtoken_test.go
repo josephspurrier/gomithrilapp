@@ -156,7 +156,7 @@ func TestGoodGenerateVerifyTokenReal(t *testing.T) {
 		AccessTokenDuration:  time.Hour * 2,
 	}
 
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjExMzczMjg0NDUsInVzZXJJRCI6MTAwfQ.ShRjs6DHypHAMf-H1a4opeZ3aEF37quOpLMnfxAXUlU")
+	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjExMzczMjg0NDUsInVzZXJJRCI6IjEwMCJ9.R6qxT1sZbpprJYnMvlhoIC1K5Fljc68WBgkBp3fW7HY")
 	assert.Equal(t, "100", s)
 	assert.Equal(t, nil, err)
 }
@@ -174,11 +174,11 @@ func TestMissingExpiration(t *testing.T) {
 		AccessTokenDuration:  time.Hour * 2,
 	}
 
-	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6Mn0.rN-m8KD3oLK_-kW3vKaialQ06Fy_k_d95cPQJyalTJE")
+	s, err := j.Verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6IjIifQ.RKV01hVEDOFuMsj-aXzMYpLduXimU6QesUXtAFLTROA")
 	assert.Equal(t, "", s)
 	assert.Equal(t, webtoken.ErrMissingExpiration, err)
 
-	r, err := j.RefreshAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6Mn0.rN-m8KD3oLK_-kW3vKaialQ06Fy_k_d95cPQJyalTJE")
+	r, err := j.RefreshAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInVzZXJJRCI6IjIifQ.RKV01hVEDOFuMsj-aXzMYpLduXimU6QesUXtAFLTROA")
 	assert.Nil(t, r)
 	assert.Equal(t, webtoken.ErrMissingExpiration, err)
 }
