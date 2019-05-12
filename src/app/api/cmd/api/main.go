@@ -1,28 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
 
 	"app/api/component"
-	"app/api/internal/bind"
-	"app/api/internal/response"
 	"app/api/middleware"
-	"app/api/model"
-	"app/api/pkg/database"
 	"app/api/pkg/logger"
-	"app/api/pkg/passhash"
-	"app/api/pkg/query"
-	"app/api/pkg/router"
-	"app/api/pkg/webtoken"
-
-	"github.com/jmoiron/sqlx"
-	"github.com/josephspurrier/rove"
-	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
 
 func init() {
@@ -33,32 +19,6 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-/*unc main() {
-	// Create the logger.
-	l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
-
-	// Get the config file name from the first argument.
-	configFile := "config.json"
-	if len(os.Args) > 1 {
-		configFile = os.Args[1]
-	}
-
-	// Load the configuration file.
-	config := new(webapi.AppConfig)
-	err := jsonconfig.Load(configFile, config)
-	if err != nil {
-		l.Fatalf("%v", err)
-	}
-
-	// Set up the service, routes, and the handlers.
-	core := webapi.Services(config, l)
-	mux := webapi.Routes(core)
-	httpServer, httpsServer := webapi.Handlers(config, l, mux)
-
-	// Start the listeners based on the config.
-	config.Server.Run(httpServer, httpsServer, l)
-}*/
-
 func main() {
 	port := "8081"
 
@@ -66,10 +26,10 @@ func main() {
 	//l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
 	l := logger.New(log.New(os.Stderr, "", log.Lshortfile))
 
-	core := Services(l)
+	core := component.Services(l)
 
 	// Load the routes.
-	LoadRoutes(core)
+	component.LoadRoutes(core)
 
 	l.Printf("Server started.")
 	err := http.ListenAndServe(":"+port, middleware.Wrap(core.Router, l, core.Token.Secret()))
@@ -77,166 +37,3 @@ func main() {
 		l.Printf(err.Error())
 	}
 }
-
-// Services will set up the production services.
-func Services(l logger.ILog) component.Core {
-	db, err := LoadMigrations(l)
-	if err != nil {
-		l.Fatalf(err.Error())
-	}
-
-	// Configure the services.
-	r := router.New()
-	db2 := database.New(db)
-	q := query.New(db2)
-	p := passhash.New()
-	resp := response.New()
-	b := bind.New()
-
-	// Setup middleware.
-	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
-	t := webtoken.New([]byte(secret))
-
-	return component.NewCore(l, r, db, q, b, resp, t, p)
-}
-
-// LoadRoutes will load the endpoints.
-func LoadRoutes(core component.Core) {
-	component.SetupStatic(core)
-	component.SetupLogin(core)
-	component.SetupRegister(core)
-
-	// Set up the 404 page.
-
-	core.Router.Instance().NotFound = router.Handler(
-		func(w http.ResponseWriter, r *http.Request) (int, error) {
-			return http.StatusNotFound, nil
-		})
-
-	// Set the handling of all responses.
-	router.ServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, err error) {
-		// Handle only errors.
-		if status >= 400 {
-			resp := new(model.GenericResponse)
-			resp.Body.Status = http.StatusText(status)
-			if err != nil {
-				resp.Body.Message = err.Error()
-			}
-
-			// Write the content.
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(status)
-			err := json.NewEncoder(w).Encode(resp.Body)
-			if err != nil {
-				w.Write([]byte(`{"status":"Internal Server Error","message":"problem encoding JSON"}`))
-				return
-			}
-		}
-
-		// Display server errors.
-		if status >= 500 {
-			if err != nil {
-				core.Log.Printf("%v", err)
-			}
-		}
-	}
-}
-
-// LoadMigrations will run the database migrations.
-func LoadMigrations(l logger.ILog) (*sqlx.DB, error) {
-	// If the host env var is set, use it.
-	host := os.Getenv("MYSQL_HOST")
-	if len(host) == 0 {
-		host = "127.0.0.1"
-	}
-
-	// If the password env var is set, use it.
-	password := os.Getenv("MYSQL_ROOT_PASSWORD")
-	if len(password) == 0 {
-		password = "password"
-	}
-
-	// Set the database connection information.
-	con := &mysql.Connection{
-		Hostname:  host,
-		Username:  "root",
-		Password:  password,
-		Name:      "main",
-		Port:      3306,
-		Parameter: "collation=utf8mb4_unicode_ci&parseTime=true&multiStatements=true",
-	}
-
-	// Connect to the database.
-	db, err := mysql.New(con)
-	if err != nil {
-		// Attempt to connect without the database name.
-		d, err := con.Connect(false)
-		if err != nil {
-			return nil, err
-		}
-
-		// Create the database.
-		_, err = d.Query(fmt.Sprintf(`CREATE DATABASE IF NOT EXISTS %v DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;`, con.Name))
-		if err != nil {
-			return nil, err
-		}
-		l.Printf("Database created.")
-
-		// Attempt to reconnect with the database name.
-		db, err = mysql.New(con)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	// Perform all migrations against the database.
-	r := rove.NewChangesetMigration(db, changesets)
-	r.Verbose = true
-	return db.DB, r.Migrate(0)
-}
-
-var changesets = `
---changeset josephspurrier:1
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
-CREATE TABLE user_status (
-    id TINYINT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
-    
-    status VARCHAR(25) NOT NULL,
-    
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-    
-    PRIMARY KEY (id)
-);
---rollback DROP TABLE user_status;
-
---changeset josephspurrier:2
-INSERT INTO user_status (id, status, created_at, updated_at, deleted) VALUES
-(1, 'active',   CURRENT_TIMESTAMP,  CURRENT_TIMESTAMP,  0),
-(2, 'inactive', CURRENT_TIMESTAMP,  CURRENT_TIMESTAMP,  0);
---rollback TRUNCATE TABLE user_status;
-
---changeset josephspurrier:3
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
-CREATE TABLE user (
-    id VARCHAR(36) NOT NULL,
-    
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password CHAR(60) NOT NULL,
-    
-    status_id TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP DEFAULT 0,
-    
-    UNIQUE KEY (email),
-    CONSTRAINT f_user_status FOREIGN KEY (status_id) REFERENCES user_status (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    
-    PRIMARY KEY (id)
-);
---rollback DROP TABLE user;
-`

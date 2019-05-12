@@ -4,8 +4,6 @@ import (
 	"app/api"
 	"app/api/pkg/logger"
 	"app/api/pkg/router"
-
-	"github.com/jmoiron/sqlx"
 )
 
 // Core represents the core for all the endpoints.
@@ -21,7 +19,7 @@ type Core struct {
 }
 
 // NewCore returs a core for all the endpoints.
-func NewCore(l logger.ILog, r *router.Mux, db *sqlx.DB, q api.IQuery,
+func NewCore(l logger.ILog, r *router.Mux, db api.IDatabase, q api.IQuery,
 	b api.IBind, resp api.IResponse, token api.IToken, p api.IPassword) Core {
 	return Core{
 		Log:      l,

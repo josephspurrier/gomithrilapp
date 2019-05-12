@@ -7,15 +7,17 @@ import (
 )
 
 // New returns a new database wrapper.
-func New(db *sqlx.DB) *DBW {
+func New(db *sqlx.DB, name string) *DBW {
 	return &DBW{
-		db: db,
+		name: name,
+		db:   db,
 	}
 }
 
 // DBW is a database wrapper that provides helpful utilities.
 type DBW struct {
-	db *sqlx.DB
+	name string
+	db   *sqlx.DB
 }
 
 // Select using this DB.
@@ -40,6 +42,11 @@ func (d *DBW) Exec(query string, args ...interface{}) (sql.Result, error) {
 // QueryRowScan returns a single result.
 func (d *DBW) QueryRowScan(dest interface{}, query string, args ...interface{}) error {
 	return d.db.QueryRow(query, args...).Scan(dest)
+}
+
+// Name returns the database name.
+func (d *DBW) Name() string {
+	return d.name
 }
 
 /*

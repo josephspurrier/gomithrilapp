@@ -2,7 +2,6 @@ package component
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
@@ -76,13 +75,10 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	m.Body.Status = http.StatusText(http.StatusOK)
 
 	// Generate the access tokens.
-	at, err := p.Token.Generate(ID, 8*time.Hour)
+	m.Body.Token, err = p.Token.Generate(ID, 8*time.Hour)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-
-	m.Body.Token = at
-	log.Println(at)
 
 	return p.Response.JSON(w, m.Body)
 }
