@@ -6,7 +6,6 @@ services:
   - mysql
 
 go:
-  - "1.8"
   - "1.9"
   - "1.10"
   - "tip"
@@ -16,7 +15,7 @@ cache:
     - $(npm config get prefix)/lib/node_modules
 
 before_install:
-  - mysql -e 'CREATE DATABASE main;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'
   - export GOPATH=$HOME/gopath/src/project-root
   - export PATH=$HOME/gopath/src/project-root/bin:$PATH
   - cd $GOPATH/src/app/api

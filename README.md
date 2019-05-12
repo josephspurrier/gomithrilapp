@@ -10,7 +10,9 @@ This is an application that uses Vue on the frontend (UI) and Go on the backend 
 
 ## Current Versions
 
-These are the current versions:
+You should use Go 1.9 or newer.
+
+These are the current versions on the front-end components:
 
 - Nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
 - Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
