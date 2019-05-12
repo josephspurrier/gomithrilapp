@@ -1,8 +1,6 @@
 package bind_test
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -10,6 +8,7 @@ import (
 	"testing"
 
 	"app/api/internal/bind"
+	"app/api/internal/testrequest"
 	"app/api/pkg/router"
 
 	"github.com/stretchr/testify/assert"
@@ -183,7 +182,7 @@ func TestJSONSuccess(t *testing.T) {
 	form.Add("first_name", "john")
 	form.Add("last_name", "smith")
 
-	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(toJSON(form)))
+	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(testrequest.ToJSON(form)))
 	r.Header.Add("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, r)
@@ -277,23 +276,4 @@ func TestJSONFailureNil(t *testing.T) {
 	mux.ServeHTTP(w, r)
 
 	assert.Equal(t, true, called)
-}
-
-func toJSON(values url.Values) string {
-	m := make(map[string]string)
-
-	for k, v := range values {
-		if len(v) > 0 {
-			m[k] = v[0]
-		} else {
-			m[k] = ""
-		}
-	}
-
-	js, err := json.Marshal(m)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return string(js)
 }

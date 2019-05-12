@@ -2,8 +2,14 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/jmoiron/sqlx"
+)
+
+var (
+	// ErrNoDatabase is when there is no database connection.
+	ErrNoDatabase = errors.New("no database connection is set")
 )
 
 // New returns a new database wrapper.
@@ -23,6 +29,9 @@ type DBW struct {
 // Select using this DB.
 // Any placeholder parameters are replaced with supplied args.
 func (d *DBW) Select(dest interface{}, query string, args ...interface{}) error {
+	if d == nil {
+		return ErrNoDatabase
+	}
 	return d.db.Select(dest, query, args...)
 }
 
@@ -30,17 +39,26 @@ func (d *DBW) Select(dest interface{}, query string, args ...interface{}) error 
 // Any placeholder parameters are replaced with supplied args.
 // An error is returned if the result set is empty.
 func (d *DBW) Get(dest interface{}, query string, args ...interface{}) error {
+	if d == nil {
+		return ErrNoDatabase
+	}
 	return d.db.Get(dest, query, args...)
 }
 
 // Exec executes a query without returning any rows.
 // The args are for any placeholder parameters in the query.
 func (d *DBW) Exec(query string, args ...interface{}) (sql.Result, error) {
+	if d == nil {
+		return nil, ErrNoDatabase
+	}
 	return d.db.Exec(query, args...)
 }
 
 // QueryRowScan returns a single result.
 func (d *DBW) QueryRowScan(dest interface{}, query string, args ...interface{}) error {
+	if d == nil {
+		return ErrNoDatabase
+	}
 	return d.db.QueryRow(query, args...).Scan(dest)
 }
 
