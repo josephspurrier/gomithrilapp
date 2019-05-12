@@ -1,6 +1,6 @@
 # nuxtapp
 
-> My stunning Nuxt.js project
+> Application in Vue and Go.
 
 ## Build Setup
 

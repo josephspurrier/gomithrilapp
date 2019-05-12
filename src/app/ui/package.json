@@ -1,7 +1,7 @@
 {
   "name": "nuxtapp",
   "version": "1.0.0",
-  "description": "My stunning Nuxt.js project",
+  "description": "Application in Vue and Go.",
   "author": "Joseph Spurrier",
   "private": true,
   "scripts": {
