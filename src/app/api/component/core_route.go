@@ -15,7 +15,6 @@ func LoadRoutes(core Core) {
 	SetupRegister(core)
 
 	// Set up the 404 page.
-
 	core.Router.Instance().NotFound = router.Handler(
 		func(w http.ResponseWriter, r *http.Request) (int, error) {
 			return http.StatusNotFound, nil

@@ -40,22 +40,32 @@ func Services(l logger.ILog) Core {
 		Parameter: "collation=utf8mb4_unicode_ci&parseTime=true&multiStatements=true",
 	}
 
-	db, err := database.Migrate(l, con, api.Changesets)
+	// Migration the database.
+	dbx, err := database.Migrate(l, con, api.Changesets)
 	if err != nil {
 		l.Fatalf(err.Error())
 	}
 
-	// Configure the services.
-	r := router.New()
-	db2 := database.New(db, con.Name)
-	q := query.New(db2)
-	p := passhash.New()
-	resp := response.New()
-	b := bind.New()
-
-	// Setup middleware.
+	// FIXME: This needs to be loaded from a config.
 	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
-	t := webtoken.New([]byte(secret))
 
-	return NewCore(l, r, db2, q, b, resp, t, p)
+	// Configure the services.
+	mux := router.New()
+	db := database.New(dbx, con.Name)
+	q := query.New(db)
+	binder := bind.New()
+	resp := response.New()
+	token := webtoken.New([]byte(secret))
+	pass := passhash.New()
+
+	// Return a new core.
+	return NewCore(
+		l,
+		mux,
+		db,
+		q,
+		binder,
+		resp,
+		token,
+		pass)
 }

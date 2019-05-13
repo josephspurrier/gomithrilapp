@@ -26,11 +26,13 @@ func main() {
 	//l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
 	l := logger.New(log.New(os.Stderr, "", log.Lshortfile))
 
+	// Setup the services.
 	core := component.Services(l)
 
 	// Load the routes.
 	component.LoadRoutes(core)
 
+	// Start the web server.
 	l.Printf("Server started.")
 	err := http.ListenAndServe(":"+port, middleware.Wrap(core.Router, l, core.Token.Secret()))
 	if err != nil {

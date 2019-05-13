@@ -11,7 +11,7 @@ import (
 	"app/api/pkg/router"
 )
 
-// CoreMock contains all the mocked dependencies.
+// CoreMock contains all the configurable dependencies.
 type CoreMock struct {
 	Log      *testutil.MockLogger
 	DB       api.IDatabase
@@ -24,24 +24,36 @@ type CoreMock struct {
 
 // NewCoreMock returns all mocked dependencies.
 func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
-	ml := new(testutil.MockLogger)
-	mq := query.New(db)
-	mt := new(testutil.MockToken)
-	resp := response.New()
+	// Set up the dependencies.
+	mockLogger := new(testutil.MockLogger)
+	mux := router.New()
+	mockQuery := query.New(db)
 	binder := bind.New()
-	p := passhash.New()
+	resp := response.New()
+	mockToken := new(testutil.MockToken)
+	pass := passhash.New()
 
-	r := router.New()
+	// Set up the core.
+	core := NewCore(
+		mockLogger,
+		mux,
+		db,
+		mockQuery,
+		binder,
+		resp,
+		mockToken,
+		pass)
 
-	core := NewCore(ml, r, db, mq, binder, resp, mt, p)
+	// Add all the configurable mocks.
 	m := &CoreMock{
-		Log:      ml,
+		Log:      mockLogger,
 		DB:       db,
-		Q:        mq,
+		Q:        mockQuery,
 		Bind:     binder,
 		Response: resp,
-		Token:    mt,
-		Password: p,
+		Token:    mockToken,
+		Password: pass,
 	}
+
 	return core, m
 }

@@ -18,17 +18,23 @@ type Core struct {
 	Password api.IPassword
 }
 
-// NewCore returs a core for all the endpoints.
-func NewCore(l logger.ILog, r *router.Mux, db api.IDatabase, q api.IQuery,
-	b api.IBind, resp api.IResponse, token api.IToken, p api.IPassword) Core {
+// NewCore returns a core for all the endpoints.
+func NewCore(l logger.ILog,
+	mux *router.Mux,
+	db api.IDatabase,
+	query api.IQuery,
+	binder api.IBind,
+	resp api.IResponse,
+	token api.IToken,
+	pass api.IPassword) Core {
 	return Core{
 		Log:      l,
-		Router:   r,
+		Router:   mux,
 		DB:       db,
-		Q:        q,
-		Bind:     b,
+		Q:        query,
+		Bind:     binder,
 		Response: resp,
 		Token:    token,
-		Password: p,
+		Password: pass,
 	}
 }

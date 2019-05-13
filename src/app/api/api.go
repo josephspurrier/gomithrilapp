@@ -24,12 +24,3 @@
 //
 // swagger:meta
 package api
-
-import (
-	"log"
-)
-
-func init() {
-	// Verbose logging with file name and line number.
-	log.SetFlags(log.Lshortfile)
-}
