@@ -1,10 +1,8 @@
-package logger_test
+package logger
 
 import (
 	"os"
 	"testing"
-
-	"app/api/pkg/logger"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -32,7 +30,7 @@ func (l *mockLogger) Printf(format string, v ...interface{}) {
 }
 func TestPrintf(t *testing.T) {
 	m := new(mockLogger)
-	l := logger.New(m)
+	l := New(m)
 
 	var arr []interface{}
 	arr = append(arr, "A")
@@ -43,7 +41,7 @@ func TestPrintf(t *testing.T) {
 	assert.Equal(t, true, m.printfCalled)
 	assert.Equal(t, arr, m.printfV)
 
-	// Clear the logger.
+	// Clear the
 	m = new(mockLogger)
 
 	os.Setenv("WEBAPI_LOG_LEVEL", "none")
@@ -55,7 +53,7 @@ func TestPrintf(t *testing.T) {
 
 func TestFatalf(t *testing.T) {
 	m := new(mockLogger)
-	l := logger.New(m)
+	l := New(m)
 
 	var arr []interface{}
 	arr = append(arr, "A")
@@ -66,7 +64,7 @@ func TestFatalf(t *testing.T) {
 	assert.Equal(t, true, m.fatalfCalled)
 	assert.Equal(t, arr, m.fatalfV)
 
-	// Clear the logger.
+	// Clear the
 	m = new(mockLogger)
 
 	os.Setenv("WEBAPI_LOG_LEVEL", "none")

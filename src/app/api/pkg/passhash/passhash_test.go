@@ -1,30 +1,28 @@
-package passhash_test
+package passhash
 
 import (
 	"testing"
-
-	"app/api/pkg/passhash"
 
 	"github.com/stretchr/testify/assert"
 )
 
 // TestStringString tests string to string hash.
 func TestStringString(t *testing.T) {
-	ph := passhash.New()
+	ph := New()
 	plainText := "This is a test."
-	hash, err := ph.HashString(plainText)
+	hash, err := ph.Hash(plainText)
 	assert.Nil(t, err)
-	assert.True(t, ph.MatchString(hash, plainText))
+	assert.True(t, ph.Match(hash, plainText))
 
 	plainText2 := "This is a test2."
-	hash, err = ph.HashString(plainText2)
+	hash, err = ph.Hash(plainText2)
 	assert.Nil(t, err)
-	assert.False(t, ph.MatchString(hash, plainText))
+	assert.False(t, ph.Match(hash, plainText))
 }
 
 // TestByteByte tests byte to byte hash.
 func TestByteByte(t *testing.T) {
-	ph := passhash.New()
+	ph := New()
 	plainText := []byte("This is a test.")
 	hash, err := ph.HashBytes(plainText)
 	assert.Nil(t, err)
@@ -38,27 +36,27 @@ func TestByteByte(t *testing.T) {
 
 // TestStringByte tests string to byte hash.
 func TestStringByte(t *testing.T) {
-	ph := passhash.New()
+	ph := New()
 	plainText := "This is a test."
-	hash, err := ph.HashString(plainText)
+	hash, err := ph.Hash(plainText)
 	assert.Nil(t, err)
 	assert.True(t, ph.MatchBytes([]byte(hash), []byte(plainText)))
 }
 
 // TestByteString tests byte to string hash.
 func TestByteString(t *testing.T) {
-	ph := passhash.New()
+	ph := New()
 	plainText := []byte("This is a test.")
 	hash, err := ph.HashBytes(plainText)
 	assert.Nil(t, err)
-	assert.True(t, ph.MatchString(string(hash), string(plainText)))
+	assert.True(t, ph.Match(string(hash), string(plainText)))
 }
 
-// TestHashStringEmpty tests empty string which should pass fine.
-func TestHashStringEmpty(t *testing.T) {
-	ph := passhash.New()
+// TestHashEmpty tests empty string which should pass fine.
+func TestHashEmpty(t *testing.T) {
+	ph := New()
 	plainText := ""
-	hash, err := ph.HashString(plainText)
+	hash, err := ph.Hash(plainText)
 	assert.Nil(t, err)
-	assert.True(t, ph.MatchString(hash, plainText))
+	assert.True(t, ph.Match(hash, plainText))
 }

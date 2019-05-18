@@ -67,7 +67,7 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Encrypt the password.
-	password, err := p.Password.HashString(req.Password)
+	password, err := p.Password.Hash(req.Password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

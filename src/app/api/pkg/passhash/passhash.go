@@ -13,8 +13,8 @@ func New() *Passhash {
 // Passhash is a password hashing tool.
 type Passhash struct{}
 
-// HashString returns a hashed string and an error.
-func (p *Passhash) HashString(password string) (string, error) {
+// Hash returns a hashed string and an error.
+func (p *Passhash) Hash(password string) (string, error) {
 	key, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -33,8 +33,8 @@ func (p *Passhash) HashBytes(password []byte) ([]byte, error) {
 	return key, nil
 }
 
-// MatchString returns true if the hash matches the password.
-func (p *Passhash) MatchString(hash, password string) bool {
+// Match returns true if the hash matches the password.
+func (p *Passhash) Match(hash, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	if err == nil {
 		return true

@@ -2,6 +2,8 @@ package component
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -16,7 +18,7 @@ func SetupStatic(core Core) {
 	p.Core = core
 
 	p.Router.Get("/v1", p.IndexGET)
-	p.Router.Get("/static/*", p.StaticGET)
+	p.Router.Get("/static/...", p.StaticGET)
 }
 
 // IndexGET .
@@ -36,6 +38,10 @@ func (p StaticEndpoint) StaticGET(w http.ResponseWriter, r *http.Request) (int, 
 		return http.StatusNotFound, nil
 	}
 
-	http.ServeFile(w, r, r.URL.Path[1:])
+	// FIXME: This should be set with a variable since GOPATH won't exist in
+	// a production environment.
+	basepath := filepath.Join(os.Getenv("GOPATH"), "src/app/api")
+
+	http.ServeFile(w, r, filepath.Join(basepath, r.URL.Path[1:]))
 	return http.StatusOK, nil
 }

@@ -65,7 +65,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	user.FindOneByID(user, ID)
 
 	// Ensure the user's password matches.
-	if !p.Password.MatchString(user.Password, req.Password) {
+	if !p.Password.Match(user.Password, req.Password) {
 		return http.StatusBadRequest, errors.New("user not found (2)")
 	}
 

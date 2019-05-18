@@ -8,15 +8,12 @@ import (
 	"app/api/middleware/logrequest"
 )
 
-// *****************************************************************************
-// Middleware
-// *****************************************************************************
-
 // Wrap will return the http.Handler wrapped in middleware.
 func Wrap(h http.Handler, l logrequest.ILog, secret []byte) http.Handler {
 	// JWT whitelist.
 	whitelist := []string{
 		"GET /v1",
+		"GET /static/*",
 		"POST /v1/login",
 		"POST /v1/register",
 	}

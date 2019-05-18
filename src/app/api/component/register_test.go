@@ -1,12 +1,11 @@
 package component_test
 
 import (
-	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 	"testing"
-	"time"
 
 	"app/api/component"
 	"app/api/internal/testrequest"
@@ -18,13 +17,7 @@ import (
 
 func TestRegisterSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := component.NewCoreMock(db)
-
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
-		return enc, nil
-	}
+	core, _ := component.NewCoreMock(db)
 
 	// Register the user.
 	form := url.Values{}
@@ -125,4 +118,29 @@ func TestRegisterFailDatabase(t *testing.T) {
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}
+
+func TestRegisterFailHash(t *testing.T) {
+	db := testutil.LoadDatabase()
+	core, _ := component.NewCoreMock(db)
+
+	mpass := new(testutil.MockPasshash)
+	core.Password = mpass
+	mpass.HashError = errors.New("bad error")
+
+	// Register the user.
+	form := url.Values{}
+	form.Set("first_name", "a@a.com")
+	form.Set("last_name", "a@a.com")
+	form.Set("email", "a@a.com")
+	form.Set("password", "a")
+	w := testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+
+	// Verify the response.
+	r := new(model.InternalServerErrorResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	testutil.TeardownDatabase(db)
 }

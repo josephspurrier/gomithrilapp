@@ -23,8 +23,8 @@ type IDatabase interface {
 
 // IPassword provides password hashing.
 type IPassword interface {
-	HashString(password string) (string, error)
-	MatchString(hash, password string) bool
+	Hash(password string) (string, error)
+	Match(hash, password string) bool
 }
 
 // IQuery provides default queries.

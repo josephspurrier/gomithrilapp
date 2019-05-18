@@ -1,4 +1,4 @@
-package router_test
+package router
 
 import (
 	"bytes"
@@ -11,14 +11,12 @@ import (
 	"strings"
 	"testing"
 
-	"app/api/pkg/router"
-
 	"github.com/stretchr/testify/assert"
 )
 
 func TestParams(t *testing.T) {
-	mux := router.New()
-	mux.Get("/user/:name", router.Handler(
+	mux := New()
+	mux.Get("/user/:name", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
@@ -30,9 +28,9 @@ func TestParams(t *testing.T) {
 }
 
 func TestInstance(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
-	mux.Get("/user/:name", router.Handler(
+	mux.Get("/user/:name", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
@@ -45,12 +43,12 @@ func TestInstance(t *testing.T) {
 }
 
 func TestPostForm(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	form := url.Values{}
 	form.Add("username", "jsmith")
 
-	mux.Post("/user", router.Handler(
+	mux.Post("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			r.ParseForm()
 			assert.Equal(t, "jsmith", r.FormValue("username"))
@@ -64,14 +62,14 @@ func TestPostForm(t *testing.T) {
 }
 
 func TestPostJSON(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	j, err := json.Marshal(map[string]interface{}{
 		"username": "jsmith",
 	})
 	assert.Nil(t, err)
 
-	mux.Post("/user", router.Handler(
+	mux.Post("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			b, err := ioutil.ReadAll(r.Body)
 			assert.Nil(t, err)
@@ -87,11 +85,11 @@ func TestPostJSON(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Get("/user", router.Handler(
+	mux.Get("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -105,11 +103,11 @@ func TestGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Delete("/user", router.Handler(
+	mux.Delete("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -123,11 +121,11 @@ func TestDelete(t *testing.T) {
 }
 
 func TestHead(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Head("/user", router.Handler(
+	mux.Head("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -141,11 +139,11 @@ func TestHead(t *testing.T) {
 }
 
 func TestOptions(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Options("/user", router.Handler(
+	mux.Options("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -159,11 +157,11 @@ func TestOptions(t *testing.T) {
 }
 
 func TestPatch(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Patch("/user", router.Handler(
+	mux.Patch("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -177,11 +175,11 @@ func TestPatch(t *testing.T) {
 }
 
 func TestPut(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Put("/user", router.Handler(
+	mux.Put("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -195,11 +193,11 @@ func TestPut(t *testing.T) {
 }
 
 func Test404(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := false
 
-	mux.Get("/user", router.Handler(
+	mux.Get("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -214,11 +212,11 @@ func Test404(t *testing.T) {
 }
 
 func Test500NoError(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := true
 
-	mux.Get("/user", router.Handler(
+	mux.Get("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusInternalServerError, nil
@@ -233,12 +231,12 @@ func Test500NoError(t *testing.T) {
 }
 
 func Test500WithError(t *testing.T) {
-	mux := router.New()
+	mux := New()
 
 	called := true
 	specificError := errors.New("specific error")
 
-	mux.Get("/user", router.Handler(
+	mux.Get("/user", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusInternalServerError, specificError

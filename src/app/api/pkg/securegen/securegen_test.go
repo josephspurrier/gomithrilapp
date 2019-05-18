@@ -1,7 +1,6 @@
-package securegen_test
+package securegen
 
 import (
-	"app/api/pkg/securegen"
 	"strings"
 	"testing"
 
@@ -14,7 +13,7 @@ func TestUUID(t *testing.T) {
 	m := make(map[string]bool)
 
 	for i := 0; i < iterations; i++ {
-		s, err := securegen.UUID()
+		s, err := UUID()
 		assert.Nil(t, err)
 
 		// Ensure the lengths are consistent.
@@ -40,7 +39,7 @@ func TestBytes(t *testing.T) {
 	m := make(map[string]bool)
 
 	for i := 0; i < iterations; i++ {
-		s, err := securegen.Bytes(32)
+		s, err := Bytes(32)
 		assert.Nil(t, err)
 
 		// Ensure the lengths are consistent.

@@ -36,7 +36,7 @@ func TestFormSuccess(t *testing.T) {
 			}
 
 			req := new(request)
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
@@ -81,7 +81,7 @@ func TestFormNil(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -121,7 +121,7 @@ func TestFormMissingPointer(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -167,7 +167,7 @@ func TestJSONSuccess(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
@@ -214,7 +214,7 @@ func TestJSONFailure(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -260,7 +260,7 @@ func TestJSONFailureNil(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New()
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
