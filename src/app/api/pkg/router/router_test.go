@@ -3,6 +3,7 @@ package router_test
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -19,7 +20,7 @@ func TestParams(t *testing.T) {
 	mux := router.New()
 	mux.Get("/user/:name", router.Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
-			assert.Equal(t, "john", router.Params(r, "name"))
+			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
 		}))
 
@@ -33,7 +34,7 @@ func TestInstance(t *testing.T) {
 
 	mux.Get("/user/:name", router.Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
-			assert.Equal(t, "john", router.Params(r, "name"))
+			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
 		}))
 
@@ -191,4 +192,63 @@ func TestPut(t *testing.T) {
 	mux.ServeHTTP(w, r)
 
 	assert.Equal(t, true, called)
+}
+
+func Test404(t *testing.T) {
+	mux := router.New()
+
+	called := false
+
+	mux.Get("/user", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+			return http.StatusOK, nil
+		}))
+
+	r := httptest.NewRequest("GET", "/badroute", nil)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, false, called)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+}
+
+func Test500NoError(t *testing.T) {
+	mux := router.New()
+
+	called := true
+
+	mux.Get("/user", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+			return http.StatusInternalServerError, nil
+		}))
+
+	r := httptest.NewRequest("GET", "/user", nil)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}
+
+func Test500WithError(t *testing.T) {
+	mux := router.New()
+
+	called := true
+	specificError := errors.New("specific error")
+
+	mux.Get("/user", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+			return http.StatusInternalServerError, specificError
+		}))
+
+	r := httptest.NewRequest("GET", "/user", nil)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	assert.Equal(t, w.Body.String(), specificError.Error()+"\n")
 }

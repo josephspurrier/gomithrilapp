@@ -6,19 +6,25 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/matryer/way"
 	validator "gopkg.in/go-playground/validator.v9"
 )
+
+// IRouter extracts a URL parameter value.
+type IRouter interface {
+	Param(r *http.Request, param string) string
+}
 
 // Binder contains the request bind an validator objects.
 type Binder struct {
 	validator *validator.Validate
+	router    IRouter
 }
 
 // New returns a new binder for request bind and validation.
-func New() *Binder {
+func New(r IRouter) *Binder {
 	return &Binder{
 		validator: validator.New(),
+		router:    r,
 	}
 }
 
@@ -65,7 +71,7 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 	for j := 0; j < elem.NumField(); j++ {
 		tag := keys.Field(j).Tag
 		tagvalue := tag.Get("json")
-		pathParam := way.Param(r.Context(), tagvalue)
+		pathParam := b.router.Param(r, tagvalue)
 		if len(pathParam) > 0 {
 			m[tagvalue] = pathParam
 		}

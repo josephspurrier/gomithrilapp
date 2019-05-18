@@ -1,8 +1,6 @@
 package router
 
-import (
-	"net/http"
-)
+import "net/http"
 
 // Handler is used to wrapper all endpoint functions so they work with generic
 // routers.

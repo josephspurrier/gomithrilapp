@@ -28,7 +28,7 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 	mockLogger := new(testutil.MockLogger)
 	mux := router.New()
 	mockQuery := query.New(db)
-	binder := bind.New()
+	binder := bind.New(mux)
 	resp := response.New()
 	mockToken := new(testutil.MockToken)
 	pass := passhash.New()

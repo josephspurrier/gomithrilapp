@@ -53,7 +53,7 @@ func Services(l logger.ILog) Core {
 	mux := router.New()
 	db := database.New(dbx, con.Name)
 	q := query.New(db)
-	binder := bind.New()
+	binder := bind.New(mux)
 	resp := response.New()
 	token := webtoken.New([]byte(secret))
 	pass := passhash.New()
