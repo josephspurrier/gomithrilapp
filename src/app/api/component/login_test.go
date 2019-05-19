@@ -215,3 +215,19 @@ func TestLoginToken(t *testing.T) {
 
 	testutil.TeardownDatabase(db)
 }
+
+func TestLoginFailDatabase(t *testing.T) {
+	core, _ := component.NewCoreMock(nil)
+
+	// Login with the user.
+	form := url.Values{}
+	form.Set("email", "a@a.com")
+	form.Set("password", "a")
+	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+
+	// Verify the response.
+	r := new(model.InternalServerErrorResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}

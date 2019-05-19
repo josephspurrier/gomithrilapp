@@ -8,6 +8,7 @@ import (
 	"app/api/internal/response"
 	"app/api/pkg/database"
 	"app/api/pkg/logger"
+	"app/api/pkg/mock"
 	"app/api/pkg/passhash"
 	"app/api/pkg/query"
 	"app/api/pkg/router"
@@ -57,9 +58,10 @@ func Services(l logger.ILog) Core {
 	resp := response.New()
 	token := webtoken.New([]byte(secret))
 	pass := passhash.New()
+	mocker := mock.New(false)
 
 	// Return a new core.
-	return NewCore(
+	core := NewCore(
 		l,
 		mux,
 		db,
@@ -67,5 +69,11 @@ func Services(l logger.ILog) Core {
 		binder,
 		resp,
 		token,
-		pass)
+		pass,
+		mocker,
+	)
+
+	core.Store = LoadStores(core)
+
+	return core
 }

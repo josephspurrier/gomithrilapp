@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"app/api/model"
-	"app/api/store"
 )
 
 // LoginEndpoint .
@@ -53,7 +52,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Determine if the user exists.
-	user := store.NewUser(p.DB, p.Q)
+	user := p.Store.User
 	found, ID, err := user.ExistsByField(user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err

@@ -120,6 +120,29 @@ func TestRegisterFailDatabase(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 }
 
+func TestRegisterFailDatabase2(t *testing.T) {
+	db := testutil.LoadDatabase()
+	core, _ := component.NewCoreMock(db)
+
+	core.Mock.Add("User.Create", "0", errors.New("error creating user"))
+
+	// Register the user.
+	form := url.Values{}
+	form.Set("first_name", "a@a.com")
+	form.Set("last_name", "a@a.com")
+	form.Set("email", "a@a.com")
+	form.Set("password", "a")
+	w := testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+
+	// Verify the response.
+	r := new(model.CreatedResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	testutil.TeardownDatabase(db)
+}
+
 func TestRegisterFailHash(t *testing.T) {
 	db := testutil.LoadDatabase()
 	core, _ := component.NewCoreMock(db)

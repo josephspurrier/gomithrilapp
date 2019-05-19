@@ -3,8 +3,6 @@ package component
 import (
 	"errors"
 	"net/http"
-
-	"app/api/store"
 )
 
 // RegisterEndpoint .
@@ -58,7 +56,7 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Determine if the user already exists.
-	user := store.NewUser(p.DB, p.Q)
+	user := p.Store.User
 	found, _, err := user.ExistsByField(user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err

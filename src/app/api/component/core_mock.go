@@ -6,6 +6,7 @@ import (
 	"app/api/internal/response"
 	"app/api/internal/testutil"
 	"app/api/pkg/database"
+	"app/api/pkg/mock"
 	"app/api/pkg/passhash"
 	"app/api/pkg/query"
 	"app/api/pkg/router"
@@ -20,6 +21,7 @@ type CoreMock struct {
 	Response api.IResponse
 	Token    *testutil.MockToken
 	Password api.IPassword
+	Mock     *mock.Mocker
 }
 
 // NewCoreMock returns all mocked dependencies.
@@ -32,6 +34,7 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 	resp := response.New()
 	mockToken := new(testutil.MockToken)
 	pass := passhash.New()
+	mocker := mock.New(true)
 
 	// Set up the core.
 	core := NewCore(
@@ -42,7 +45,11 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 		binder,
 		resp,
 		mockToken,
-		pass)
+		pass,
+		mocker,
+	)
+
+	core.Store = LoadStores(core)
 
 	// Add all the configurable mocks.
 	m := &CoreMock{
@@ -53,6 +60,7 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 		Response: resp,
 		Token:    mockToken,
 		Password: pass,
+		Mock:     mocker,
 	}
 
 	return core, m

@@ -4,12 +4,14 @@ import (
 	"time"
 
 	"app/api"
+	"app/api/pkg/mock"
 	"app/api/pkg/securegen"
 )
 
 // NewUser returns a new query object.
-func NewUser(db api.IDatabase, q api.IQuery) *User {
+func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) *User {
 	return &User{
+		Mock:   m,
 		IQuery: q,
 		db:     db,
 	}
@@ -18,7 +20,9 @@ func NewUser(db api.IDatabase, q api.IQuery) *User {
 // User is a user of the system.
 type User struct {
 	api.IQuery
-	db api.IDatabase
+
+	Mock *mock.Mocker
+	db   api.IDatabase
 
 	ID        string     `db:"id"`
 	FirstName string     `db:"first_name"`
@@ -62,6 +66,10 @@ func (x UserGroup) PrimaryKey() string {
 
 // Create adds a new user.
 func (x *User) Create(firstName, lastName, email, password string) (string, error) {
+	if x.Mock != nil && x.Mock.Enabled() {
+		return x.Mock.String(), x.Mock.Error()
+	}
+
 	uuid, err := securegen.UUID()
 	if err != nil {
 		return "", err
@@ -80,6 +88,10 @@ func (x *User) Create(firstName, lastName, email, password string) (string, erro
 
 // Update makes changes to a user.
 func (x *User) Update(ID, firstName, lastName, email, password string) (err error) {
+	if x.Mock != nil && x.Mock.Enabled() {
+		return x.Mock.Error()
+	}
+
 	_, err = x.db.Exec(`
 		UPDATE user
 		SET

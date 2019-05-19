@@ -3,6 +3,7 @@ package component
 import (
 	"app/api"
 	"app/api/pkg/logger"
+	"app/api/pkg/mock"
 	"app/api/pkg/router"
 )
 
@@ -16,6 +17,8 @@ type Core struct {
 	Response api.IResponse
 	Token    api.IToken
 	Password api.IPassword
+	Mock     *mock.Mocker
+	Store    *Store
 }
 
 // NewCore returns a core for all the endpoints.
@@ -26,8 +29,9 @@ func NewCore(l logger.ILog,
 	binder api.IBind,
 	resp api.IResponse,
 	token api.IToken,
-	pass api.IPassword) Core {
-	return Core{
+	pass api.IPassword,
+	mocker *mock.Mocker) Core {
+	c := Core{
 		Log:      l,
 		Router:   mux,
 		DB:       db,
@@ -36,5 +40,8 @@ func NewCore(l logger.ILog,
 		Response: resp,
 		Token:    token,
 		Password: pass,
+		Mock:     mocker,
 	}
+
+	return c
 }
