@@ -153,6 +153,7 @@ func TestLoginFailMissingUser(t *testing.T) {
 
 func TestLoginFailMissingBody(t *testing.T) {
 	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
