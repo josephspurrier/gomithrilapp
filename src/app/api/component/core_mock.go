@@ -27,14 +27,14 @@ type CoreMock struct {
 // NewCoreMock returns all mocked dependencies.
 func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 	// Set up the dependencies.
+	mocker := mock.New(true)
 	mockLogger := new(testutil.MockLogger)
 	mux := router.New()
-	mockQuery := query.New(db)
+	mockQuery := query.New(mocker, db)
 	binder := bind.New(mux)
 	resp := response.New()
 	mockToken := new(testutil.MockToken)
 	pass := passhash.New()
-	mocker := mock.New(true)
 
 	// Set up the core.
 	core := NewCore(

@@ -97,8 +97,8 @@ func TestIsWhitelisted(t *testing.T) {
 		"*",
 	}))
 
-	// Bad spacing.
-	assert.Equal(t, false, jwt.IsWhitelisted("GET", "/v1", []string{
+	// Allow weird spacing.
+	assert.Equal(t, true, jwt.IsWhitelisted("GET", "/v1", []string{
 		"POST /v1",
 		"* ",
 	}))

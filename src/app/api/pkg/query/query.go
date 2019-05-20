@@ -1,19 +1,22 @@
 package query
 
 import (
+	"app/api/pkg/mock"
 	"fmt"
 )
 
 // New returns a new query object.
-func New(db IDatabase) *Q {
+func New(m *mock.Mocker, db IDatabase) *Q {
 	return &Q{
-		db: db,
+		Mock: m,
+		db:   db,
 	}
 }
 
 // Q is a database wrapper that provides helpful utilities.
 type Q struct {
-	db IDatabase
+	Mock *mock.Mocker
+	db   IDatabase
 }
 
 // *****************************************************************************
@@ -22,6 +25,10 @@ type Q struct {
 
 // FindOneByID will find a record by string ID.
 func (q *Q) FindOneByID(dest IRecord, ID string) (exists bool, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Bool(), q.Mock.Error()
+	}
+
 	err = q.db.Get(dest, fmt.Sprintf(`
 		SELECT * FROM %s
 		WHERE %s = ?
@@ -32,6 +39,10 @@ func (q *Q) FindOneByID(dest IRecord, ID string) (exists bool, err error) {
 
 // FindAll returns all users.
 func (q *Q) FindAll(dest IRecord) (total int, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Int(), q.Mock.Error()
+	}
+
 	//TODO: Add in something to handle soft deletes.
 	//WHERE deleted_at IS NULL
 
@@ -54,6 +65,10 @@ func (q *Q) FindAll(dest IRecord) (total int, err error) {
 
 // DeleteOneByID removes one record by ID.
 func (q *Q) DeleteOneByID(dest IRecord, ID string) (affected int, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Int(), q.Mock.Error()
+	}
+
 	result, err := q.db.Exec(fmt.Sprintf("DELETE FROM %s WHERE %s = ? LIMIT 1",
 		dest.Table(), dest.PrimaryKey()), ID)
 	if err != nil {
@@ -65,6 +80,10 @@ func (q *Q) DeleteOneByID(dest IRecord, ID string) (affected int, err error) {
 
 // DeleteAll removes all records.
 func (q *Q) DeleteAll(dest IRecord) (affected int, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Int(), q.Mock.Error()
+	}
+
 	result, err := q.db.Exec(fmt.Sprintf(`DELETE FROM %s`, dest.Table()))
 	if err != nil {
 		return 0, err
@@ -79,6 +98,10 @@ func (q *Q) DeleteAll(dest IRecord) (affected int, err error) {
 
 // ExistsByID determines if a records exists by ID.
 func (q *Q) ExistsByID(db IRecord, value string) (found bool, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Bool(), q.Mock.Error()
+	}
+
 	err = q.db.Get(db, fmt.Sprintf(`
 		SELECT %s FROM %s
 		WHERE %s = ?
@@ -90,6 +113,10 @@ func (q *Q) ExistsByID(db IRecord, value string) (found bool, err error) {
 // ExistsByField determines if a records exists by a specified field and
 // returns the ID.
 func (q *Q) ExistsByField(db IRecord, field string, value string) (found bool, ID string, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Bool(), q.Mock.String(), q.Mock.Error()
+	}
+
 	err = q.db.QueryRowScan(&ID, fmt.Sprintf(`
 		SELECT %s FROM %s
 		WHERE %s = ?

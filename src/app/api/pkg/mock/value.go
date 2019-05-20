@@ -1,25 +1,25 @@
 package mock
 
-// String returns a string.
-func (m *Mocker) String() string {
-	// FIXME: Move this into the pop function.
-	caller, ok := m.findCaller()
-	if !ok {
-		return ""
-	}
-
-	// FIXME: Change this to accept a pointer and return an error.
-	return m.pop(caller).(string)
+// String .
+func (m *Mocker) String() (v string) {
+	m.pop(&v)
+	return
 }
 
-// Error returns an error.
-func (m *Mocker) Error() error {
-	// FIXME: Move this into the pop function.
-	caller, ok := m.findCaller()
-	if !ok {
-		return nil
-	}
+// Int .
+func (m *Mocker) Int() (v int) {
+	m.pop(&v)
+	return
+}
 
-	// FIXME: Change this to accept a pointer and return an error.
-	return m.pop(caller).(error)
+// Bool .
+func (m *Mocker) Bool() (v bool) {
+	m.pop(&v)
+	return
+}
+
+// Error .
+func (m *Mocker) Error() (v error) {
+	m.pop(&v)
+	return
 }

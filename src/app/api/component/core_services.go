@@ -51,14 +51,14 @@ func Services(l logger.ILog) Core {
 	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
 
 	// Configure the services.
+	mocker := mock.New(false)
 	mux := router.New()
 	db := database.New(dbx, con.Name)
-	q := query.New(db)
+	q := query.New(mocker, db)
 	binder := bind.New(mux)
 	resp := response.New()
 	token := webtoken.New([]byte(secret))
 	pass := passhash.New()
-	mocker := mock.New(false)
 
 	// Return a new core.
 	core := NewCore(
