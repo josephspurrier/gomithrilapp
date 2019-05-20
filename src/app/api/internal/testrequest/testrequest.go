@@ -3,7 +3,6 @@ package testrequest
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http/httptest"
 	"net/url"
 	"strings"
@@ -61,10 +60,7 @@ func ToJSON(values url.Values) string {
 		}
 	}
 
-	js, err := json.Marshal(m)
-	if err != nil {
-		log.Fatal(err)
-	}
+	js, _ := json.Marshal(m)
 
 	return string(js)
 }

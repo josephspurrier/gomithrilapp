@@ -4,20 +4,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"runtime"
 
 	"app/api/boot"
 	"app/api/middleware"
 	"app/api/pkg/logger"
 )
-
-func init() {
-	// Verbose logging with file name and line number.
-	log.SetFlags(log.Lshortfile)
-
-	// Use all CPU cores.
-	runtime.GOMAXPROCS(runtime.NumCPU())
-}
 
 func main() {
 	// FIXME: This should be an environment variable.

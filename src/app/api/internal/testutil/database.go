@@ -40,7 +40,7 @@ func LoadDatabase() *database.DBW {
 
 	db, err := database.Migrate(ml, con, api.Changesets)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalln(err.Error())
 	}
 
 	return database.New(db, con.Name)
