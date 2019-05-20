@@ -9,9 +9,9 @@ import (
 )
 
 // NewUser returns a new query object.
-func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) *User {
-	return &User{
-		Mock:   m,
+func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) User {
+	return User{
+		mock:   m,
 		db:     db,
 		IQuery: q,
 	}
@@ -19,7 +19,7 @@ func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) *User {
 
 // User is a user of the system.
 type User struct {
-	Mock *mock.Mocker
+	mock *mock.Mocker
 	db   api.IDatabase
 	api.IQuery
 
@@ -45,9 +45,9 @@ func (x *User) PrimaryKey() string {
 }
 
 // NewGroup returns an empty group.
-func (x *User) NewGroup() *UserGroup {
+func (x *User) NewGroup() UserGroup {
 	group := make(UserGroup, 0)
-	return &group
+	return group
 }
 
 // UserGroup represents a group of users.
@@ -65,8 +65,8 @@ func (x UserGroup) PrimaryKey() string {
 
 // Create adds a new user.
 func (x *User) Create(firstName, lastName, email, password string) (string, error) {
-	if x.Mock != nil && x.Mock.Enabled() {
-		return x.Mock.String(), x.Mock.Error()
+	if x.mock != nil && x.mock.Enabled() {
+		return x.mock.String(), x.mock.Error()
 	}
 
 	uuid, err := securegen.UUID()
@@ -87,8 +87,8 @@ func (x *User) Create(firstName, lastName, email, password string) (string, erro
 
 // Update makes changes to a user.
 func (x *User) Update(ID, firstName, lastName, email, password string) (err error) {
-	if x.Mock != nil && x.Mock.Enabled() {
-		return x.Mock.Error()
+	if x.mock != nil && x.mock.Enabled() {
+		return x.mock.Error()
 	}
 
 	_, err = x.db.Exec(`

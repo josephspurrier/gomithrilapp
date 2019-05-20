@@ -6,7 +6,7 @@ import (
 
 // Store is a list of the stores in the application.
 type Store struct {
-	User *store.User
+	User store.User
 }
 
 // LoadStores will load the stores.

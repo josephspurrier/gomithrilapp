@@ -24,7 +24,7 @@ func TestUser(t *testing.T) {
 	err = user.Update(ID, "aa", "bb", "cc", "dd")
 	assert.NoError(t, err)
 
-	found, err := user.FindOneByID(user, ID)
+	found, err := user.FindOneByID(&user, ID)
 	assert.NoError(t, err)
 	assert.Equal(t, true, found)
 
@@ -33,7 +33,7 @@ func TestUser(t *testing.T) {
 	assert.Equal(t, 36, len(ID))
 
 	group := user.NewGroup()
-	total, err := user.FindAll(group)
+	total, err := user.FindAll(&group)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, total)
 }
