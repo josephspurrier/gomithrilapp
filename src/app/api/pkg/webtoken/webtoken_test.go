@@ -40,6 +40,8 @@ func TestValidJWT(t *testing.T) {
 	s, err := token.Verify(ss)
 	assert.Nil(t, err)
 	assert.Equal(t, "jsmith", s)
+
+	assert.Equal(t, secret, token.Secret())
 }
 
 func TestInvalidSecret(t *testing.T) {
