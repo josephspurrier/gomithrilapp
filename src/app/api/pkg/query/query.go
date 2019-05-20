@@ -37,6 +37,20 @@ func (q *Q) FindOneByID(dest IRecord, ID string) (exists bool, err error) {
 	return recordExists(err)
 }
 
+// FindOneByField will find a record by a specified field.
+func (q *Q) FindOneByField(dest IRecord, field string, value string) (exists bool, err error) {
+	if q.Mock != nil && q.Mock.Enabled() {
+		return q.Mock.Bool(), q.Mock.Error()
+	}
+
+	err = q.db.Get(dest, fmt.Sprintf(`
+		SELECT * FROM %s
+		WHERE %s = ?
+		LIMIT 1`, dest.Table(), field),
+		value)
+	return recordExists(err)
+}
+
 // FindAll returns all users.
 func (q *Q) FindAll(dest IRecord) (total int, err error) {
 	if q.Mock != nil && q.Mock.Enabled() {

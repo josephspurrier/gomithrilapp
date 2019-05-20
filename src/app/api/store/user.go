@@ -12,17 +12,16 @@ import (
 func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) *User {
 	return &User{
 		Mock:   m,
-		IQuery: q,
 		db:     db,
+		IQuery: q,
 	}
 }
 
 // User is a user of the system.
 type User struct {
-	api.IQuery
-
 	Mock *mock.Mocker
 	db   api.IDatabase
+	api.IQuery
 
 	ID        string     `db:"id"`
 	FirstName string     `db:"first_name"`

@@ -30,6 +30,7 @@ type IPassword interface {
 // IQuery provides default queries.
 type IQuery interface {
 	FindOneByID(dest query.IRecord, ID string) (found bool, err error)
+	FindOneByField(dest query.IRecord, field string, value string) (exists bool, err error)
 	FindAll(dest query.IRecord) (total int, err error)
 	ExistsByID(db query.IRecord, s string) (found bool, err error)
 	ExistsByField(db query.IRecord, field string, value string) (found bool, ID string, err error)
