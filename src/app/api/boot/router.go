@@ -15,10 +15,11 @@ func SetupRouter(l logger.ILog, mux *router.Mux) {
 	mux.Instance().NotFound = router.Handler(
 		func(w http.ResponseWriter, r *http.Request) (int, error) {
 			return http.StatusNotFound, nil
-		})
+		},
+	)
 
 	// Set the handling of all responses.
-	router.ServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, err error) {
+	mux.CustomServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, err error) {
 		// Handle only errors.
 		if status >= 400 {
 			resp := new(model.GenericResponse)

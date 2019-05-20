@@ -2,24 +2,24 @@ package router
 
 import "net/http"
 
-// Handler is a main handler.
-type Handler struct {
-	CustomHandler
+// handler is a internal handler.
+type handler struct {
+	Handler
 	CustomServeHTTP func(w http.ResponseWriter, r *http.Request, status int, err error)
 }
 
 // ServeHTTP handles all the errors from the HTTP handlers.
-func (fn Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	status, err := fn.CustomHandler(w, r)
+func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	status, err := fn.Handler(w, r)
 	fn.CustomServeHTTP(w, r, status, err)
 }
 
-// CustomHandler is used to wrapper all endpoint functions so they work with generic
+// Handler is used to wrapper all endpoint functions so they work with generic
 // routers.
-type CustomHandler func(http.ResponseWriter, *http.Request) (int, error)
+type Handler func(http.ResponseWriter, *http.Request) (int, error)
 
 // ServeHTTP handles all the errors from the HTTP handlers.
-func (fn CustomHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (fn Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	status, err := fn(w, r)
 	DefaultServeHTTP(w, r, status, err)
 }

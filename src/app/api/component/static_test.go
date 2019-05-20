@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"app/api/component"
+	"app/api/boot"
 	"app/api/internal/testrequest"
 	"app/api/model"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestIndexGET(t *testing.T) {
-	core, _ := component.NewCoreMock(nil)
+	core, _ := boot.NewCoreMock(nil)
 
 	w := testrequest.SendForm(t, core, "GET", "/v1", nil)
 
@@ -26,7 +26,7 @@ func TestIndexGET(t *testing.T) {
 }
 
 func TestStaticGET(t *testing.T) {
-	core, _ := component.NewCoreMock(nil)
+	core, _ := boot.NewCoreMock(nil)
 
 	w := testrequest.SendForm(t, core, "GET", "/static/healthcheck.html", nil)
 
@@ -35,7 +35,7 @@ func TestStaticGET(t *testing.T) {
 }
 
 func TestStaticGETNotFound(t *testing.T) {
-	core, _ := component.NewCoreMock(nil)
+	core, _ := boot.NewCoreMock(nil)
 
 	w := testrequest.SendForm(t, core, "GET", "/static/healthcheck-bad.html", nil)
 
@@ -44,7 +44,7 @@ func TestStaticGETNotFound(t *testing.T) {
 }
 
 func TestStaticGETDirNotFound(t *testing.T) {
-	core, _ := component.NewCoreMock(nil)
+	core, _ := boot.NewCoreMock(nil)
 
 	w := testrequest.SendForm(t, core, "GET", "/static/folder/", nil)
 

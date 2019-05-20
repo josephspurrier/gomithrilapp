@@ -1,6 +1,7 @@
-package component
+package boot
 
 import (
+	"app/api/component"
 	"app/api/internal/bind"
 	"app/api/internal/response"
 	"app/api/internal/testutil"
@@ -19,7 +20,7 @@ type CoreMock struct {
 }
 
 // NewCoreMock returns all mocked dependencies.
-func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
+func NewCoreMock(db *database.DBW) (component.Core, *CoreMock) {
 	// Set up the dependencies.
 	mocker := mock.New(true)
 	mockLogger := new(testutil.MockLogger)
@@ -30,8 +31,10 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 	mockToken := new(testutil.MockToken)
 	pass := passhash.New()
 
+	SetupRouter(mockLogger, mux)
+
 	// Set up the core.
-	core := NewCore(
+	core := component.NewCore(
 		mockLogger,
 		mux,
 		db,

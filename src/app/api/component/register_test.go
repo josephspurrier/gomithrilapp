@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"app/api/component"
+	"app/api/boot"
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
 	"app/api/model"
@@ -17,7 +17,7 @@ import (
 
 func TestRegisterSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	// Register the user.
 	form := url.Values{}
@@ -39,7 +39,7 @@ func TestRegisterSuccess(t *testing.T) {
 
 func TestRegisterFailUserExists(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	// Register the user.
 	form := url.Values{}
@@ -67,7 +67,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 
 func TestRegisterFailMissingField(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	// Register the user.
 	form := url.Values{}
@@ -88,7 +88,7 @@ func TestRegisterFailMissingField(t *testing.T) {
 
 func TestRegisterFailInvalidJSON(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	// Register the user.
 	w := testrequest.SendJSON(t, core, "POST", "/v1/register", nil)
@@ -103,7 +103,7 @@ func TestRegisterFailInvalidJSON(t *testing.T) {
 }
 
 func TestRegisterFailDatabase(t *testing.T) {
-	core, _ := component.NewCoreMock(nil)
+	core, _ := boot.NewCoreMock(nil)
 
 	// Register the user.
 	form := url.Values{}
@@ -122,7 +122,7 @@ func TestRegisterFailDatabase(t *testing.T) {
 
 func TestRegisterFailDatabase2(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	core.Mock.Add("UserStore.Create", "0", errors.New("error creating user"))
 
@@ -145,7 +145,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 
 func TestRegisterFailHash(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, _ := component.NewCoreMock(db)
+	core, _ := boot.NewCoreMock(db)
 
 	mpass := new(testutil.MockPasshash)
 	core.Password = mpass
