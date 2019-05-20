@@ -124,7 +124,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 	db := testutil.LoadDatabase()
 	core, _ := component.NewCoreMock(db)
 
-	core.Mock.Add("User.Create", "0", errors.New("error creating user"))
+	core.Mock.Add("UserStore.Create", "0", errors.New("error creating user"))
 
 	// Register the user.
 	form := url.Values{}

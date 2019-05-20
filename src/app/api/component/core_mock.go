@@ -1,7 +1,6 @@
 package component
 
 import (
-	"app/api"
 	"app/api/internal/bind"
 	"app/api/internal/response"
 	"app/api/internal/testutil"
@@ -14,14 +13,8 @@ import (
 
 // CoreMock contains all the configurable dependencies.
 type CoreMock struct {
-	Log      *testutil.MockLogger
-	DB       api.IDatabase
-	Q        api.IQuery
-	Bind     api.IBind
-	Response api.IResponse
-	Token    *testutil.MockToken
-	Password api.IPassword
-	Mock     *mock.Mocker
+	Log   *testutil.MockLogger
+	Token *testutil.MockToken
 }
 
 // NewCoreMock returns all mocked dependencies.
@@ -53,14 +46,8 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 
 	// Add all the configurable mocks.
 	m := &CoreMock{
-		Log:      mockLogger,
-		DB:       db,
-		Q:        mockQuery,
-		Bind:     binder,
-		Response: resp,
-		Token:    mockToken,
-		Password: pass,
-		Mock:     mocker,
+		Log:   mockLogger,
+		Token: mockToken,
 	}
 
 	return core, m

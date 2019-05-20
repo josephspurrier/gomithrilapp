@@ -3,8 +3,6 @@ package store
 import (
 	"time"
 
-	"app/api"
-	"app/api/pkg/mock"
 	"app/api/pkg/securegen"
 )
 
@@ -57,19 +55,15 @@ func (x UserGroup) PrimaryKey() string {
 }
 
 // NewUserStore returns a new query object.
-func NewUserStore(m *mock.Mocker, db api.IDatabase, q api.IQuery) UserStore {
+func NewUserStore(c Core) UserStore {
 	return UserStore{
-		mock:   m,
-		db:     db,
-		IQuery: q,
+		Core: c,
 	}
 }
 
 // UserStore is a user of the system.
 type UserStore struct {
-	mock *mock.Mocker
-	db   api.IDatabase
-	api.IQuery
+	Core
 }
 
 // Create adds a new user.

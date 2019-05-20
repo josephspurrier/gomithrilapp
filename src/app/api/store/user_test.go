@@ -6,7 +6,6 @@ import (
 
 	"app/api/component"
 	"app/api/internal/testutil"
-	"app/api/store"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +15,7 @@ func TestUser(t *testing.T) {
 	defer testutil.TeardownDatabase(db)
 	p, _ := component.NewCoreMock(db)
 
-	s := store.NewUserStore(p.Mock, p.DB, p.Q)
+	s := p.Store.User
 
 	ID, err := s.Create("a", "b", "c", "d")
 	assert.NoError(t, err)
@@ -45,7 +44,7 @@ func TestUserMock(t *testing.T) {
 	defer testutil.TeardownDatabase(db)
 	p, _ := component.NewCoreMock(db)
 
-	s := store.NewUserStore(p.Mock, p.DB, p.Q)
+	s := p.Store.User
 
 	e := errors.New("yes")
 	p.Mock.Add("UserStore.Create", "1", e)
