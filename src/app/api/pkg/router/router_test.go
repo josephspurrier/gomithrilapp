@@ -16,7 +16,7 @@ import (
 
 func TestParams(t *testing.T) {
 	mux := New()
-	mux.Get("/user/:name", Handler(
+	mux.Get("/user/:name", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
@@ -30,7 +30,7 @@ func TestParams(t *testing.T) {
 func TestInstance(t *testing.T) {
 	mux := New()
 
-	mux.Get("/user/:name", Handler(
+	mux.Get("/user/:name", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			assert.Equal(t, "john", mux.Param(r, "name"))
 			return http.StatusOK, nil
@@ -48,7 +48,7 @@ func TestPostForm(t *testing.T) {
 	form := url.Values{}
 	form.Add("username", "jsmith")
 
-	mux.Post("/user", Handler(
+	mux.Post("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			r.ParseForm()
 			assert.Equal(t, "jsmith", r.FormValue("username"))
@@ -69,7 +69,7 @@ func TestPostJSON(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	mux.Post("/user", Handler(
+	mux.Post("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			b, err := ioutil.ReadAll(r.Body)
 			assert.Nil(t, err)
@@ -89,7 +89,7 @@ func TestGet(t *testing.T) {
 
 	called := false
 
-	mux.Get("/user", Handler(
+	mux.Get("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -107,7 +107,7 @@ func TestDelete(t *testing.T) {
 
 	called := false
 
-	mux.Delete("/user", Handler(
+	mux.Delete("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -125,7 +125,7 @@ func TestHead(t *testing.T) {
 
 	called := false
 
-	mux.Head("/user", Handler(
+	mux.Head("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -143,7 +143,7 @@ func TestOptions(t *testing.T) {
 
 	called := false
 
-	mux.Options("/user", Handler(
+	mux.Options("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -161,7 +161,7 @@ func TestPatch(t *testing.T) {
 
 	called := false
 
-	mux.Patch("/user", Handler(
+	mux.Patch("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -179,7 +179,7 @@ func TestPut(t *testing.T) {
 
 	called := false
 
-	mux.Put("/user", Handler(
+	mux.Put("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -197,7 +197,7 @@ func Test404(t *testing.T) {
 
 	called := false
 
-	mux.Get("/user", Handler(
+	mux.Get("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusOK, nil
@@ -216,7 +216,7 @@ func Test500NoError(t *testing.T) {
 
 	called := true
 
-	mux.Get("/user", Handler(
+	mux.Get("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusInternalServerError, nil
@@ -236,7 +236,7 @@ func Test500WithError(t *testing.T) {
 	called := true
 	specificError := errors.New("specific error")
 
-	mux.Get("/user", Handler(
+	mux.Get("/user", CustomHandler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 			return http.StatusInternalServerError, specificError

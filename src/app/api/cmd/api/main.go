@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 
+	"app/api/boot"
 	"app/api/component"
 	"app/api/middleware"
 	"app/api/pkg/logger"
@@ -27,9 +28,10 @@ func main() {
 	l := logger.New(log.New(os.Stderr, "", log.Lshortfile))
 
 	// Setup the services.
-	core := component.Services(l)
+	core := boot.Services(l)
 
 	// Load the routes.
+	boot.SetupRouter(l, core.Router)
 	component.LoadRoutes(core)
 
 	// Start the web server.

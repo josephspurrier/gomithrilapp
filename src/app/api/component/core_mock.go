@@ -9,6 +9,7 @@ import (
 	"app/api/pkg/passhash"
 	"app/api/pkg/query"
 	"app/api/pkg/router"
+	"app/api/store"
 )
 
 // CoreMock contains all the configurable dependencies.
@@ -42,7 +43,7 @@ func NewCoreMock(db *database.DBW) (Core, *CoreMock) {
 		mocker,
 	)
 
-	core.Store = LoadStores(core)
+	core.Store = store.LoadFactory(mocker, db, mockQuery)
 
 	// Add all the configurable mocks.
 	m := &CoreMock{

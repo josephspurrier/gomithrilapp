@@ -2,10 +2,10 @@ package component
 
 import (
 	"app/api"
-	"app/api/boot"
 	"app/api/pkg/logger"
 	"app/api/pkg/mock"
 	"app/api/pkg/router"
+	"app/api/store"
 )
 
 // Core represents the core for all the endpoints.
@@ -19,7 +19,7 @@ type Core struct {
 	Token    api.IToken
 	Password api.IPassword
 	Mock     *mock.Mocker
-	Store    *boot.Store
+	Store    *store.Factory
 }
 
 // NewCore returns a core for all the endpoints.

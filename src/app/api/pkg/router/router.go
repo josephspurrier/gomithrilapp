@@ -9,12 +9,16 @@ import (
 // Mux contains the router.
 type Mux struct {
 	router *way.Router
+
+	// CustomServeHTTP is a settable serve function.
+	CustomServeHTTP func(w http.ResponseWriter, r *http.Request, status int, err error)
 }
 
 // New returns an instance of the router.
 func New() *Mux {
 	return &Mux{
-		router: way.NewRouter(),
+		router:          way.NewRouter(),
+		CustomServeHTTP: DefaultServeHTTP,
 	}
 }
 

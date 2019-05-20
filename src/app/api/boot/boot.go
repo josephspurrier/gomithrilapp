@@ -1,9 +1,10 @@
-package component
+package boot
 
 import (
 	"os"
 
 	"app/api"
+	"app/api/component"
 	"app/api/internal/bind"
 	"app/api/internal/response"
 	"app/api/pkg/database"
@@ -13,12 +14,13 @@ import (
 	"app/api/pkg/query"
 	"app/api/pkg/router"
 	"app/api/pkg/webtoken"
+	"app/api/store"
 
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
 
 // Services will set up the production services.
-func Services(l logger.ILog) Core {
+func Services(l logger.ILog) component.Core {
 	// If the host env var is set, use it.
 	host := os.Getenv("MYSQL_HOST")
 	if len(host) == 0 {
@@ -61,7 +63,7 @@ func Services(l logger.ILog) Core {
 	pass := passhash.New()
 
 	// Return a new core.
-	core := NewCore(
+	core := component.NewCore(
 		l,
 		mux,
 		db,
@@ -73,7 +75,7 @@ func Services(l logger.ILog) Core {
 		mocker,
 	)
 
-	core.Store = LoadStores(core)
+	core.Store = store.LoadFactory(mocker, db, q)
 
 	return core
 }
