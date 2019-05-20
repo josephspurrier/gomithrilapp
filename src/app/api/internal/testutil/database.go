@@ -7,10 +7,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/josephspurrier/rove/pkg/adapter/mysql"
-
 	"app/api"
 	"app/api/pkg/database"
+
+	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
 
 func init() {
@@ -19,8 +19,6 @@ func init() {
 
 // LoadDatabase will set up the DB and apply migrations for the tests.
 func LoadDatabase() *database.DBW {
-	//return LoadDatabaseFromFile("../../../../../migration/mysql-v0.sql", true)
-
 	unique := "T" + fmt.Sprint(rand.Intn(500))
 
 	password := "password"

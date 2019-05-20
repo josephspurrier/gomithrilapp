@@ -7,7 +7,6 @@ import (
 	"runtime"
 
 	"app/api/boot"
-	"app/api/component"
 	"app/api/middleware"
 	"app/api/pkg/logger"
 )
@@ -21,6 +20,7 @@ func init() {
 }
 
 func main() {
+	// FIXME: This should be an environment variable.
 	port := "8081"
 
 	// Create the logger.
@@ -29,10 +29,6 @@ func main() {
 
 	// Setup the services.
 	core := boot.Services(l)
-
-	// Load the routes.
-	boot.SetupRouter(l, core.Router)
-	component.LoadRoutes(core)
 
 	// Start the web server.
 	l.Printf("Server started.")

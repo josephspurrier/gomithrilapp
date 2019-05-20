@@ -13,45 +13,42 @@ import (
 	"app/api/store"
 )
 
-// CoreMock contains all the configurable dependencies.
-type CoreMock struct {
+// CoreTest contains all the configurable dependencies.
+type CoreTest struct {
 	Log   *testutil.MockLogger
 	Token *testutil.MockToken
+	Mock  *mock.Mocker
 }
 
-// NewCoreMock returns all mocked dependencies.
-func NewCoreMock(db *database.DBW) (component.Core, *CoreMock) {
+// TestServices sets up the test services.
+func TestServices(db *database.DBW) (component.Core, *CoreTest) {
 	// Set up the dependencies.
-	mocker := mock.New(true)
-	mockLogger := new(testutil.MockLogger)
 	mux := router.New()
-	mockQuery := query.New(mocker, db)
-	binder := bind.New(mux)
-	resp := response.New()
-	mockToken := new(testutil.MockToken)
-	pass := passhash.New()
+	mocker := mock.New(true)
 
-	SetupRouter(mockLogger, mux)
+	// Set up the mocked dependencies.
+	mockLogger := new(testutil.MockLogger)
+	mockToken := new(testutil.MockToken)
 
 	// Set up the core.
 	core := component.NewCore(
 		mockLogger,
 		mux,
-		db,
-		mockQuery,
-		binder,
-		resp,
+		bind.New(mux),
+		response.New(),
 		mockToken,
-		pass,
-		mocker,
+		passhash.New(),
+		store.LoadFactory(mocker, db, query.New(mocker, db)),
 	)
 
-	core.Store = store.LoadFactory(mocker, db, mockQuery)
+	// Set up the router.
+	SetupRouter(core.Log, mux)
 
 	// Add all the configurable mocks.
-	m := &CoreMock{
+	m := &CoreTest{
 		Log:   mockLogger,
 		Token: mockToken,
+		Mock:  mocker,
 	}
 
 	return core, m

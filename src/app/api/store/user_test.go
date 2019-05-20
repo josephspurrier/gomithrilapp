@@ -13,7 +13,7 @@ import (
 func TestUser(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.NewCoreMock(db)
+	p, _ := boot.TestServices(db)
 
 	s := p.Store.User
 
@@ -42,17 +42,17 @@ func TestUser(t *testing.T) {
 func TestUserMock(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.NewCoreMock(db)
+	p, m := boot.TestServices(db)
 
 	s := p.Store.User
 
 	e := errors.New("yes")
-	p.Mock.Add("UserStore.Create", "1", e)
+	m.Mock.Add("UserStore.Create", "1", e)
 	ID, err := s.Create("aaa", "bbb", "ccc", "ddd")
 	assert.Equal(t, e, err)
 	assert.Equal(t, "1", ID)
 
-	p.Mock.Add("UserStore.Update", e)
+	m.Mock.Add("UserStore.Update", e)
 	err = s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.Equal(t, e, err)
 }

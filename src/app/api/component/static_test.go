@@ -13,9 +13,9 @@ import (
 )
 
 func TestIndexGET(t *testing.T) {
-	core, _ := boot.NewCoreMock(nil)
+	p, _ := boot.TestServices(nil)
 
-	w := testrequest.SendForm(t, core, "GET", "/v1", nil)
+	w := testrequest.SendForm(t, p, "GET", "/v1", nil)
 
 	r := new(model.OKResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
@@ -26,27 +26,27 @@ func TestIndexGET(t *testing.T) {
 }
 
 func TestStaticGET(t *testing.T) {
-	core, _ := boot.NewCoreMock(nil)
+	p, _ := boot.TestServices(nil)
 
-	w := testrequest.SendForm(t, core, "GET", "/static/healthcheck.html", nil)
+	w := testrequest.SendForm(t, p, "GET", "/static/healthcheck.html", nil)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "ok", w.Body.String())
 }
 
 func TestStaticGETNotFound(t *testing.T) {
-	core, _ := boot.NewCoreMock(nil)
+	p, _ := boot.TestServices(nil)
 
-	w := testrequest.SendForm(t, core, "GET", "/static/healthcheck-bad.html", nil)
+	w := testrequest.SendForm(t, p, "GET", "/static/healthcheck-bad.html", nil)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Equal(t, "404 page not found\n", w.Body.String())
 }
 
 func TestStaticGETDirNotFound(t *testing.T) {
-	core, _ := boot.NewCoreMock(nil)
+	p, _ := boot.TestServices(nil)
 
-	w := testrequest.SendForm(t, core, "GET", "/static/folder/", nil)
+	w := testrequest.SendForm(t, p, "GET", "/static/folder/", nil)
 
 	r := new(model.GenericResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)

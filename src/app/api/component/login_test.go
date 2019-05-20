@@ -19,7 +19,8 @@ import (
 
 func TestLoginSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	defer testutil.TeardownDatabase(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		b := []byte("0123456789ABCDEF0123456789ABCDEF")
@@ -47,13 +48,12 @@ func TestLoginSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginFail(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	defer testutil.TeardownDatabase(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		b := []byte("0123456789ABCDEF0123456789ABCDEF")
@@ -81,13 +81,12 @@ func TestLoginFail(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginFailMissingField(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	defer testutil.TeardownDatabase(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		b := []byte("0123456789ABCDEF0123456789ABCDEF")
@@ -115,13 +114,12 @@ func TestLoginFailMissingField(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginFailMissingUser(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	defer testutil.TeardownDatabase(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		b := []byte("0123456789ABCDEF0123456789ABCDEF")
@@ -155,7 +153,7 @@ func TestLoginFailMissingUser(t *testing.T) {
 
 func TestLoginFailMissingBody(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		b := []byte("0123456789ABCDEF0123456789ABCDEF")
@@ -180,13 +178,12 @@ func TestLoginFailMissingBody(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginToken(t *testing.T) {
 	db := testutil.LoadDatabase()
-	core, m := boot.NewCoreMock(db)
+	defer testutil.TeardownDatabase(db)
+	core, m := boot.TestServices(db)
 
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		return "", errors.New("bad token generation")
@@ -212,12 +209,10 @@ func TestLoginToken(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 	assert.Equal(t, "", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginFailDatabase(t *testing.T) {
-	core, _ := boot.NewCoreMock(nil)
+	core, _ := boot.TestServices(nil)
 
 	// Login with the user.
 	form := url.Values{}

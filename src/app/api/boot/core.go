@@ -19,7 +19,7 @@ import (
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
 
-// Services will set up the production services.
+// Services sets up the production services.
 func Services(l logger.ILog) component.Core {
 	// If the host env var is set, use it.
 	host := os.Getenv("MYSQL_HOST")
@@ -53,29 +53,29 @@ func Services(l logger.ILog) component.Core {
 	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
 
 	// Configure the services.
-	mocker := mock.New(false)
 	mux := router.New()
 	db := database.New(dbx, con.Name)
-	q := query.New(mocker, db)
-	binder := bind.New(mux)
-	resp := response.New()
-	token := webtoken.New([]byte(secret))
-	pass := passhash.New()
+	mocker := mock.New(false)
 
 	// Return a new core.
 	core := component.NewCore(
 		l,
 		mux,
-		db,
-		q,
-		binder,
-		resp,
-		token,
-		pass,
-		mocker,
+		bind.New(mux),
+		response.New(),
+		webtoken.New([]byte(secret)),
+		passhash.New(),
+		store.LoadFactory(mocker,
+			db,
+			query.New(mocker, db),
+		),
 	)
 
-	core.Store = store.LoadFactory(mocker, db, q)
+	// Set up the router.
+	SetupRouter(l, mux)
+
+	// Load all the routes.
+	LoadRoutes(core)
 
 	return core
 }

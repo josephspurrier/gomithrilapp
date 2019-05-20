@@ -9,7 +9,7 @@ import (
 	"app/api/pkg/router"
 )
 
-// SetupRouter will setup the router.
+// SetupRouter will setup the error page and page handling.
 func SetupRouter(l logger.ILog, mux *router.Mux) {
 	// Set up the 404 page.
 	mux.Instance().NotFound = router.Handler(
