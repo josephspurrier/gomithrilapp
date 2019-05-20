@@ -52,8 +52,8 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Determine if the user exists.
-	user := p.Store.User
-	found, err := user.FindOneByField(&user, "email", req.Email)
+	user := p.Store.User.New()
+	found, err := p.Store.User.FindOneByField(&user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if !found {

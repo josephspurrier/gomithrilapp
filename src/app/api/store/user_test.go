@@ -14,26 +14,28 @@ import (
 func TestUser(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, _ := component.NewCoreMock(db)
+	p, _ := component.NewCoreMock(db)
 
-	user := store.NewUser(core.Mock, core.DB, core.Q)
-	ID, err := user.Create("a", "b", "c", "d")
+	s := store.NewUserStore(p.Mock, p.DB, p.Q)
+
+	ID, err := s.Create("a", "b", "c", "d")
 	assert.NoError(t, err)
 	assert.Equal(t, 36, len(ID))
 
-	err = user.Update(ID, "aa", "bb", "cc", "dd")
+	err = s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.NoError(t, err)
 
-	found, err := user.FindOneByID(&user, ID)
+	user := s.New()
+	found, err := s.FindOneByID(&user, ID)
 	assert.NoError(t, err)
 	assert.Equal(t, true, found)
 
-	ID, err = user.Create("aaa", "bbb", "ccc", "ddd")
+	ID, err = s.Create("aaa", "bbb", "ccc", "ddd")
 	assert.NoError(t, err)
 	assert.Equal(t, 36, len(ID))
 
-	group := user.NewGroup()
-	total, err := user.FindAll(&group)
+	group := s.NewGroup()
+	total, err := s.FindAll(&group)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, total)
 }
@@ -41,17 +43,17 @@ func TestUser(t *testing.T) {
 func TestUserMock(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, m := component.NewCoreMock(db)
+	p, _ := component.NewCoreMock(db)
 
-	user := store.NewUser(core.Mock, core.DB, core.Q)
+	s := store.NewUserStore(p.Mock, p.DB, p.Q)
 
 	e := errors.New("yes")
-	m.Mock.Add("User.Create", "1", e)
-	ID, err := user.Create("aaa", "bbb", "ccc", "ddd")
+	p.Mock.Add("UserStore.Create", "1", e)
+	ID, err := s.Create("aaa", "bbb", "ccc", "ddd")
 	assert.Equal(t, e, err)
 	assert.Equal(t, "1", ID)
 
-	m.Mock.Add("User.Update", e)
-	err = user.Update(ID, "aa", "bb", "cc", "dd")
+	p.Mock.Add("UserStore.Update", e)
+	err = s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.Equal(t, e, err)
 }

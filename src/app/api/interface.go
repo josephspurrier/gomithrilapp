@@ -1,10 +1,11 @@
 package api
 
 import (
-	"app/api/pkg/query"
 	"database/sql"
 	"net/http"
 	"time"
+
+	"app/api/pkg/query"
 )
 
 // IBind provides bind and validation for requests.

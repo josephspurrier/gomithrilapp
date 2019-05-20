@@ -8,21 +8,8 @@ import (
 	"app/api/pkg/securegen"
 )
 
-// NewUser returns a new query object.
-func NewUser(m *mock.Mocker, db api.IDatabase, q api.IQuery) User {
-	return User{
-		mock:   m,
-		db:     db,
-		IQuery: q,
-	}
-}
-
 // User is a user of the system.
 type User struct {
-	mock *mock.Mocker
-	db   api.IDatabase
-	api.IQuery
-
 	ID        string     `db:"id"`
 	FirstName string     `db:"first_name"`
 	LastName  string     `db:"last_name"`
@@ -32,6 +19,12 @@ type User struct {
 	CreatedAt *time.Time `db:"created_at"`
 	UpdatedAt *time.Time `db:"updated_at"`
 	DeletedAt *time.Time `db:"deleted_at"`
+}
+
+// New returns an empty user.
+func (x *UserStore) New() User {
+	user := User{}
+	return user
 }
 
 // Table returns the table name.
@@ -45,7 +38,7 @@ func (x *User) PrimaryKey() string {
 }
 
 // NewGroup returns an empty group.
-func (x *User) NewGroup() UserGroup {
+func (x *UserStore) NewGroup() UserGroup {
 	group := make(UserGroup, 0)
 	return group
 }
@@ -63,8 +56,24 @@ func (x UserGroup) PrimaryKey() string {
 	return "id"
 }
 
+// NewUserStore returns a new query object.
+func NewUserStore(m *mock.Mocker, db api.IDatabase, q api.IQuery) UserStore {
+	return UserStore{
+		mock:   m,
+		db:     db,
+		IQuery: q,
+	}
+}
+
+// UserStore is a user of the system.
+type UserStore struct {
+	mock *mock.Mocker
+	db   api.IDatabase
+	api.IQuery
+}
+
 // Create adds a new user.
-func (x *User) Create(firstName, lastName, email, password string) (string, error) {
+func (x *UserStore) Create(firstName, lastName, email, password string) (string, error) {
 	if x.mock != nil && x.mock.Enabled() {
 		return x.mock.String(), x.mock.Error()
 	}
@@ -86,7 +95,7 @@ func (x *User) Create(firstName, lastName, email, password string) (string, erro
 }
 
 // Update makes changes to a user.
-func (x *User) Update(ID, firstName, lastName, email, password string) (err error) {
+func (x *UserStore) Update(ID, firstName, lastName, email, password string) (err error) {
 	if x.mock != nil && x.mock.Enabled() {
 		return x.mock.Error()
 	}

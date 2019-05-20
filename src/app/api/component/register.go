@@ -56,8 +56,8 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Determine if the user already exists.
-	user := p.Store.User
-	found, _, err := user.ExistsByField(&user, "email", req.Email)
+	user := p.Store.User.New()
+	found, _, err := p.Store.User.ExistsByField(&user, "email", req.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if found {
@@ -71,7 +71,7 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Create the user.
-	ID, err := user.Create(req.FirstName, req.LastName, req.Email, password)
+	ID, err := p.Store.User.Create(req.FirstName, req.LastName, req.Email, password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
