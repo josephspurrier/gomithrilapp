@@ -27,7 +27,9 @@ func Migrate(l logger.ILog, con *mysql.Connection, changesets string) (*sqlx.DB,
 		if err != nil {
 			return nil, err
 		}
-		l.Printf("Database created.")
+		if l != nil {
+			l.Printf("Database created.")
+		}
 
 		// Attempt to reconnect with the database name.
 		db, err = mysql.New(con)

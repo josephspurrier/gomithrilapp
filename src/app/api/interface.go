@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"app/api/pkg/query"
+	"app/api/internal/query"
 )
 
 // IBind provides bind and validation for requests.

@@ -1,8 +1,9 @@
 package query
 
 import (
-	"app/api/pkg/mock"
 	"fmt"
+
+	"app/api/pkg/mock"
 )
 
 // New returns a new query object.
