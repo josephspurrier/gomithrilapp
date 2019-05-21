@@ -1,4 +1,4 @@
-package api
+package migration
 
 // Changesets is the database migrations.
 var Changesets = `

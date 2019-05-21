@@ -3,11 +3,11 @@ package boot
 import (
 	"os"
 
-	"app/api"
 	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
 	"app/api/internal/response"
+	"app/api/migration"
 	"app/api/pkg/database"
 	"app/api/pkg/logger"
 	"app/api/pkg/mock"
@@ -44,7 +44,7 @@ func Services(l logger.ILog) endpoint.Core {
 	}
 
 	// Migration the database.
-	dbx, err := database.Migrate(l, con, api.Changesets)
+	dbx, err := database.Migrate(l, con, migration.Changesets)
 	if err != nil {
 		l.Fatalf(err.Error())
 	}

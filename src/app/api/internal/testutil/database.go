@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"app/api"
+	"app/api/migration"
 	"app/api/pkg/database"
 
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
@@ -38,7 +38,7 @@ func LoadDatabase() *database.DBW {
 
 	ml := new(MockLogger)
 
-	db, err := database.Migrate(ml, con, api.Changesets)
+	db, err := database.Migrate(ml, con, migration.Changesets)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
