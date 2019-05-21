@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"net/http"
 	"time"
-
-	"app/api/internal/query"
 )
 
 // IBind provides bind and validation for requests.
@@ -19,6 +17,7 @@ type IDatabase interface {
 	Exec(query string, args ...interface{}) (sql.Result, error)
 	Get(dest interface{}, query string, args ...interface{}) error
 	Select(dest interface{}, query string, args ...interface{}) error
+	QueryRowScan(dest interface{}, query string, args ...interface{}) error
 	Name() string
 }
 
@@ -30,13 +29,19 @@ type IPassword interface {
 
 // IQuery provides default queries.
 type IQuery interface {
-	FindOneByID(dest query.IRecord, ID string) (found bool, err error)
-	FindOneByField(dest query.IRecord, field string, value string) (exists bool, err error)
-	FindAll(dest query.IRecord) (total int, err error)
-	ExistsByID(db query.IRecord, s string) (found bool, err error)
-	ExistsByField(db query.IRecord, field string, value string) (found bool, ID string, err error)
-	DeleteOneByID(dest query.IRecord, ID string) (affected int, err error)
-	DeleteAll(dest query.IRecord) (affected int, err error)
+	FindOneByID(dest IRecord, ID string) (found bool, err error)
+	FindOneByField(dest IRecord, field string, value string) (exists bool, err error)
+	FindAll(dest IRecord) (total int, err error)
+	ExistsByID(db IRecord, s string) (found bool, err error)
+	ExistsByField(db IRecord, field string, value string) (found bool, ID string, err error)
+	DeleteOneByID(dest IRecord, ID string) (affected int, err error)
+	DeleteAll(dest IRecord) (affected int, err error)
+}
+
+// IRecord provides table information.
+type IRecord interface {
+	Table() string
+	PrimaryKey() string
 }
 
 // IResponse provides outputs for data.

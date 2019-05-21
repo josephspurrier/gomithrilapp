@@ -6,14 +6,15 @@ import (
 
 	"app/api/internal/query"
 	"app/api/internal/query/internal/store"
+	"app/api/internal/testutil"
 	"app/api/pkg/mock"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFindOneByID(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -43,8 +44,8 @@ func TestFindOneByID(t *testing.T) {
 }
 
 func TestFindOneByField(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -74,8 +75,8 @@ func TestFindOneByField(t *testing.T) {
 }
 
 func TestFindAll(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -110,8 +111,8 @@ func TestFindAll(t *testing.T) {
 }
 
 func TestDeleteOneByID(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -143,8 +144,8 @@ func TestDeleteOneByID(t *testing.T) {
 }
 
 func TestDeleteAll(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -180,8 +181,8 @@ func TestDeleteAll(t *testing.T) {
 }
 
 func TestExistsByID(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)
@@ -215,8 +216,8 @@ func TestExistsByID(t *testing.T) {
 }
 
 func TestExistsByField(t *testing.T) {
-	db := LoadDatabase()
-	defer TeardownDatabase(db)
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
 
 	mocker := mock.New(true)
 	q := query.New(mocker, db)

@@ -1,6 +1,7 @@
 package store
 
 import (
+	"app/api"
 	"app/api/internal/query"
 	"app/api/pkg/mock"
 	"time"
@@ -63,12 +64,12 @@ func (x UserGroup) PrimaryKey() string {
 // UserStore is a user of the system.
 type UserStore struct {
 	mock *mock.Mocker
-	db   query.IDatabase
+	db   api.IDatabase
 	*query.Q
 }
 
 // NewUserStore returns a new query object.
-func NewUserStore(m *mock.Mocker, db query.IDatabase, q *query.Q) UserStore {
+func NewUserStore(m *mock.Mocker, db api.IDatabase, q *query.Q) UserStore {
 	return UserStore{
 		mock: m,
 		db:   db,
