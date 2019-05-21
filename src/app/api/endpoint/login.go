@@ -66,15 +66,15 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Create the response.
-	m := new(model.LoginResponse)
-	m.Body.Token = ""
-	m.Body.Status = http.StatusText(http.StatusOK)
+	m := new(model.LoginResponse).Body
+	m.Token = ""
+	m.Status = http.StatusText(http.StatusOK)
 
 	// Generate the access tokens.
-	m.Body.Token, err = p.Token.Generate(user.ID, 8*time.Hour)
+	m.Token, err = p.Token.Generate(user.ID, 8*time.Hour)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 
-	return p.Response.JSON(w, m.Body)
+	return p.Response.JSON(w, m)
 }
