@@ -84,13 +84,17 @@ func TestFindAll(t *testing.T) {
 	group := store.NewGroup()
 	user := store.NewUser()
 
+	total, err := q.FindAll(&user)
+	assert.Equal(t, 0, total)
+	assert.NotNil(t, err)
+
 	ID, err := cs.Create("1", "a", "b", "c", "d")
 	assert.Equal(t, "1", ID)
 	assert.Nil(t, err)
 
 	e := errors.New("ok")
 	q.Mock.Add("Q.FindAll", 99, e)
-	total, err := q.FindAll(&group)
+	total, err = q.FindAll(&group)
 	assert.Equal(t, 99, total)
 	assert.Equal(t, e, err)
 
@@ -199,6 +203,10 @@ func TestExistsByID(t *testing.T) {
 	assert.Equal(t, true, exists)
 	assert.Nil(t, err, err)
 
+	exists, err = q.ExistsByID(&user, "12")
+	assert.Equal(t, false, exists)
+	assert.Nil(t, err)
+
 	user.TableName = "bad"
 	user.PrimaryKeyName = "bad"
 	exists, err = q.ExistsByID(&user, "1")
@@ -231,6 +239,11 @@ func TestExistsByField(t *testing.T) {
 	assert.Equal(t, true, exists)
 	assert.Equal(t, "1", ID)
 	assert.Nil(t, err, err)
+
+	exists, ID, err = q.ExistsByField(&user, "id", "12")
+	assert.Equal(t, false, exists)
+	assert.Equal(t, "", ID)
+	assert.Nil(t, err)
 
 	user.TableName = "bad"
 	user.PrimaryKeyName = "bad"
