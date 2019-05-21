@@ -3,12 +3,12 @@ package boot
 import (
 	"app/api/component"
 	"app/api/internal/bind"
+	"app/api/internal/query"
 	"app/api/internal/response"
 	"app/api/internal/testutil"
 	"app/api/pkg/database"
 	"app/api/pkg/mock"
 	"app/api/pkg/passhash"
-	"app/api/pkg/query"
 	"app/api/pkg/router"
 	"app/api/store"
 )
