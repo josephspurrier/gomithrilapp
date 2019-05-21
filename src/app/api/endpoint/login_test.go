@@ -147,8 +147,6 @@ func TestLoginFailMissingUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "", r.Body.Token)
-
-	testutil.TeardownDatabase(db)
 }
 
 func TestLoginFailMissingBody(t *testing.T) {
