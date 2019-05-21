@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"app/api/component"
+	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
 	"app/api/internal/response"
@@ -21,7 +21,7 @@ type CoreTest struct {
 }
 
 // TestServices sets up the test services.
-func TestServices(db *database.DBW) (component.Core, *CoreTest) {
+func TestServices(db *database.DBW) (endpoint.Core, *CoreTest) {
 	// Set up the dependencies.
 	mux := router.New()
 	mocker := mock.New(true)
@@ -31,7 +31,7 @@ func TestServices(db *database.DBW) (component.Core, *CoreTest) {
 	mockToken := new(testutil.MockToken)
 
 	// Set up the core.
-	core := component.NewCore(
+	core := endpoint.NewCore(
 		mockLogger,
 		mux,
 		bind.New(mux),

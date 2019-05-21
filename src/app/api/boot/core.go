@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"app/api"
-	"app/api/component"
+	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
 	"app/api/internal/response"
@@ -20,7 +20,7 @@ import (
 )
 
 // Services sets up the production services.
-func Services(l logger.ILog) component.Core {
+func Services(l logger.ILog) endpoint.Core {
 	// If the host env var is set, use it.
 	host := os.Getenv("MYSQL_HOST")
 	if len(host) == 0 {
@@ -58,7 +58,7 @@ func Services(l logger.ILog) component.Core {
 	mocker := mock.New(false)
 
 	// Return a new core.
-	core := component.NewCore(
+	core := endpoint.NewCore(
 		l,
 		mux,
 		bind.New(mux),

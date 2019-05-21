@@ -1,4 +1,4 @@
-package component_test
+package endpoint_test
 
 import (
 	"encoding/json"

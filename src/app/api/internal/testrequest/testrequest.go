@@ -9,11 +9,11 @@ import (
 	"testing"
 
 	"app/api/boot"
-	"app/api/component"
+	"app/api/endpoint"
 )
 
 // SendForm is a helper to quickly make a form request.
-func SendForm(t *testing.T, core component.Core, method string, target string,
+func SendForm(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
 	boot.LoadRoutes(core)
 
@@ -31,7 +31,7 @@ func SendForm(t *testing.T, core component.Core, method string, target string,
 }
 
 // SendJSON is a helper to quickly make a JSON request.
-func SendJSON(t *testing.T, core component.Core, method string, target string,
+func SendJSON(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
 	boot.LoadRoutes(core)
 

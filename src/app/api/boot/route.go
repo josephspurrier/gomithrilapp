@@ -1,10 +1,10 @@
 package boot
 
-import "app/api/component"
+import "app/api/endpoint"
 
 // LoadRoutes will load the routes for the endpoints.
-func LoadRoutes(core component.Core) {
-	component.SetupStatic(core)
-	component.SetupLogin(core)
-	component.SetupRegister(core)
+func LoadRoutes(core endpoint.Core) {
+	endpoint.SetupStatic(core)
+	endpoint.SetupLogin(core)
+	endpoint.SetupRegister(core)
 }

@@ -23,7 +23,8 @@ func Migrate(l logger.ILog, con *mysql.Connection, changesets string) (*sqlx.DB,
 		}
 
 		// Create the database.
-		_, err = d.Query(fmt.Sprintf(`CREATE DATABASE IF NOT EXISTS %v DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;`, con.Name))
+		_, err = d.Query(fmt.Sprintf(`CREATE DATABASE IF NOT EXISTS %v
+		DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;`, con.Name))
 		if err != nil {
 			return nil, err
 		}
