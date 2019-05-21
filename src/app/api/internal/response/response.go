@@ -19,11 +19,13 @@ func New() *Output {
 func (o *Output) JSON(w http.ResponseWriter, body interface{}) (int, error) {
 	// Write the content.
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+
 	err := json.NewEncoder(w).Encode(body)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return http.StatusInternalServerError, err
 	}
+
 	return http.StatusOK, nil
 }
 
@@ -34,12 +36,10 @@ func (o *Output) OK(w http.ResponseWriter, message string) (int, error) {
 	r.Body.Message = message
 
 	// Write the content.
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	err := json.NewEncoder(w).Encode(r.Body)
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(r.Body)
+
 	return http.StatusOK, nil
 }
 
@@ -50,11 +50,9 @@ func (o *Output) Created(w http.ResponseWriter, recordID string) (int, error) {
 	r.Body.RecordID = recordID
 
 	// Write the content.
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err := json.NewEncoder(w).Encode(r.Body)
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(r.Body)
+
 	return http.StatusCreated, nil
 }
