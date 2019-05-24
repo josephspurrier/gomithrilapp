@@ -3,15 +3,18 @@ package middleware
 import (
 	"net/http"
 
+	"app/api"
 	"app/api/middleware/cors"
 	"app/api/middleware/jwt"
 	"app/api/middleware/logrequest"
 )
 
 // Wrap will return the http.Handler wrapped in middleware.
-func Wrap(h http.Handler, l logrequest.ILog, secret []byte) http.Handler {
+func Wrap(h http.Handler, l logrequest.ILog, secret []byte,
+	ctx api.IContext) http.Handler {
 	// JWT whitelist.
 	whitelist := []string{
+		"GET /favicon.ico",
 		"GET /v1",
 		"GET /static/*",
 		"POST /v1/login",
@@ -19,7 +22,7 @@ func Wrap(h http.Handler, l logrequest.ILog, secret []byte) http.Handler {
 	}
 
 	// JWT validation.
-	token := jwt.New(secret, whitelist)
+	token := jwt.New(secret, whitelist, ctx)
 	h = token.Handler(h)
 
 	// CORS for the endpoints.

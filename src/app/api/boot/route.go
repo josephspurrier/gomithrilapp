@@ -7,4 +7,5 @@ func LoadRoutes(core endpoint.Core) {
 	endpoint.SetupStatic(core)
 	endpoint.SetupLogin(core)
 	endpoint.SetupRegister(core)
+	endpoint.SetupNotepad(core)
 }

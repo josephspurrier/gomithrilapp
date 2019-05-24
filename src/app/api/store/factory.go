@@ -8,6 +8,7 @@ import (
 // Factory is all of the stores in the application.
 type Factory struct {
 	User UserStore
+	Note NoteStore
 }
 
 // LoadFactory will return the factory.
@@ -16,5 +17,6 @@ func LoadFactory(m *mock.Mocker, db api.IDatabase, q api.IQuery) *Factory {
 
 	return &Factory{
 		User: NewUserStore(cs),
+		Note: NewNoteStore(cs),
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // StaticEndpoint .
@@ -18,7 +17,7 @@ func SetupStatic(core Core) {
 	p.Core = core
 
 	p.Router.Get("/v1", p.IndexGET)
-	p.Router.Get("/static/...", p.StaticGET)
+	p.Router.Get("/static...", p.StaticGET)
 }
 
 // IndexGET .
@@ -34,7 +33,7 @@ func (p StaticEndpoint) IndexGET(w http.ResponseWriter, r *http.Request) (int, e
 
 // StaticGET .
 func (p StaticEndpoint) StaticGET(w http.ResponseWriter, r *http.Request) (int, error) {
-	if strings.HasSuffix(r.URL.Path, "/") {
+	if r.URL.Path == "/static/" {
 		return http.StatusNotFound, nil
 	}
 

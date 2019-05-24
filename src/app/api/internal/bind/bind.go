@@ -1,8 +1,10 @@
 package bind
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 
@@ -57,8 +59,11 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 			m[k] = vv[0]
 		}
 	case "application/json":
+		b, _ := ioutil.ReadAll(r.Body)
+		// Leave the body readable.
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 		// Decode to the interface.
-		err = json.NewDecoder(r.Body).Decode(&m)
+		err = json.Unmarshal(b, &m)
 		r.Body.Close()
 		if err != nil {
 			return

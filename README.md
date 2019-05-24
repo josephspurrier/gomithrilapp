@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/josephspurrier/govueapp.svg)](https://travis-ci.org/josephspurrier/govueapp)
 [![Coverage Status](https://coveralls.io/repos/github/josephspurrier/govueapp/badge.svg?branch=master&timestamp=20190520-01)](https://coveralls.io/github/josephspurrier/govueapp?branch=master)
 
-[![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/swagger.json)
+[![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
 This is an application that uses Vue on the frontend (UI) and Go on the backend (API).
 
@@ -133,23 +133,23 @@ go get github.com/go-swagger/go-swagger/cmd/swagger
 ### Generate Swagger Spec
 
 ```bash
-# CD to the webapi folder.
-cd src/app/api
+# CD to the api folder.
+cd src/app/api/cmd/api
 
 # Generate the swagger spec.
-swagger generate spec -o ./swagger.json
+swagger generate spec -o $GOPATH/src/app/api/static/swagger/swagger.json
 
 # Replace 'example' with 'x-example' in the swagger spec.
 ## MacOS
-sed -i '' -e 's/example/x\-example/' ./swagger.json
+sed -i '' -e 's/example/x\-example/' $GOPATH/src/app/api/static/swagger/swagger.json
 ## Linux
-sed -i'' -e 's/example/x\-example/' ./swagger.json
+sed -i'' -e 's/example/x\-example/' $GOPATH/src/app/api/static/swagger/swagger.json
 
 # Validate the swagger spec.
-swagger validate ./swagger.json
+swagger validate $GOPATH/src/app/api/static/swagger/swagger.json
 
 # Serve the spec for the browser.
-swagger serve -F=swagger ./swagger.json
+swagger serve -F=swagger $GOPATH/src/app/api/static/swagger/swagger.json
 ```
 
 ## References

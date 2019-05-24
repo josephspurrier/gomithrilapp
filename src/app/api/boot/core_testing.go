@@ -4,6 +4,7 @@ import (
 	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
+	"app/api/internal/requestcontext"
 	"app/api/internal/response"
 	"app/api/internal/testutil"
 	"app/api/pkg/database"
@@ -39,6 +40,7 @@ func TestServices(db *database.DBW) (endpoint.Core, *CoreTest) {
 		mockToken,
 		passhash.New(),
 		store.LoadFactory(mocker, db, query.New(mocker, db)),
+		requestcontext.New(),
 	)
 
 	// Set up the router.

@@ -23,7 +23,8 @@ func main() {
 
 	// Start the web server.
 	l.Printf("Server started.")
-	err := http.ListenAndServe(":"+port, middleware.Wrap(core.Router, l, core.Token.Secret()))
+	err := http.ListenAndServe(":"+port, middleware.Wrap(core.Router, l,
+		core.Token.Secret(), core.Context))
 	if err != nil {
 		l.Printf(err.Error())
 	}

@@ -16,6 +16,7 @@ type Core struct {
 	Token    api.IToken
 	Password api.IPassword
 	Store    *store.Factory
+	Context  api.IContext
 }
 
 // NewCore returns a core for all the endpoints.
@@ -25,7 +26,8 @@ func NewCore(l logger.ILog,
 	resp api.IResponse,
 	token api.IToken,
 	pass api.IPassword,
-	storeFactory *store.Factory) Core {
+	storeFactory *store.Factory,
+	ctx api.IContext) Core {
 	c := Core{
 		Log:      l,
 		Router:   mux,
@@ -34,6 +36,7 @@ func NewCore(l logger.ILog,
 		Token:    token,
 		Password: pass,
 		Store:    storeFactory,
+		Context:  ctx,
 	}
 
 	return c

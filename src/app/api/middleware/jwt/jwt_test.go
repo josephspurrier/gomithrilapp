@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"app/api/internal/requestcontext"
 	"app/api/middleware/jwt"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestWhitelistAllowed(t *testing.T) {
 			"GET /v1/auth",
 		}
 
-		token := jwt.New([]byte("secret"), whitelist)
+		token := jwt.New([]byte("secret"), whitelist, requestcontext.New())
 		h := token.Handler(mux)
 
 		r := httptest.NewRequest(arr[0], arr[1], nil)
@@ -51,7 +52,7 @@ func TestWhitelistNotAllowed(t *testing.T) {
 			"GET /v1/auth",
 		}
 
-		token := jwt.New([]byte("secret"), whitelist)
+		token := jwt.New([]byte("secret"), whitelist, requestcontext.New())
 		h := token.Handler(mux)
 
 		r := httptest.NewRequest(arr[0], arr[1], nil)
@@ -71,7 +72,7 @@ func TestWhitelistBadBearer(t *testing.T) {
 		"GET /v1/auth",
 	}
 
-	token := jwt.New([]byte("secret"), whitelist)
+	token := jwt.New([]byte("secret"), whitelist, requestcontext.New())
 	h := token.Handler(mux)
 
 	r := httptest.NewRequest("POST", "/v1/user", nil)

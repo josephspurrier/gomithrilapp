@@ -56,3 +56,9 @@ type IToken interface {
 	Generate(userID string, duration time.Duration) (string, error)
 	Secret() []byte
 }
+
+// IContext provides handlers for type request context.
+type IContext interface {
+	SetUserID(r *http.Request, val string)
+	UserID(r *http.Request) (string, bool)
+}

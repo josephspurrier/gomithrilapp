@@ -19,17 +19,13 @@ func SetupRegister(core Core) {
 }
 
 // Register .
-// swagger:route POST /v1/register user UserRegister
+// swagger:route POST /v1/register authentication UserRegister
 //
-// Register a new user.
-//
-// Security:
-//   token:
+// Register a user.
 //
 // Responses:
 //   201: CreatedResponse
 //   400: BadRequestResponse
-//   401: UnauthorizedResponse
 //   500: InternalServerErrorResponse
 func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int, error) {
 	// swagger:parameters UserRegister

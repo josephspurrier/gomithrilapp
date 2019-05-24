@@ -22,14 +22,13 @@ func SetupLogin(c Core) {
 }
 
 // Login .
-// swagger:route POST /v1/login user UserLogin
+// swagger:route POST /v1/login authentication UserLogin
 //
 // Authenticate a user.
 //
 // Responses:
-//   201: LoginResponse
+//   200: LoginResponse
 //   400: BadRequestResponse
-//   401: UnauthorizedResponse
 //   500: InternalServerErrorResponse
 func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, error) {
 	// swagger:parameters UserLogin

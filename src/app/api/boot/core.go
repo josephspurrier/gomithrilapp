@@ -6,6 +6,7 @@ import (
 	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
+	"app/api/internal/requestcontext"
 	"app/api/internal/response"
 	"app/api/migration"
 	"app/api/pkg/database"
@@ -69,6 +70,7 @@ func Services(l logger.ILog) endpoint.Core {
 			db,
 			query.New(mocker, db),
 		),
+		requestcontext.New(),
 	)
 
 	// Set up the router.

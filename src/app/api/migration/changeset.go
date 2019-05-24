@@ -40,7 +40,25 @@ CREATE TABLE user (
     deleted_at TIMESTAMP DEFAULT 0,
     
     UNIQUE KEY (email),
-    CONSTRAINT f_user_status FOREIGN KEY (status_id) REFERENCES user_status (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT f_user_user_status FOREIGN KEY (status_id) REFERENCES user_status (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    
+    PRIMARY KEY (id)
+);
+--rollback DROP TABLE user;
+
+--changeset josephspurrier:4
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+CREATE TABLE note (
+    id VARCHAR(36) NOT NULL,
+    
+    user_id VARCHAR(36) NOT NULL,
+    message TEXT(50) NOT NULL,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT 0,
+    
+    CONSTRAINT f_note_user_id FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     
     PRIMARY KEY (id)
 );

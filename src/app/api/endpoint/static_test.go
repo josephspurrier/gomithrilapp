@@ -48,10 +48,6 @@ func TestStaticGETDirNotFound(t *testing.T) {
 
 	w := testrequest.SendForm(t, p, "GET", "/static/folder/", nil)
 
-	r := new(model.GenericResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-
 	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Equal(t, http.StatusText(http.StatusNotFound), r.Body.Status)
+	assert.Equal(t, "404 page not found\n", w.Body.String())
 }

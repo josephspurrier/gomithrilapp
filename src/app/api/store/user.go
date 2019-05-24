@@ -41,7 +41,7 @@ func (x *UserStore) NewGroup() UserGroup {
 	return group
 }
 
-// UserGroup represents a group of users.
+// UserGroup represents a group.
 type UserGroup []User
 
 // Table returns the table name.
@@ -61,12 +61,12 @@ func NewUserStore(c Core) UserStore {
 	}
 }
 
-// UserStore is a user of the system.
+// UserStore .
 type UserStore struct {
 	Core
 }
 
-// Create adds a new user.
+// Create adds a new item.
 func (x *UserStore) Create(firstName, lastName, email, password string) (string, error) {
 	if x.mock != nil && x.mock.Enabled() {
 		return x.mock.String(), x.mock.Error()
@@ -88,7 +88,7 @@ func (x *UserStore) Create(firstName, lastName, email, password string) (string,
 	return uuid, err
 }
 
-// Update makes changes to a user.
+// Update makes changes to an item.
 func (x *UserStore) Update(ID, firstName, lastName, email, password string) (err error) {
 	if x.mock != nil && x.mock.Enabled() {
 		return x.mock.Error()

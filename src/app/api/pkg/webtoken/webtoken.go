@@ -110,11 +110,12 @@ func (c *Configuration) Generate(userID string, duration time.Duration) (string,
 	return token.SignedString([]byte(c.secret))
 }
 
-// Verify will ensure a JWT is valid.
+// Verify will ensure a JWT is valid and returns the audience if successful.
 func (c *Configuration) Verify(s string) (string, error) {
 	token, err := jwt.ParseWithClaims(s, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(c.secret), nil
 	})
+
 	if err == nil {
 		// If a token is valid, return the audience.
 		if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
