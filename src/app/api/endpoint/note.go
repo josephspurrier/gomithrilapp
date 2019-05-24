@@ -160,6 +160,9 @@ func (p NoteEndpoint) Show(w http.ResponseWriter, r *http.Request) (int, error) 
 	// Copy the items to the JSON model.
 	item := new(model.Note)
 	err = structcopy.ByTag(&note, "db", item, "json")
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
 
 	// Create the response.
 	m := new(model.NoteShowResponse).Body
