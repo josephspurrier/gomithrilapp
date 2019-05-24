@@ -66,7 +66,7 @@ func (c *Config) Handler(next http.Handler) http.Handler {
 
 // IsWhitelisted returns true if the request is in the whitelist. If only an
 // asterisk is found in the whitelist, allow all routes. If an asterisk is
-// found somwhere in the page, then whitelist only the matching paths.
+// found in the page string, then whitelist only the matching paths.
 func IsWhitelisted(method string, path string, arr []string) (found bool) {
 	s := fmt.Sprintf("%v %v", method, path)
 	for _, i := range arr {
