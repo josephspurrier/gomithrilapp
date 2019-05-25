@@ -43,16 +43,16 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Request validation.
-	req := new(request).Body
-	if err := p.Bind.Unmarshal(&req, r); err != nil {
+	req := new(request)
+	if err := p.Bind.Unmarshal(req, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(&req); err != nil {
+	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
 	}
 
 	// Determine if the user exists.
 	user := p.Store.User.New()
-	found, err := p.Store.User.FindOneByField(&user, "email", req.Email)
+	found, err := p.Store.User.FindOneByField(&user, "email", req.Body.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if !found {
@@ -60,7 +60,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Ensure the user's password matches.
-	if !p.Password.Match(user.Password, req.Password) {
+	if !p.Password.Match(user.Password, req.Body.Password) {
 		return http.StatusBadRequest, errors.New("user not found (2)")
 	}
 

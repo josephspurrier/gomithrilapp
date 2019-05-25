@@ -1,10 +1,8 @@
 package bind
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 
@@ -59,15 +57,22 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 			m[k] = vv[0]
 		}
 	case "application/json":
-		b, _ := ioutil.ReadAll(r.Body)
-		// Leave the body readable.
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 		// Decode to the interface.
-		err = json.Unmarshal(b, &m)
+		err = json.NewDecoder(r.Body).Decode(&m)
 		r.Body.Close()
 		if err != nil {
 			return
 		}
+
+		// Copy the map items to a new map.
+		mt := make(map[string]interface{})
+		for key, value := range m {
+			mt[key] = value
+		}
+
+		// Save the map to the body to handle cases where there is a body
+		// defined.
+		m["body"] = mt
 	}
 
 	// Loop through each field to extract the URL parameter.

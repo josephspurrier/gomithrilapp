@@ -44,16 +44,16 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Request validation.
-	req := new(request).Body
-	if err := p.Bind.Unmarshal(&req, r); err != nil {
+	req := new(request)
+	if err := p.Bind.Unmarshal(req, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(&req); err != nil {
+	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
 	}
 
 	// Determine if the user already exists.
 	user := p.Store.User.New()
-	found, _, err := p.Store.User.ExistsByField(&user, "email", req.Email)
+	found, _, err := p.Store.User.ExistsByField(&user, "email", req.Body.Email)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if found {
@@ -61,13 +61,14 @@ func (p *RegisterEndpoint) Register(w http.ResponseWriter, r *http.Request) (int
 	}
 
 	// Encrypt the password.
-	password, err := p.Password.Hash(req.Password)
+	password, err := p.Password.Hash(req.Body.Password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 
 	// Create the user.
-	ID, err := p.Store.User.Create(req.FirstName, req.LastName, req.Email, password)
+	ID, err := p.Store.User.Create(req.Body.FirstName,
+		req.Body.LastName, req.Body.Email, password)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

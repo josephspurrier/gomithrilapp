@@ -49,10 +49,10 @@ func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Request validation.
-	req := new(request).Body
-	if err := p.Bind.Unmarshal(&req, r); err != nil {
+	req := new(request)
+	if err := p.Bind.Unmarshal(req, r); err != nil {
 		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(&req); err != nil {
+	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
 	}
 
@@ -63,7 +63,7 @@ func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, erro
 	}
 
 	// Create the note.
-	ID, err := p.Store.Note.Create(userID, req.Message)
+	ID, err := p.Store.Note.Create(userID, req.Body.Message)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -99,7 +99,7 @@ func (p NoteEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, error)
 	}
 
 	// Copy the items to the JSON model.
-	arr := new(model.NoteIndexResponse).Body.Notes
+	arr := make([]model.Note, 0)
 	for _, u := range group {
 		item := new(model.Note)
 		err = structcopy.ByTag(&u, "db", item, "json")
@@ -199,8 +199,6 @@ func (p *NoteEndpoint) Update(w http.ResponseWriter, r *http.Request) (int, erro
 	// Request validation.
 	req := new(request)
 	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err := p.Bind.Unmarshal(&req.Body, r); err != nil {
 		return http.StatusBadRequest, err
 	} else if err = p.Bind.Validate(req); err != nil {
 		return http.StatusBadRequest, err
