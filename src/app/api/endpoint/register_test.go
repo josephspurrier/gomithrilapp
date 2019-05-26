@@ -68,7 +68,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 func TestRegisterFailMissingField(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, m := boot.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -83,6 +83,12 @@ func TestRegisterFailMissingField(t *testing.T) {
 	r := new(model.CreatedResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	w = tr.SendJSON(t, p, "POST", "/v1/register", nil)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 

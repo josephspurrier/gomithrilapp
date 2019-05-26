@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"reflect"
 
+	"app/api/pkg/mock"
+
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -18,23 +20,33 @@ type IRouter interface {
 type Binder struct {
 	validator *validator.Validate
 	router    IRouter
+	Mock      *mock.Mocker
 }
 
 // New returns a new binder for request bind and validation.
-func New(r IRouter) *Binder {
+func New(mock *mock.Mocker, r IRouter) *Binder {
 	return &Binder{
 		validator: validator.New(),
 		router:    r,
+		Mock:      mock,
 	}
 }
 
 // Validate will validate a struct using the validator.
 func (b *Binder) Validate(s interface{}) error {
+	if b.Mock != nil && b.Mock.Enabled() {
+		return b.Mock.Error()
+	}
+
 	return b.validator.Struct(s)
 }
 
 // Unmarshal will perform an unmarshal on an interface using: form or JSON.
 func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
+	if b.Mock != nil && b.Mock.Enabled() {
+		return b.Mock.Error()
+	}
+
 	// Check for errors.
 	v := reflect.ValueOf(iface)
 	if v.Kind() != reflect.Ptr {

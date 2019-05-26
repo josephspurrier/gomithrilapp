@@ -139,7 +139,7 @@ func TestLoginFailMissingUser(t *testing.T) {
 func TestLoginFailMissingBody(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, _ := boot.TestServices(db)
+	p, m := boot.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -148,10 +148,10 @@ func TestLoginFailMissingBody(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	tr.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Login with the user.
-	w := tr.SendJSON(t, core, "POST", "/v1/login", nil)
+	w := tr.SendJSON(t, p, "POST", "/v1/login", nil)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -159,6 +159,12 @@ func TestLoginFailMissingBody(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "", r.Body.Token)
+
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	w = tr.SendJSON(t, p, "POST", "/v1/login", nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 
 func TestLoginTokenBad(t *testing.T) {

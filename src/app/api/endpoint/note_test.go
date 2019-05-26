@@ -77,6 +77,13 @@ func TestNoteCreateFail(t *testing.T) {
 	w := tr.SendJSON(t, p, "POST", "/v1/note", form)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "POST", "/v1/note", nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
 	// Invalid data.
 	tr.Header.Set("Authorization", "Bearer "+token)
 	w = tr.SendJSON(t, p, "POST", "/v1/note", nil)
@@ -225,6 +232,19 @@ func TestNoteShowFail(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "GET", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid validate.
+	m.Mock.Add("Binder.Validate", e)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "GET", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
 	// Invalid user.
 	m.Mock.Add("CTX.UserID", "", false)
 	tr.Header.Set("Authorization", "Bearer "+token)
@@ -278,4 +298,165 @@ func TestNoteUpdateSuccess(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "bar", rrrr.Body.Message)
+}
+
+func TestNoteUpdateFail(t *testing.T) {
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
+	p, m := boot.TestServices(db)
+	tr := testrequest.New()
+
+	// Get an auth token.
+	token := auth(t, tr, p)
+
+	// Create a note.
+	form := url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w := tr.SendJSON(t, p, "POST", "/v1/note", form)
+	rr := new(model.CreatedResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusCreated, w.Code)
+	assert.Equal(t, 36, len(rr.Body.RecordID))
+
+	recordID := rr.Body.RecordID
+
+	// Note not found.
+	form = url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/bad-id", form)
+	rrr := new(model.BadRequestResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &rrr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	form = url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/"+recordID, form)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid validate.
+	m.Mock.Add("Binder.Validate", e)
+	form = url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/"+recordID, form)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid user.
+	form = url.Values{}
+	form.Set("message", "foo")
+	m.Mock.Add("CTX.UserID", "", false)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/"+recordID, form)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Invalid DB.
+	m.Mock.Add("NoteStore.FindOneByIDAndUser", false, errors.New("no note"))
+	form = url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/"+recordID, form)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Invalid DB.
+	m.Mock.Add("NoteStore.Update", 0, errors.New("no note"))
+	form = url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "PUT", "/v1/note/"+recordID, form)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}
+
+func TestNoteDestroySuccess(t *testing.T) {
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
+	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
+
+	// Get an auth token.
+	token := auth(t, tr, p)
+
+	// Create a note.
+	form := url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w := tr.SendJSON(t, p, "POST", "/v1/note", form)
+	rr := new(model.CreatedResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusCreated, w.Code)
+	assert.Equal(t, 36, len(rr.Body.RecordID))
+
+	recordID := rr.Body.RecordID
+
+	// Get the note.
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/"+recordID, nil)
+	rrr := new(model.OKResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &rrr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, w.Code)
+}
+
+func TestNoteDestroyFail(t *testing.T) {
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
+	p, m := boot.TestServices(db)
+	tr := testrequest.New()
+
+	// Get an auth token.
+	token := auth(t, tr, p)
+
+	// Create a note.
+	form := url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w := tr.SendJSON(t, p, "POST", "/v1/note", form)
+	rr := new(model.CreatedResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusCreated, w.Code)
+	assert.Equal(t, 36, len(rr.Body.RecordID))
+
+	recordID := rr.Body.RecordID
+
+	// Note not found.
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/bad-id", nil)
+	rrr := new(model.BadRequestResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &rrr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid unmarshal.
+	e := errors.New("bad error")
+	m.Mock.Add("Binder.Unmarshal", e)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid validate.
+	m.Mock.Add("Binder.Validate", e)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Invalid user.
+	m.Mock.Add("CTX.UserID", "", false)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Invalid DB.
+	m.Mock.Add("NoteStore.DeleteOneByIDAndUser", 0, errors.New("no note"))
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "DELETE", "/v1/note/"+recordID, nil)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
 }

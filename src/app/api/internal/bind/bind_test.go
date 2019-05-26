@@ -1,6 +1,7 @@
 package bind_test
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -9,6 +10,7 @@ import (
 
 	"app/api/internal/bind"
 	"app/api/internal/testrequest"
+	"app/api/pkg/mock"
 	"app/api/pkg/router"
 
 	"github.com/stretchr/testify/assert"
@@ -36,7 +38,7 @@ func TestFormSuccess(t *testing.T) {
 			}
 
 			req := new(request)
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
@@ -81,7 +83,7 @@ func TestFormNil(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -121,7 +123,7 @@ func TestFormMissingPointer(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -167,7 +169,7 @@ func TestJSONSuccess(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
@@ -214,7 +216,7 @@ func TestJSONFailure(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -260,7 +262,7 @@ func TestJSONFailureNil(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mux)
+			b := bind.New(mock.New(false), mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -276,4 +278,16 @@ func TestJSONFailureNil(t *testing.T) {
 	mux.ServeHTTP(w, r)
 
 	assert.Equal(t, true, called)
+}
+
+func TestMock(t *testing.T) {
+	b := bind.New(mock.New(true), nil)
+
+	e := errors.New("test error")
+
+	b.Mock.Add("Binder.Unmarshal", e)
+	assert.Equal(t, e, b.Unmarshal(nil, nil))
+
+	b.Mock.Add("Binder.Validate", e)
+	assert.Equal(t, e, b.Validate(nil))
 }

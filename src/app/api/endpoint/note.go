@@ -268,8 +268,8 @@ func (p NoteEndpoint) Destroy(w http.ResponseWriter, r *http.Request) (int, erro
 	note := p.Store.Note.New()
 	affected, err := p.Store.Note.DeleteOneByIDAndUser(&note, req.NoteID, userID)
 	if err != nil {
-		return http.StatusBadRequest, errors.New("note not deleted: " + err.Error())
-	} else if affected < 1 {
+		return http.StatusInternalServerError, err
+	} else if affected == 0 {
 		return http.StatusBadRequest, errors.New("note does not exist")
 	}
 

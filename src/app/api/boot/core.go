@@ -65,7 +65,7 @@ func Services(l logger.ILog, dbx *database.DBW, mocker *mock.Mocker) endpoint.Co
 	core := endpoint.NewCore(
 		l,
 		mux,
-		bind.New(mux),
+		bind.New(mocker, mux),
 		response.New(),
 		webtoken.New([]byte(secret)),
 		passhash.New(),

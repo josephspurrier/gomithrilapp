@@ -41,9 +41,12 @@ func TestStaticGETNotFound(t *testing.T) {
 	tr := testrequest.New()
 
 	w := tr.SendForm(t, p, "GET", "/static/healthcheck-bad.html", nil)
-
 	assert.Equal(t, http.StatusNotFound, w.Code)
 	assert.Equal(t, "404 page not found\n", w.Body.String())
+
+	w = tr.SendForm(t, p, "GET", "/static/", nil)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+	assert.Equal(t, "{\"status\":\"Not Found\"}\n", w.Body.String())
 }
 
 func TestStaticGETDirNotFound(t *testing.T) {
