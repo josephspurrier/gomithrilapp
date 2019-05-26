@@ -36,7 +36,7 @@ func (q *Q) FindOneByID(dest api.IRecord, ID string) (exists bool, err error) {
 		WHERE %s = ?
 		LIMIT 1`, dest.Table(), dest.PrimaryKey()),
 		ID)
-	return recordExists(err)
+	return q.db.RecordExists(err)
 }
 
 // FindOneByField will find a record by a specified field.
@@ -50,7 +50,7 @@ func (q *Q) FindOneByField(dest api.IRecord, field string, value string) (exists
 		WHERE %s = ?
 		LIMIT 1`, dest.Table(), field),
 		value)
-	return recordExists(err)
+	return q.db.RecordExists(err)
 }
 
 // FindAll returns all users.
@@ -68,7 +68,7 @@ func (q *Q) FindAll(dest api.IRecord) (total int, err error) {
 		`, dest.PrimaryKey(), dest.Table()))
 
 	if err != nil {
-		return total, suppressNoRowsError(err)
+		return total, q.db.SuppressNoRowsError(err)
 	}
 
 	err = q.db.Select(dest, fmt.Sprintf(`SELECT * FROM %s`, dest.Table()))
@@ -91,7 +91,7 @@ func (q *Q) DeleteOneByID(dest api.IRecord, ID string) (affected int, err error)
 		return 0, err
 	}
 
-	return affectedRows(result), err
+	return q.db.AffectedRows(result), err
 }
 
 // DeleteAll removes all records.
@@ -105,7 +105,7 @@ func (q *Q) DeleteAll(dest api.IRecord) (affected int, err error) {
 		return 0, err
 	}
 
-	return affectedRows(result), err
+	return q.db.AffectedRows(result), err
 }
 
 // *****************************************************************************
@@ -123,7 +123,7 @@ func (q *Q) ExistsByID(db api.IRecord, value string) (found bool, err error) {
 		WHERE %s = ?
 		LIMIT 1`, db.PrimaryKey(), db.Table(), db.PrimaryKey()),
 		value)
-	return recordExists(err)
+	return q.db.RecordExists(err)
 }
 
 // ExistsByField determines if a records exists by a specified field and
@@ -139,5 +139,5 @@ func (q *Q) ExistsByField(db api.IRecord, field string, value string) (found boo
 		LIMIT 1`, db.PrimaryKey(), db.Table(), field),
 		value)
 
-	return recordExistsString(err, ID)
+	return q.db.RecordExistsString(err, ID)
 }

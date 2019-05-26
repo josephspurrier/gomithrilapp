@@ -93,7 +93,7 @@ func (p NoteEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, error)
 
 	// Get a list of notes for the user.
 	group := p.Store.Note.NewGroup()
-	err := p.Store.Note.FindAllByUser(&group, userID)
+	_, err := p.Store.Note.FindAllByUser(&group, userID)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -152,9 +152,11 @@ func (p NoteEndpoint) Show(w http.ResponseWriter, r *http.Request) (int, error) 
 
 	// Get the note for the user.
 	note := p.Store.Note.New()
-	err := p.Store.Note.FindOneByIDAndUser(&note, req.NoteID, userID)
+	exists, err := p.Store.Note.FindOneByIDAndUser(&note, req.NoteID, userID)
 	if err != nil {
-		return http.StatusBadRequest, errors.New("notes not found")
+		return http.StatusInternalServerError, err
+	} else if !exists {
+		return http.StatusBadRequest, errors.New("invalid note")
 	}
 
 	// Copy the items to the JSON model.
@@ -212,13 +214,15 @@ func (p *NoteEndpoint) Update(w http.ResponseWriter, r *http.Request) (int, erro
 
 	// Determine if the note exists for the user.
 	note := p.Store.Note.New()
-	err := p.Store.Note.FindOneByIDAndUser(&note, req.NoteID, userID)
+	exists, err := p.Store.Note.FindOneByIDAndUser(&note, req.NoteID, userID)
 	if err != nil {
+		return http.StatusInternalServerError, err
+	} else if !exists {
 		return http.StatusBadRequest, errors.New("note does not exist")
 	}
 
 	// Update the note.
-	err = p.Store.Note.Update(req.NoteID, userID, req.Body.Message)
+	_, err = p.Store.Note.Update(req.NoteID, userID, req.Body.Message)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

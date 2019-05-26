@@ -1,7 +1,6 @@
 package store
 
 import (
-	"database/sql"
 	"time"
 
 	"app/api"
@@ -88,12 +87,12 @@ func (x *NoteStore) Create(userID, message string) (string, error) {
 }
 
 // Update makes changes to an item.
-func (x *NoteStore) Update(ID, userID, message string) (err error) {
+func (x *NoteStore) Update(ID, userID, message string) (affected int, err error) {
 	if x.mock != nil && x.mock.Enabled() {
-		return x.mock.Error()
+		return x.mock.Int(), x.mock.Error()
 	}
 
-	_, err = x.db.Exec(`
+	result, err := x.db.Exec(`
 		UPDATE note
 		SET
 			message = ?
@@ -102,13 +101,13 @@ func (x *NoteStore) Update(ID, userID, message string) (err error) {
 		LIMIT 1
 		`,
 		message, ID, userID)
-	return
+	return x.db.AffectedRows(result), err
 }
 
 // FindAllByUser returns items for a user.
-func (x *NoteStore) FindAllByUser(dest *NoteGroup, userID string) (err error) {
+func (x *NoteStore) FindAllByUser(dest *NoteGroup, userID string) (total int, err error) {
 	if x.mock != nil && x.mock.Enabled() {
-		return x.mock.Error()
+		return x.mock.Int(), x.mock.Error()
 	}
 
 	err = x.db.Select(dest, `
@@ -117,13 +116,13 @@ func (x *NoteStore) FindAllByUser(dest *NoteGroup, userID string) (err error) {
 		WHERE user_id = ?
 		`,
 		userID)
-	return
+	return len(*dest), x.db.SuppressNoRowsError(err)
 }
 
 // FindOneByIDAndUser returns an item for a user.
-func (x *NoteStore) FindOneByIDAndUser(dest *Note, ID string, userID string) (err error) {
+func (x *NoteStore) FindOneByIDAndUser(dest *Note, ID string, userID string) (exists bool, err error) {
 	if x.mock != nil && x.mock.Enabled() {
-		return x.mock.Error()
+		return x.mock.Bool(), x.mock.Error()
 	}
 
 	err = x.db.Get(dest, `
@@ -134,7 +133,7 @@ func (x *NoteStore) FindOneByIDAndUser(dest *Note, ID string, userID string) (er
 		LIMIT 1
 		`,
 		ID, userID)
-	return
+	return x.db.RecordExists(err)
 }
 
 // DeleteOneByIDAndUser removes one item from a user.
@@ -150,24 +149,6 @@ func (x *NoteStore) DeleteOneByIDAndUser(dest api.IRecord, ID string,
 	AND user_id = ?
 	LIMIT 1`,
 		ID, userID)
-	if err != nil {
-		return 0, err
-	}
 
-	return affectedRows(result), err
-}
-
-// affectedRows returns the number of rows affected by the query.
-func affectedRows(result sql.Result) int {
-	if result == nil {
-		return 0
-	}
-
-	// If successful, get the number of affected rows.
-	count, err := result.RowsAffected()
-	if err != nil {
-		return 0
-	}
-
-	return int(count)
+	return x.db.AffectedRows(result), err
 }

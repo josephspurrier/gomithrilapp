@@ -61,7 +61,9 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 		err = json.NewDecoder(r.Body).Decode(&m)
 		r.Body.Close()
 		if err != nil {
-			return
+			// No longer fail on an unmarshal error. This is so users can submit
+			// empty data for GET requests, yet we can still map the URL
+			// parameter by using the same logic.
 		}
 
 		// Copy the map items to a new map.

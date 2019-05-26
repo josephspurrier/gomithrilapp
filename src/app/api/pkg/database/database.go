@@ -67,6 +67,49 @@ func (d *DBW) Name() string {
 	return d.name
 }
 
+// AffectedRows returns the number of rows affected by the query.
+func (d *DBW) AffectedRows(result sql.Result) int {
+	if result == nil {
+		return 0
+	}
+
+	// If successful, get the number of affected rows.
+	count, err := result.RowsAffected()
+	if err != nil {
+		return 0
+	}
+
+	return int(count)
+}
+
+// RecordExists returns if the record exists or not.
+func (d *DBW) RecordExists(err error) (bool, error) {
+	if err == nil {
+		return true, nil
+	} else if err == sql.ErrNoRows {
+		return false, nil
+	}
+	return false, err
+}
+
+// RecordExistsString returns the proper string is the record exists.
+func (d *DBW) RecordExistsString(err error, s string) (bool, string, error) {
+	if err == nil {
+		return true, s, nil
+	} else if err == sql.ErrNoRows {
+		return false, "", nil
+	}
+	return false, "", err
+}
+
+// SuppressNoRowsError will return nil if the error is sql.ErrNoRows.
+func (d *DBW) SuppressNoRowsError(err error) error {
+	if err == sql.ErrNoRows {
+		return nil
+	}
+	return err
+}
+
 /*
 // PaginatedResults returns the paginated results of a query.
 func (d *DBW) PaginatedResults(i interface{}, fn func() (interface{}, int,

@@ -19,6 +19,10 @@ type IDatabase interface {
 	Select(dest interface{}, query string, args ...interface{}) error
 	QueryRowScan(dest interface{}, query string, args ...interface{}) error
 	Name() string
+	RecordExists(err error) (bool, error)
+	AffectedRows(result sql.Result) int
+	RecordExistsString(err error, s string) (bool, string, error)
+	SuppressNoRowsError(err error) error
 }
 
 // IPassword provides password hashing.

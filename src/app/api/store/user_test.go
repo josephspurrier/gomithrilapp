@@ -21,8 +21,9 @@ func TestUser(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 36, len(ID))
 
-	err = s.Update(ID, "aa", "bb", "cc", "dd")
+	affected, err := s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.NoError(t, err)
+	assert.Equal(t, 1, affected)
 
 	user := s.New()
 	found, err := s.FindOneByID(&user, ID)
@@ -52,7 +53,8 @@ func TestUserMock(t *testing.T) {
 	assert.Equal(t, e, err)
 	assert.Equal(t, "1", ID)
 
-	m.Mock.Add("UserStore.Update", e)
-	err = s.Update(ID, "aa", "bb", "cc", "dd")
+	m.Mock.Add("UserStore.Update", 22, e)
+	affected, err := s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.Equal(t, e, err)
+	assert.Equal(t, 22, affected)
 }

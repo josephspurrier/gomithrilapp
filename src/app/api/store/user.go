@@ -89,12 +89,12 @@ func (x *UserStore) Create(firstName, lastName, email, password string) (string,
 }
 
 // Update makes changes to an item.
-func (x *UserStore) Update(ID, firstName, lastName, email, password string) (err error) {
+func (x *UserStore) Update(ID, firstName, lastName, email, password string) (affected int, err error) {
 	if x.mock != nil && x.mock.Enabled() {
-		return x.mock.Error()
+		return x.mock.Int(), x.mock.Error()
 	}
 
-	_, err = x.db.Exec(`
+	result, err := x.db.Exec(`
 		UPDATE user
 		SET
 			first_name = ?,
@@ -104,5 +104,5 @@ func (x *UserStore) Update(ID, firstName, lastName, email, password string) (err
 		WHERE id = ?
 		`,
 		firstName, lastName, email, password, ID)
-	return
+	return x.db.AffectedRows(result), err
 }
