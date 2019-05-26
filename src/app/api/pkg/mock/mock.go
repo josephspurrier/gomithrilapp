@@ -2,6 +2,8 @@
 // panic if the wrong value types are added.
 package mock
 
+import "log"
+
 // Mocker helps test functions.
 type Mocker struct {
 	enable bool
@@ -18,6 +20,11 @@ func New(enable bool) *Mocker {
 // SetEnable will enable the mocker.
 func (m *Mocker) SetEnable(enable bool) {
 	m.enable = enable
+}
+
+// ShowCaller will output the caller.
+func (m *Mocker) ShowCaller() {
+	log.Println(getCaller(2))
 }
 
 // Enabled returns if the mock is enabled for the function.

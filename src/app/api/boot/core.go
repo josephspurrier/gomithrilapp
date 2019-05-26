@@ -73,7 +73,7 @@ func Services(l logger.ILog, dbx *database.DBW, mocker *mock.Mocker) endpoint.Co
 			dbx,
 			query.New(mocker, dbx),
 		),
-		requestcontext.New(),
+		requestcontext.New(mocker),
 	)
 
 	// Set up the router.
