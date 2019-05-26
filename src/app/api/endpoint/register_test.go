@@ -19,6 +19,7 @@ func TestRegisterSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -26,7 +27,7 @@ func TestRegisterSuccess(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -40,6 +41,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -47,14 +49,14 @@ func TestRegisterFailUserExists(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	form = url.Values{}
 	form.Set("first_name", "a@a.com")
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -67,6 +69,7 @@ func TestRegisterFailMissingField(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -74,7 +77,7 @@ func TestRegisterFailMissingField(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	//form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -87,9 +90,10 @@ func TestRegisterFailInvalidJSON(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", nil)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", nil)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -100,6 +104,7 @@ func TestRegisterFailInvalidJSON(t *testing.T) {
 
 func TestRegisterFailDatabase(t *testing.T) {
 	p, _ := boot.TestServices(nil)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -107,7 +112,7 @@ func TestRegisterFailDatabase(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -120,6 +125,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, m := boot.TestServices(db)
+	tr := testrequest.New()
 
 	m.Mock.Add("UserStore.Create", "0", errors.New("error creating user"))
 
@@ -129,7 +135,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -142,6 +148,7 @@ func TestRegisterFailHash(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	mpass := new(testutil.MockPasshash)
 	p.Password = mpass
@@ -153,7 +160,7 @@ func TestRegisterFailHash(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
 
 	// Verify the response.
 	r := new(model.InternalServerErrorResponse)

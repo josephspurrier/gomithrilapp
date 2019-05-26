@@ -3,6 +3,7 @@ package testrequest
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"strings"
@@ -12,9 +13,24 @@ import (
 	"app/api/endpoint"
 )
 
+// TR is a test request.
+type TR struct {
+	Header    http.Header
+	Handler   http.Handler
+	ServeHTTP func(w http.ResponseWriter, r *http.Request)
+}
+
+// New returns a new TR.
+func New() *TR {
+	return &TR{
+		Header: make(http.Header),
+	}
+}
+
 // SendForm is a helper to quickly make a form request.
-func SendForm(t *testing.T, core endpoint.Core, method string, target string,
+func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
+	// Load the routes.
 	boot.LoadRoutes(core)
 
 	var body io.Reader
@@ -23,16 +39,22 @@ func SendForm(t *testing.T, core endpoint.Core, method string, target string,
 	}
 
 	r := httptest.NewRequest(method, target, body)
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	for k, v := range tr.Header {
+		r.Header.Set(k, v[0])
+	}
+	tr.Header = make(http.Header)
+
 	w := httptest.NewRecorder()
-	core.Router.ServeHTTP(w, r)
+	boot.Middleware(core).ServeHTTP(w, r)
 
 	return w
 }
 
 // SendJSON is a helper to quickly make a JSON request.
-func SendJSON(t *testing.T, core endpoint.Core, method string, target string,
+func (tr *TR) SendJSON(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
+	// Load the routes.
 	boot.LoadRoutes(core)
 
 	var body io.Reader
@@ -41,9 +63,15 @@ func SendJSON(t *testing.T, core endpoint.Core, method string, target string,
 	}
 
 	r := httptest.NewRequest(method, target, body)
-	r.Header.Add("Content-Type", "application/json")
+
+	r.Header.Set("Content-Type", "application/json")
+	for k, v := range tr.Header {
+		r.Header.Set(k, v[0])
+	}
+	tr.Header = make(http.Header)
+
 	w := httptest.NewRecorder()
-	core.Router.ServeHTTP(w, r)
+	boot.Middleware(core).ServeHTTP(w, r)
 
 	return w
 }

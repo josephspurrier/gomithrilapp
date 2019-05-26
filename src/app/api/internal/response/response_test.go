@@ -2,7 +2,6 @@ package response_test
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -69,7 +68,6 @@ func TestCreated(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, status)
 	assert.Nil(t, err)
 
-	log.Println(w.Code, w.Body.String())
 	c := new(model.CreatedResponse).Body
 	err = json.Unmarshal(w.Body.Bytes(), &c)
 	assert.Nil(t, err)

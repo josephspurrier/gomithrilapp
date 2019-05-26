@@ -21,10 +21,12 @@ func TestLoginSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	core, m := boot.TestServices(db)
+	tr := testrequest.New()
 
+	core.Token = m.Token
+	m.Token.SecretValue = "0123456789ABCDEF0123456789ABCDEF"
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
+		enc := base64.StdEncoding.EncodeToString(m.Token.Secret())
 		return enc, nil
 	}
 
@@ -34,13 +36,13 @@ func TestLoginSuccess(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -53,13 +55,8 @@ func TestLoginSuccess(t *testing.T) {
 func TestLoginFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, m := boot.TestServices(db)
-
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
-		return enc, nil
-	}
+	core, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -67,13 +64,13 @@ func TestLoginFail(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "wrong-password")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -86,13 +83,8 @@ func TestLoginFail(t *testing.T) {
 func TestLoginFailMissingField(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, m := boot.TestServices(db)
-
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
-		return enc, nil
-	}
+	core, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -100,13 +92,13 @@ func TestLoginFailMissingField(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	//form.Set("password", "wrong-password")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -119,13 +111,8 @@ func TestLoginFailMissingField(t *testing.T) {
 func TestLoginFailMissingUser(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, m := boot.TestServices(db)
-
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
-		return enc, nil
-	}
+	core, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -133,13 +120,13 @@ func TestLoginFailMissingUser(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "b@b.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -152,13 +139,8 @@ func TestLoginFailMissingUser(t *testing.T) {
 func TestLoginFailMissingBody(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	core, m := boot.TestServices(db)
-
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		b := []byte("0123456789ABCDEF0123456789ABCDEF")
-		enc := base64.StdEncoding.EncodeToString(b)
-		return enc, nil
-	}
+	core, _ := boot.TestServices(db)
+	tr := testrequest.New()
 
 	// Register the user.
 	form := url.Values{}
@@ -166,10 +148,10 @@ func TestLoginFailMissingBody(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", nil)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", nil)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -179,11 +161,14 @@ func TestLoginFailMissingBody(t *testing.T) {
 	assert.Equal(t, "", r.Body.Token)
 }
 
-func TestLoginToken(t *testing.T) {
+func TestLoginTokenBad(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
 	core, m := boot.TestServices(db)
+	tr := testrequest.New()
 
+	core.Token = m.Token
+	m.Token.SecretValue = "0123456789ABCDEF0123456789ABCDEF"
 	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
 		return "", errors.New("bad token generation")
 	}
@@ -194,13 +179,13 @@ func TestLoginToken(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	testrequest.SendJSON(t, core, "POST", "/v1/register", form)
+	tr.SendJSON(t, core, "POST", "/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -212,12 +197,13 @@ func TestLoginToken(t *testing.T) {
 
 func TestLoginFailDatabase(t *testing.T) {
 	core, _ := boot.TestServices(nil)
+	tr := testrequest.New()
 
 	// Login with the user.
 	form := url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := testrequest.SendJSON(t, core, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, core, "POST", "/v1/login", form)
 
 	// Verify the response.
 	r := new(model.InternalServerErrorResponse)

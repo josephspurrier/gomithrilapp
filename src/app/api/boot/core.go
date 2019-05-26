@@ -20,8 +20,8 @@ import (
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
 
-// Services sets up the production services.
-func Services(l logger.ILog) endpoint.Core {
+// Database migrates the database and then returns the database connection.
+func Database(l logger.ILog) *database.DBW {
 	// If the host env var is set, use it.
 	host := os.Getenv("MYSQL_HOST")
 	if len(host) == 0 {
@@ -50,13 +50,16 @@ func Services(l logger.ILog) endpoint.Core {
 		l.Fatalf(err.Error())
 	}
 
+	return database.New(dbx, con.Name)
+}
+
+// Services sets up the production services.
+func Services(l logger.ILog, dbx *database.DBW, mocker *mock.Mocker) endpoint.Core {
 	// FIXME: This needs to be loaded from a config.
 	secret := "TA8tALZAvLVLo4ToI44xF/nF6IyrRNOR6HSfpno/81M="
 
 	// Configure the services.
 	mux := router.New()
-	db := database.New(dbx, con.Name)
-	mocker := mock.New(false)
 
 	// Return a new core.
 	core := endpoint.NewCore(
@@ -67,17 +70,14 @@ func Services(l logger.ILog) endpoint.Core {
 		webtoken.New([]byte(secret)),
 		passhash.New(),
 		store.LoadFactory(mocker,
-			db,
-			query.New(mocker, db),
+			dbx,
+			query.New(mocker, dbx),
 		),
 		requestcontext.New(),
 	)
 
 	// Set up the router.
 	SetupRouter(l, mux)
-
-	// Load all the routes.
-	LoadRoutes(core)
 
 	return core
 }

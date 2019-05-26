@@ -2,16 +2,9 @@ package boot
 
 import (
 	"app/api/endpoint"
-	"app/api/internal/bind"
-	"app/api/internal/query"
-	"app/api/internal/requestcontext"
-	"app/api/internal/response"
 	"app/api/internal/testutil"
 	"app/api/pkg/database"
 	"app/api/pkg/mock"
-	"app/api/pkg/passhash"
-	"app/api/pkg/router"
-	"app/api/store"
 )
 
 // CoreTest contains all the configurable dependencies.
@@ -23,28 +16,12 @@ type CoreTest struct {
 
 // TestServices sets up the test services.
 func TestServices(db *database.DBW) (endpoint.Core, *CoreTest) {
-	// Set up the dependencies.
-	mux := router.New()
-	mocker := mock.New(true)
-
 	// Set up the mocked dependencies.
 	mockLogger := new(testutil.MockLogger)
 	mockToken := new(testutil.MockToken)
+	mocker := mock.New(true)
 
-	// Set up the core.
-	core := endpoint.NewCore(
-		mockLogger,
-		mux,
-		bind.New(mux),
-		response.New(),
-		mockToken,
-		passhash.New(),
-		store.LoadFactory(mocker, db, query.New(mocker, db)),
-		requestcontext.New(),
-	)
-
-	// Set up the router.
-	SetupRouter(core.Log, mux)
+	core := Services(mockLogger, db, mocker)
 
 	// Add all the configurable mocks.
 	m := &CoreTest{

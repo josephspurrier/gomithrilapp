@@ -70,6 +70,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	m.Status = http.StatusText(http.StatusOK)
 
 	// Generate the access tokens.
+	// FIXME: Set this timeout to a confgurable value.
 	m.Token, err = p.Token.Generate(user.ID, 8*time.Hour)
 	if err != nil {
 		return http.StatusInternalServerError, err
