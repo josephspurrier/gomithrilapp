@@ -98,3 +98,67 @@ func TestNoteCreateFail(t *testing.T) {
 	w = tr.SendJSON(t, p, "POST", "/v1/note", form)
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 }
+
+func TestNoteIndexSuccess(t *testing.T) {
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
+	p, _ := boot.TestServices(db)
+	tr := testrequest.New()
+
+	// Get an auth token.
+	token := auth(t, tr, p)
+
+	// Get the notes - there should be none.
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w := tr.SendJSON(t, p, "GET", "/v1/note", nil)
+	rr := new(model.NoteIndexResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, 0, len(rr.Body.Notes))
+
+	// Create a note.
+	form := url.Values{}
+	form.Set("message", "foo")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	tr.SendJSON(t, p, "POST", "/v1/note", form)
+
+	// Create another note.
+	form = url.Values{}
+	form.Set("message", "foo2")
+	tr.Header.Set("Authorization", "Bearer "+token)
+	tr.SendJSON(t, p, "POST", "/v1/note", form)
+
+	// Get the notes.
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "GET", "/v1/note", nil)
+
+	// Verify the response.
+	rr = new(model.NoteIndexResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &rr.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, 2, len(rr.Body.Notes))
+}
+
+func TestNoteIndexFail(t *testing.T) {
+	db := testutil.LoadDatabase()
+	defer testutil.TeardownDatabase(db)
+	p, m := boot.TestServices(db)
+	tr := testrequest.New()
+
+	// Get an auth token.
+	token := auth(t, tr, p)
+
+	// Invalid user.
+	m.Mock.Add("CTX.UserID", "", false)
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w := tr.SendJSON(t, p, "GET", "/v1/note", nil)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	// Invalid DB.
+	m.Mock.Add("NoteStore.FindAllByUser", errors.New("no notes"))
+	tr.Header.Set("Authorization", "Bearer "+token)
+	w = tr.SendJSON(t, p, "GET", "/v1/note", nil)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+}

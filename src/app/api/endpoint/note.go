@@ -95,7 +95,7 @@ func (p NoteEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, error)
 	group := p.Store.Note.NewGroup()
 	err := p.Store.Note.FindAllByUser(&group, userID)
 	if err != nil {
-		return http.StatusBadRequest, errors.New("notes not found")
+		return http.StatusInternalServerError, err
 	}
 
 	// Copy the items to the JSON model.
