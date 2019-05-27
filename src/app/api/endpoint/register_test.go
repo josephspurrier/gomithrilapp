@@ -40,48 +40,33 @@ func TestRegisterSuccess(t *testing.T) {
 func TestRegisterFailUserExists(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
-	tr := testrequest.New()
-
-	// Register the user.
-	form := url.Values{}
-	form.Set("first_name", "a@a.com")
-	form.Set("last_name", "a@a.com")
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/v1/register", form)
-
-	form = url.Values{}
-	form.Set("first_name", "a@a.com")
-	form.Set("last_name", "a@a.com")
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
-
-	// Verify the response.
-	r := new(model.CreatedResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
-
-func TestRegisterFailMissingField(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
 	p, m := boot.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
+	register(t, tr, p)
+
+	// Try to register the same user.
 	form := url.Values{}
 	form.Set("first_name", "a@a.com")
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
-	//form.Set("password", "a")
+	form.Set("password", "a")
 	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
-
-	// Verify the response.
-	r := new(model.CreatedResponse)
+	r := new(model.BadRequestResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+
+	// Missing password.
+	form = url.Values{}
+	form.Set("first_name", "a@a.com")
+	form.Set("last_name", "a@a.com")
+	form.Set("email", "b@a.com")
+	//form.Set("password", "a")
+	w = tr.SendJSON(t, p, "POST", "/v1/register", form)
+	r = new(model.BadRequestResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
@@ -90,22 +75,14 @@ func TestRegisterFailMissingField(t *testing.T) {
 	m.Mock.Add("Binder.Unmarshal", e)
 	w = tr.SendJSON(t, p, "POST", "/v1/register", nil)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
 
-func TestRegisterFailInvalidJSON(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
-	tr := testrequest.New()
-
-	// Register the user.
-	w := tr.SendJSON(t, p, "POST", "/v1/register", nil)
-
-	// Verify the response.
-	r := new(model.CreatedResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	// Invalid validate.
+	w = tr.SendJSON(t, p, "POST", "/v1/register", nil)
+	r = new(model.BadRequestResponse)
+	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
+
 }
 
 func TestRegisterFailDatabase(t *testing.T) {
@@ -142,9 +119,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
 	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
-
-	// Verify the response.
-	r := new(model.CreatedResponse)
+	r := new(model.InternalServerErrorResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
@@ -160,15 +135,13 @@ func TestRegisterFailHash(t *testing.T) {
 	p.Password = mpass
 	mpass.HashError = errors.New("bad error")
 
-	// Register the user.
+	// Fail hash.
 	form := url.Values{}
 	form.Set("first_name", "a@a.com")
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
 	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
-
-	// Verify the response.
 	r := new(model.InternalServerErrorResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)

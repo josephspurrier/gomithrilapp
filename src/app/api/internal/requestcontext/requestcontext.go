@@ -13,10 +13,6 @@ var (
 
 type contextKey string
 
-func (c contextKey) String() string {
-	return "app" + string(c)
-}
-
 // CTX is a request context handler.
 type CTX struct {
 	Mock *mock.Mocker
