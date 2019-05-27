@@ -1,3 +1,6 @@
+env:
+  - COVERALLS_PARALLEL=true
+
 language: go
 
 go_import_path: project-root
@@ -37,5 +40,8 @@ before_install:
 #before_script:
 #  - dredd
 
-script:
+after_success:
   - $GOPATH/bin/goveralls
+
+notifications:
+  webhooks: https://coveralls.io/webhook
