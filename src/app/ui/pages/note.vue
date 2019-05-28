@@ -23,6 +23,7 @@
             :key="v.id"
             :index="k"
             :message="v.message"
+            :id="v.id"
             @remove="handleDelete"
             @edit="handleUpdate"
           ></li>
@@ -52,11 +53,11 @@ export default {
       this.$store.dispatch('todo/addItem', inputTodo.value)
       inputTodo.value = ''
     },
-    handleUpdate(id, text) {
-      this.$store.dispatch('todo/updateItem', { id, text })
+    handleUpdate(index, id, text) {
+      this.$store.dispatch('todo/updateItem', { index, id, text })
     },
-    handleDelete(id) {
-      this.$store.dispatch('todo/deleteItem', id)
+    handleDelete(index, id) {
+      this.$store.dispatch('todo/deleteItem', { index, id })
     }
   }
 }

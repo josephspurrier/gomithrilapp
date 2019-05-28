@@ -7,15 +7,15 @@
             v-model="imessage"
             type="text"
             class="input"
-            @keyup="$emit('edit', index, imessage)"
-          />
+            @keyup="$emit('edit', index, id, imessage)"
+          >
         </div>
       </div>
       <nav class="level is-mobile">
         <div class="level-left">
           <a class="level-item">
             <span class="icon is-small has-text-danger">
-              <i class="fa fa-trash-o" @click="$emit('remove', index)"></i>
+              <i class="fa fa-trash-o" @click="$emit('remove', index, id)"></i>
             </span>
           </a>
         </div>
@@ -29,6 +29,10 @@ export default {
   props: {
     index: {
       type: Number,
+      required: true
+    },
+    id: {
+      type: String,
       required: true
     },
     message: {
