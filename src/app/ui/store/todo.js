@@ -1,6 +1,5 @@
 import shortid from 'shortid'
-import { HTTP } from '~/modules/http-common'
-import Flash from '~/modules/flash.js'
+import { HTTP2 } from '~/modules/http-common'
 
 const STORAGE_KEY = 'app-note'
 
@@ -10,192 +9,42 @@ export const state = () => ({
 
 export const actions = {
   addItem: function (state, text) {
-    let accessToken = ''
-    if (state.rootState.auth && state.rootState.auth.loggedIn) {
-      accessToken = state.rootState.auth.accessToken
-    }
-
-    const f = new Flash()
-    let success = false
-
-    // Send a login request to the server.
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-      }
-    }
-
     let form = {
       message: text,
     }
 
-    HTTP.post(`v1/note`, form, headers)
-      .then(response => {
-        if (response.data !== undefined) {
-          f.success('Created.')
-          state.commit('addListItem', {
-            id: response.data.record_id || shortid.generate(),
-            message: text,
-          })
-          state.commit('save')
-          success = true
-        } else {
-          f.failed('Token is not in the correct format.')
-        }
-      })
-      .catch(err => {
-        if (err.response === undefined) {
-          f.warning(
-            'There was an error reaching the server. Please try again later.' +
-            err
-          )
-        } else if (err.response.data.message !== undefined) {
-          f.warning(err.response.data.message)
-        } else {
-          f.warning('There was an error. Please try again later.' + err)
-        }
-      })
-      .finally(() => {
-        if (!success) {
-        }
+    HTTP2.logic('post', `v1/note`, form, state.rootState.auth, 'Created.',
+      function (data) {
+        state.commit('addListItem', {
+          id: data.record_id || shortid.generate(),
+          message: text,
+        })
+        state.commit('save')
       })
   },
   updateItem: function (state, { index, id, text }) {
-    let accessToken = ''
-    if (state.rootState.auth && state.rootState.auth.loggedIn) {
-      accessToken = state.rootState.auth.accessToken
-    }
-
-    const f = new Flash()
-    let success = false
-
-    // Send a login request to the server.
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-      }
-    }
-
     let form = {
       message: text,
     }
 
-    HTTP.put(`v1/note/` + id, form, headers)
-      .then(response => {
-        if (response.data !== undefined) {
-          f.success('Saved.')
-          state.commit('updateItem', { index, text })
-          state.commit('save')
-          success = true
-        } else {
-          f.failed('Token is not in the correct format.')
-        }
-      })
-      .catch(err => {
-        if (err.response === undefined) {
-          f.warning(
-            'There was an error reaching the server. Please try again later.' +
-            err
-          )
-        } else if (err.response.data.message !== undefined) {
-          f.warning(err.response.data.message)
-        } else {
-          f.warning('There was an error. Please try again later.' + err)
-        }
-      })
-      .finally(() => {
-        if (!success) {
-        }
+    HTTP2.logic('put', `v1/note/` + id, form, state.rootState.auth, 'Saved.',
+      function (data) {
+        state.commit('updateItem', { index, text })
+        state.commit('save')
       })
   },
   deleteItem: function (state, { index, id }) {
-    let accessToken = ''
-    if (state.rootState.auth && state.rootState.auth.loggedIn) {
-      accessToken = state.rootState.auth.accessToken
-    }
-
-    const f = new Flash()
-    let success = false
-
-    // Send a login request to the server.
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-      }
-    }
-    HTTP.delete(`v1/note/` + id, headers)
-      .then(response => {
-        if (response.data !== undefined) {
-          f.success('Deleted.')
-          state.commit('deleteItem', index)
-          state.commit('save')
-          success = true
-        } else {
-          f.failed('Token is not in the correct format.')
-        }
-      })
-      .catch(err => {
-        if (err.response === undefined) {
-          f.warning(
-            'There was an error reaching the server. Please try again later.' +
-            err
-          )
-        } else if (err.response.data.message !== undefined) {
-          f.warning(err.response.data.message)
-        } else {
-          f.warning('There was an error. Please try again later.' + err)
-        }
-      })
-      .finally(() => {
-        if (!success) {
-        }
+    HTTP2.logic('delete', `v1/note/` + id, null, state.rootState.auth, 'Deleted.',
+      function (data) {
+        state.commit('deleteItem', index)
+        state.commit('save')
       })
   },
   loadItems: function (state) {
-    let accessToken = ''
-    if (state.rootState.auth && state.rootState.auth.loggedIn) {
-      accessToken = state.rootState.auth.accessToken
-    }
-
-    const f = new Flash()
-    let success = false
-
-    // Send a login request to the server.
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-      }
-    }
-    HTTP.get(`v1/note`, headers)
-      .then(response => {
-        if (response.data !== undefined) {
-          f.success('Data loaded.')
-          state.commit('setItems', response.data.notes)
-          state.commit('save')
-          success = true
-        } else {
-          f.failed('Token is not in the correct format.')
-        }
-      })
-      .catch(err => {
-        if (err.response === undefined) {
-          f.warning(
-            'There was an error reaching the server. Please try again later.' +
-            err
-          )
-        } else if (err.response.data.message !== undefined) {
-          f.warning(err.response.data.message)
-        } else {
-          f.warning('There was an error. Please try again later.' + err)
-        }
-      })
-      .finally(() => {
-        if (!success) {
-        }
+    HTTP2.logic('get', `v1/note`, null, state.rootState.auth, 'Loaded.',
+      function (data) {
+        state.commit('setItems', data.notes)
+        state.commit('save')
       })
   },
 }
