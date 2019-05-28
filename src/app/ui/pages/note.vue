@@ -11,7 +11,7 @@
               type="text"
               placeholder="What would you like to do?"
               @keydown.enter="handleAdd"
-            />
+            >
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <ul id="listTodo">
           <li
             is="Note"
-            v-for="(v, k) in TodoList.list"
+            v-for="(v, k) in todolist"
             :key="v.id"
             :index="k"
             :message="v.message"
@@ -34,30 +34,29 @@
 
 <script>
 import Note from '~/components/Note.vue'
-import TDD from '~/modules/todo.js'
 
 export default {
   components: {
     Note
   },
-  data() {
-    return {
-      TodoList: TDD
+  computed: {
+    todolist() {
+      return this.$store.state.todo.list
     }
   },
   mounted() {
-    this.TodoList.loadItems()
-    // console.log('mounted')
+    this.$store.dispatch('todo/loadItems')
   },
   methods: {
-    handleAdd() {
-      this.TodoList.addItem()
+    handleAdd(id) {
+      this.$store.dispatch('todo/addItem', inputTodo.value)
+      inputTodo.value = ''
     },
     handleUpdate(id, text) {
-      this.TodoList.updateItem(id, text)
+      this.$store.dispatch('todo/updateItem', { id, text })
     },
     handleDelete(id) {
-      this.TodoList.deleteItem(id)
+      this.$store.dispatch('todo/deleteItem', id)
     }
   }
 }
