@@ -47,12 +47,12 @@ func TestNoteCreateFail(t *testing.T) {
 	// Get an auth token.
 	token := auth(t, tr, p)
 
-	// Missing message.
+	// SUCCESS: Allow no message.
 	form := url.Values{}
 	form.Set("message", "")
 	tr.Header.Set("Authorization", "Bearer "+token)
 	w := tr.SendJSON(t, p, "POST", "/v1/note", form)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, http.StatusCreated, w.Code)
 
 	// Invalid unmarshal.
 	e := errors.New("bad error")
@@ -61,10 +61,10 @@ func TestNoteCreateFail(t *testing.T) {
 	w = tr.SendJSON(t, p, "POST", "/v1/note", nil)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
-	// Invalid data.
+	// SUCCESS: Allow no message.
 	tr.Header.Set("Authorization", "Bearer "+token)
 	w = tr.SendJSON(t, p, "POST", "/v1/note", nil)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, http.StatusCreated, w.Code)
 
 	// Invalid user.
 	m.Mock.Add("CTX.UserID", "", false)

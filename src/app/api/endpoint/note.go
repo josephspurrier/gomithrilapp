@@ -43,8 +43,7 @@ func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, erro
 	type request struct {
 		// in: body
 		Body struct {
-			// Required: true
-			Message string `json:"message" validate:"required"`
+			Message string `json:"message"`
 		}
 	}
 
@@ -193,8 +192,7 @@ func (p *NoteEndpoint) Update(w http.ResponseWriter, r *http.Request) (int, erro
 		NoteID string `json:"note_id" validate:"required"`
 		// in: body
 		Body struct {
-			// Required: true
-			Message string `json:"message" validate:"required"`
+			Message string `json:"message"`
 		}
 	}
 
