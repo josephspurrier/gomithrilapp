@@ -152,6 +152,26 @@ swagger validate $GOPATH/src/app/api/static/swagger/swagger.json
 swagger serve -F=swagger $GOPATH/src/app/api/static/swagger/swagger.json
 ```
 
+## Debug UI Tests
+
+Jest is used to run tests on Vue. You can use the steps below to debug the tests.
+
+```bash
+# Open chrome and go to this URL.
+chrome://inspect
+
+# Click: Open dedicated DevTools for Node
+
+# Add this text to any test:
+debugger
+
+# Run this command:
+npm run test:debug
+```
+
+You can also reference this article to set up a debugger in your IDE:
+https://jestjs.io/docs/en/troubleshooting
+
 ## References
 
 These are notes on the project.
