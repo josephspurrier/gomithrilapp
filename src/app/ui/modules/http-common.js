@@ -9,7 +9,7 @@ export const HTTP = axios.create({
 })
 
 export const HTTP2 = {
-  send: function (method, endpointURL, form, auth, successMessage, successFunc) {
+  send: function(method, endpointURL, form, auth, successMessage, successFunc) {
     const f = new Flash()
     let success = false
 
@@ -22,7 +22,7 @@ export const HTTP2 = {
     const headers = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + accessToken
       }
     }
 
@@ -46,7 +46,7 @@ export const HTTP2 = {
         if (err.response === undefined) {
           f.warning(
             'There was an error reaching the server. Please try again later.' +
-            err
+              err
           )
         } else if (err.response.data.message !== undefined) {
           f.warning(err.response.data.message)
@@ -58,5 +58,5 @@ export const HTTP2 = {
         if (!success) {
         }
       })
-  },
+  }
 }

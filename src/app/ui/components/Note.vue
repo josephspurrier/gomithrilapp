@@ -8,7 +8,7 @@
             type="text"
             class="input"
             @keyup="$emit('edit', index, id, imessage)"
-          >
+          />
         </div>
       </div>
       <nav class="level is-mobile">

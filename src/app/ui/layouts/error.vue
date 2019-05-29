@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'NuxtError',
-  props: ['error'],
+  props: { error: { type: Object, default: undefined } },
   head() {
     return { title: this.error.message || 'An error occured' }
   }

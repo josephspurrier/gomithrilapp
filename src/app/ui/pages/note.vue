@@ -6,12 +6,12 @@
           <label class="label">To Do</label>
           <div class="control">
             <input
-              id="inputTodo"
+              v-model="inputTodo"
               class="input"
               type="text"
               placeholder="What would you like to do?"
               @keydown.enter="handleAdd"
-            >
+            />
           </div>
         </div>
       </div>
@@ -20,10 +20,10 @@
           <li
             is="Note"
             v-for="(v, k) in todolist"
+            :id="v.id"
             :key="v.id"
             :index="k"
             :message="v.message"
-            :id="v.id"
             @remove="handleDelete"
             @edit="handleUpdate"
           ></li>
@@ -40,6 +40,11 @@ export default {
   components: {
     Note
   },
+  data() {
+    return {
+      inputTodo: ''
+    }
+  },
   computed: {
     todolist() {
       return this.$store.state.todo.list
@@ -49,15 +54,15 @@ export default {
     this.$store.dispatch('todo/loadItems')
   },
   methods: {
-    handleAdd(id) {
-      this.$store.dispatch('todo/addItem', inputTodo.value)
-      inputTodo.value = ''
+    handleAdd() {
+      this.$store.dispatch('todo/addItem', this.inputTodo)
+      this.inputTodo = ''
     },
-    handleUpdate(index, id, text) {
-      this.$store.dispatch('todo/updateItem', { index, id, text })
+    handleUpdate(index, key, text) {
+      this.$store.dispatch('todo/updateItem', { index, key, text })
     },
-    handleDelete(index, id) {
-      this.$store.dispatch('todo/deleteItem', { index, id })
+    handleDelete(index, key) {
+      this.$store.dispatch('todo/deleteItem', { index, key })
     }
   }
 }
