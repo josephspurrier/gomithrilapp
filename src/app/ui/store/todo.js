@@ -13,7 +13,7 @@ export const actions = {
       message: text,
     }
 
-    HTTP2.logic('post', `v1/note`, form, state.rootState.auth, 'Created.',
+    HTTP2.send('post', `v1/note`, form, state.rootState.auth, 'Created.',
       function (data) {
         state.commit('addListItem', {
           id: data.record_id || shortid.generate(),
@@ -27,21 +27,21 @@ export const actions = {
       message: text,
     }
 
-    HTTP2.logic('put', `v1/note/` + id, form, state.rootState.auth, 'Saved.',
+    HTTP2.send('put', `v1/note/` + id, form, state.rootState.auth, 'Saved.',
       function (data) {
         state.commit('updateItem', { index, text })
         state.commit('save')
       })
   },
   deleteItem: function (state, { index, id }) {
-    HTTP2.logic('delete', `v1/note/` + id, null, state.rootState.auth, 'Deleted.',
+    HTTP2.send('delete', `v1/note/` + id, null, state.rootState.auth, 'Deleted.',
       function (data) {
         state.commit('deleteItem', index)
         state.commit('save')
       })
   },
   loadItems: function (state) {
-    HTTP2.logic('get', `v1/note`, null, state.rootState.auth, 'Loaded.',
+    HTTP2.send('get', `v1/note`, null, state.rootState.auth, 'Loaded.',
       function (data) {
         state.commit('setItems', data.notes)
         state.commit('save')

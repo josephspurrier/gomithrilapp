@@ -9,7 +9,7 @@ export const HTTP = axios.create({
 })
 
 export const HTTP2 = {
-  logic: function (method, endpointURL, form, auth, successMessage, successFunc) {
+  send: function (method, endpointURL, form, auth, successMessage, successFunc) {
     const f = new Flash()
     let success = false
 
