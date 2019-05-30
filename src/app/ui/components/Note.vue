@@ -4,9 +4,10 @@
       <div class="content">
         <div class="editable">
           <input
+            :id="id"
             v-model="imessage"
             type="text"
-            class="input"
+            class="input individual-note"
             @keyup="$emit('edit', index, id, imessage)"
           />
         </div>

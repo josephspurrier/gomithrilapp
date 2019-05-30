@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section id="note-section" class="section">
     <div class="container">
       <div class="box">
         <div class="field">
@@ -7,6 +7,7 @@
           <div class="control">
             <input
               v-model="inputTodo"
+              name="note-add"
               class="input"
               type="text"
               placeholder="What would you like to do?"
