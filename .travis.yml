@@ -37,6 +37,7 @@ before_install:
   #- go build -o ./cmd/hooks/hooks app/api/cmd/hooks
   #- cp testdata/config.json ./config.json
   - cd $GOPATH/src/app/ui
+  - npm install
   - npm run test
   - cd $GOPATH/src/app/api
 
