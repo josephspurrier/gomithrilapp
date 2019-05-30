@@ -36,6 +36,7 @@ before_install:
   - go build -o ./cmd/api/api app/api/cmd/api
   #- go build -o ./cmd/hooks/hooks app/api/cmd/hooks
   #- cp testdata/config.json ./config.json
+  - npm run test
 
 #before_script:
 #  - dredd
