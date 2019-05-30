@@ -11,9 +11,9 @@
       </div>
 
       <div class="container" style="margin-top: 1em;">
-        <form name="login">
+        <form name="register">
           <textfield
-            v-model="login.first_name"
+            v-model="register.first_name"
             label="First Name"
             name="first_name"
             type="text"
@@ -21,7 +21,7 @@
             required
           ></textfield>
           <textfield
-            v-model="login.last_name"
+            v-model="register.last_name"
             label="Last Name"
             name="last_name"
             type="text"
@@ -29,7 +29,7 @@
             required
           ></textfield>
           <textfield
-            v-model="login.email"
+            v-model="register.email"
             label="Email"
             name="email"
             type="text"
@@ -37,7 +37,7 @@
             required
           ></textfield>
           <textfield
-            v-model="login.password"
+            v-model="register.password"
             label="Password"
             name="password"
             type="password"
@@ -48,6 +48,7 @@
           <div class="field is-grouped">
             <p class="control">
               <a
+                id="submit"
                 :class="{
                   button: true,
                   'is-primary': true,
@@ -85,7 +86,7 @@ export default {
   $validates: true,
   data() {
     return {
-      login: {
+      register: {
         first_name: '',
         last_name: '',
         email: '',
@@ -98,10 +99,10 @@ export default {
   methods: {
     // clear will clear the form.
     clear() {
-      this.login.first_name = ''
-      this.login.last_name = ''
-      this.login.email = ''
-      this.login.password = ''
+      this.register.first_name = ''
+      this.register.last_name = ''
+      this.register.email = ''
+      this.register.password = ''
     },
     submit() {
       // Create the flash object.
@@ -119,20 +120,20 @@ export default {
           f.warning('Could not validate the form.')
         })
     },
-    // submit will send a login request to the server.
+    // submit will send a register request to the server.
     submitReady() {
       // Create the flash object.
       const f = new Flash()
       this.isLoading = true
       let success = false
 
-      // Send a login request to the server.
+      // Send a register request to the server.
       const headers = {
         headers: {
           'Content-Type': 'application/json'
         }
       }
-      HTTP.post(`v1/register`, this.login, headers)
+      HTTP.post(`v1/register`, this.register, headers)
         .then(response => {
           if (response.data.status === 'Created') {
             f.success('Registered.')
