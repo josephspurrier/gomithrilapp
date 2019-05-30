@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import About from '../pages/about.vue'
+import About from '@/pages/about.vue'
 
 describe('about.vue', () => {
   const wrapper = mount(About)

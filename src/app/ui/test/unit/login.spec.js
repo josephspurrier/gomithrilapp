@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import VeeValidate from 'vee-validate'
-import Login from '../pages/login.vue'
+import Login from '@/pages/login.vue'
 
 describe('login.vue', () => {
   // Create an extended `Vue` constructor.

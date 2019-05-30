@@ -2,12 +2,9 @@ const puppeteer = require('puppeteer')
 const timeout = 5000
 
 describe('Index page', () => {
-  it('is setup correctly', () => {
-    expect(true).toBe(true)
-  })
-
   let browser
   let page
+
   beforeAll(async () => {
     browser = await puppeteer.launch({
       headless: false
@@ -23,6 +20,7 @@ describe('Index page', () => {
   })
 
   it('renders login page', async () => {
+    await page.waitForSelector('[name="login"]')
     await page.type('[name="email"]', 'a@a.com')
     await page.type('[name="password"]', 'a')
     await page.click('#submit')
