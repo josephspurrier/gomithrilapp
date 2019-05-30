@@ -27,6 +27,8 @@ describe('Index page', () => {
     await page.type('[name="password"]', 'a')
     await page.click('#submit')
     await page.waitForNavigation()
+    const title = await page.title()
+    expect(title).toBe('Welcome')
     /* await page.screenshot({
       path: './test/screenshot/1.png'
     }) */

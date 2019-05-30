@@ -42,7 +42,13 @@ export default {
   },
   data() {
     return {
+      title: 'Notes',
       inputTodo: ''
+    }
+  },
+  head() {
+    return {
+      title: this.title
     }
   },
   computed: {

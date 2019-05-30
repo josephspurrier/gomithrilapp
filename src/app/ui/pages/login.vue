@@ -3,10 +3,10 @@
     <section class="section">
       <div class="container">
         <h1 class="title">
-          Login
+          {{ title }}
         </h1>
         <h2 class="subtitle">
-          Enter your login information below.
+          {{ subtitle }}
         </h2>
       </div>
 
@@ -84,6 +84,8 @@ export default {
   $validates: true,
   data() {
     return {
+      title: 'Login',
+      subtitle: 'Enter your login information below.',
       count: 0,
       login: {
         email: '',
@@ -92,6 +94,11 @@ export default {
       isLoading: false,
       register: '/register',
       lastError: ''
+    }
+  },
+  head() {
+    return {
+      title: this.title
     }
   },
   middleware: 'notAllowIfAuthenticated',

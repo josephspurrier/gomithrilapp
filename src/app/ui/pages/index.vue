@@ -30,6 +30,11 @@ export default {
       note: '/note'
     }
   },
+  head() {
+    return {
+      title: this.title
+    }
+  },
   middleware: 'onlyAuthenticated'
 }
 </script>

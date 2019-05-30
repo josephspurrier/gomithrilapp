@@ -3,7 +3,7 @@
     <section class="section">
       <div class="container">
         <h1 class="title">
-          About
+          {{ title }}
         </h1>
         <h2 class="subtitle">
           This shows you how to build a website using
@@ -18,7 +18,14 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      title: 'About'
+    }
+  },
+  head() {
+    return {
+      title: this.title
+    }
   }
 }
 </script>
