@@ -38,7 +38,7 @@ before_install:
   #- cp testdata/config.json ./config.json
   - cd $GOPATH/src/app/ui
   - npm install
-  - npm run test
+  - npm run coveralls
   - cd $GOPATH/src/app/api
 
 #before_script:
