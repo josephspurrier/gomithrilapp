@@ -33,6 +33,7 @@
           <div class="field is-grouped">
             <p class="control">
               <a
+                id="submit"
                 :class="{
                   button: true,
                   'is-primary': true,
@@ -83,12 +84,14 @@ export default {
   $validates: true,
   data() {
     return {
+      count: 0,
       login: {
         email: '',
         password: ''
       },
       isLoading: false,
-      register: '/register'
+      register: '/register',
+      lastError: ''
     }
   },
   middleware: 'notAllowIfAuthenticated',
@@ -120,7 +123,7 @@ export default {
       const f = new Flash()
       this.isLoading = true
       let success = false
-
+      this.count += 1
       // Send a login request to the server.
       const headers = {
         headers: {

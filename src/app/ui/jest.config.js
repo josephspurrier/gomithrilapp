@@ -1,4 +1,5 @@
 module.exports = {
+  preset: 'jest-puppeteer',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^~/(.*)$': '<rootDir>/$1',
