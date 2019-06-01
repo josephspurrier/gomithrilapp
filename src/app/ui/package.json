@@ -16,6 +16,7 @@
     "test:all": "jest",
     "test:watch": "jest --runInBand --watch",
     "test:debug": "node --inspect node_modules/.bin/jest",
+    "test:cover": "jest test/unit --coverage",
     "coveralls": "jest test/unit --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {

@@ -27,6 +27,9 @@ before_install:
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
+  - go get github.com/josephspurrier/covfmt
+  - go test ./... -coverprofile cover.out
+  - cat cover.out | covfmt $GOPATH > lcov.info
   - go get github.com/go-swagger/go-swagger/cmd/swagger
   - swagger generate spec -o ./swagger.json
   - sed -i'' -e 's/example/x\-example/' ./swagger.json
@@ -38,14 +41,16 @@ before_install:
   #- cp testdata/config.json ./config.json
   - cd $GOPATH/src/app/ui
   - npm install
-  - npm run coveralls
-  - cd $GOPATH/src/app/api
+  - npm run test:cover
+  - cd $GOPATH/src/app
+  - cat api/lcov.info ui/coverage/lcov.info | coveralls
+  # - cd $GOPATH/src/app/api
 
 #before_script:
 #  - dredd
 
-after_success:
-  - $GOPATH/bin/goveralls
+# after_success:
+#   - $GOPATH/bin/goveralls
 
 notifications:
   webhooks: https://coveralls.io/webhook
