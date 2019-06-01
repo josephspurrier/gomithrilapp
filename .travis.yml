@@ -43,7 +43,7 @@ before_install:
   - npm install
   - npm run test:cover
   - cd $GOPATH/src/app
-  - cat api/lcov.info ui/coverage/lcov.info | coveralls
+  - cat api/lcov.info ui/coverage/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
   # - cd $GOPATH/src/app/api
 
 #before_script:
