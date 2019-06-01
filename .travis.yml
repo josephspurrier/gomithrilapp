@@ -9,11 +9,9 @@ services:
   - mysql
 
 go:
-  # - "1.9"
   - "1.10"
   - "1.11"
   - "1.12"
-  # - "tip"
 
 cache:
   directories:
@@ -28,29 +26,27 @@ before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/josephspurrier/covfmt
-  - go test ./... -coverprofile cover.out
-  - cat cover.out | covfmt $GOPATH/src > lcov.info
   - go get github.com/go-swagger/go-swagger/cmd/swagger
+
+install:
+  - cd $GOPATH/src/app/ui
+  - npm install
+  - cd $GOPATH/src/app/api
+  - go install -v ./...
+
+script:
+  - cd $GOPATH/src/app/api
   - swagger generate spec -o ./swagger.json
   - sed -i'' -e 's/example/x\-example/' ./swagger.json
   - swagger validate ./swagger.json
-  #- go get github.com/snikch/goodman/cmd/goodman
-  #- npm install -g dredd@5.1.11
-  - go build -o ./cmd/api/api app/api/cmd/api
-  #- go build -o ./cmd/hooks/hooks app/api/cmd/hooks
-  #- cp testdata/config.json ./config.json
+  - go test ./... -coverprofile cover.out
+  - cat cover.out | covfmt $GOPATH/src > lcov.info
   - cd $GOPATH/src/app/ui
-  - npm install
   - npm run test:cover
+
+ after_success:
   - cd $GOPATH/src/app
   - cat api/lcov.info ui/coverage/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
-  # - cd $GOPATH/src/app/api
-
-#before_script:
-#  - dredd
-
-# after_success:
-#   - $GOPATH/bin/goveralls
 
 notifications:
   webhooks: https://coveralls.io/webhook
