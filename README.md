@@ -10,7 +10,7 @@ This is an application that uses Vue on the frontend (UI) and Go on the backend 
 
 ## Current Versions
 
-You should use Go 1.9 or newer.
+You should use Go 1.10 or newer.
 
 These are the current versions on the front-end components:
 
