@@ -35,7 +35,7 @@ docker-compose down
 
 ## Environment Preparation
 
-Once you have cloned the repo, you will need the following for local development.
+Once you have cloned the repo, you will need the following tools for local development.
 
 ### Go
 
@@ -46,6 +46,23 @@ All of the commands below assume you have your GOPATH set to the root of this pr
 ### Node and npm
 
 You should install [NodeJS and npm](https://nodejs.org/).
+
+These are the current versions on the front-end components:
+
+- Nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
+- Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
+- Vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
+- Bulma [v1.2.3](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.3) - you should use the [0.7.4 documentation](https://bulma.io/documentation/)
+
+Yuu can use these commands to interact with nuxt.
+
+```bash
+# Check the version of nuxt.
+make nuxt-upgrade
+
+# Upgrade nuxt to the new version.
+make nuxt-upgrade
+```
 
 ### Environment Variables
 
@@ -61,25 +78,6 @@ export PATH=$PATH:$(npm bin)
 ```
 
 Save the file and type `direnv allow`. That will automatically set environment variables when you `CD` into the project root and child folders.
-
-## Current Versions
-
-These are the current versions on the front-end components:
-
-- Nuxt.js [v2.6.3](https://github.com/nuxt/nuxt.js/releases/tag/v2.6.3) - you should use the [2.5.X documentation](https://nuxtjs.org/guide/release-notes)
-- Vue.js [v2.6.10](https://github.com/vuejs/vue/releases/tag/v2.6.10)
-- Vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
-- Bulma [v1.2.3](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.3) - you should use the [0.7.4 documentation](https://bulma.io/documentation/)
-
-### Update nuxt
-
-```bash
-# Upgrade nuxt to the 1.0 version.
-make nuxt-upgrade
-
-# Check the version of nuxt.
-make nuxt-upgrade
-```
 
 ## Getting Started with Development
 
@@ -139,8 +137,10 @@ make gvt-get
 # You can now remove the folder: src/github.com/FiloSottile/gvt
 # You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
 
-# Make sure you CD to the api folder before using gvt:
+# Make sure you CD to the api folder before using gvt.
 cd $GOPATH/src/app/api
+
+# Here is a sample command to add a new dependency to the project.
 gvt fetch github.com/user/project
 ```
 
@@ -154,6 +154,11 @@ make swagger-get
 
 # Generate the swagger spec.
 make swagger-gen
+
+# Your browser will open to: http://petstore.swagger.io/?url=http://localhost:{RANDOMPORT}/swagger.json
+
+# The output file will be here:
+# src/app/api/static/swagger/swagger.json
 ```
 
 ## Debug UI Tests
