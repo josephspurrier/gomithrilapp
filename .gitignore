@@ -2,6 +2,9 @@
 .DS_Store
 thumbs.db
 
+# Environment files
+.envrc
+
 # IDE files
 .vscode/
 /src/app/ui/coverage
@@ -16,6 +19,8 @@ thumbs.db
 *.dll
 *.so
 *.dylib
+/src/app/api/cmd/api/api
+/src/app/api/cmd/dbmigrate
 
 # Test binary, build with `go test -c`
 *.test

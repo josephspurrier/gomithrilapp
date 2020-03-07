@@ -23,7 +23,7 @@ const (
 // BindType returns the bindtype for a given database given a drivername.
 func BindType(driverName string) int {
 	switch driverName {
-	case "postgres", "pgx", "pq-timeouts", "cloudsqlpostgres":
+	case "postgres", "pgx", "pq-timeouts", "cloudsqlpostgres", "ql":
 		return DOLLAR
 	case "mysql":
 		return QUESTION
@@ -98,6 +98,28 @@ func rebindBuff(bindType int, query string) string {
 	return rqb.String()
 }
 
+func asSliceForIn(i interface{}) (v reflect.Value, ok bool) {
+	if i == nil {
+		return reflect.Value{}, false
+	}
+
+	v = reflect.ValueOf(i)
+	t := reflectx.Deref(v.Type())
+
+	// Only expand slices
+	if t.Kind() != reflect.Slice {
+		return reflect.Value{}, false
+	}
+
+	// []byte is a driver.Value type so it should not be expanded
+	if t == reflect.TypeOf([]byte{}) {
+		return reflect.Value{}, false
+
+	}
+
+	return v, true
+}
+
 // In expands slice values in args, returning the modified query string
 // and a new arg list that can be executed by a database. The `query` should
 // use the `?` bindVar.  The return value uses the `?` bindVar.
@@ -117,13 +139,14 @@ func In(query string, args ...interface{}) (string, []interface{}, error) {
 
 	for i, arg := range args {
 		if a, ok := arg.(driver.Valuer); ok {
-			arg, _ = a.Value()
+			var err error
+			arg, err = a.Value()
+			if err != nil {
+				return "", nil, err
+			}
 		}
-		v := reflect.ValueOf(arg)
-		t := reflectx.Deref(v.Type())
 
-		// []byte is a driver.Value type so it should not be expanded
-		if t.Kind() == reflect.Slice && t != reflect.TypeOf([]byte{}) {
+		if v, ok := asSliceForIn(arg); ok {
 			meta[i].length = v.Len()
 			meta[i].v = v
 

@@ -2,7 +2,7 @@
 const { exec } = require('child_process')
 
 module.exports = function globalSetup() {
-  exec('bash $GOPATH/bash/resetdb.sh', (err, stdout, stderr) => {
+  exec('bash $GOPATH/bash/reset-db.sh', (err, stdout, stderr) => {
     if (err) {
       // node couldn't execute the command
       return
