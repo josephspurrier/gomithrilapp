@@ -29,7 +29,7 @@ docker-compose down
 
 ## Environment Preparation
 
-You should use Go 1.10 or newer. All of the commands below assume you have your GOPATH set to the root of this project directory. This does prevent you from being able to use this command to download and run the project like a typical Go application: `go get github.com/josephspurrier/govueapp`, but we found (after many projects) it is now much easier for you to clone this repo and make changes without having to rewrite imports. This project also has a separate front-end and back-end so it makes sense `go get` would not work anyway.
+You should use Go 1.11 or newer. All of the commands below assume you have your GOPATH set to the root of this project directory. This does prevent you from being able to use this command to download and run the project like a typical Go application: `go get github.com/josephspurrier/govueapp`, but we found (after many projects) it is now much easier for you to clone this repo and make changes without having to rewrite imports. This project also has a separate front-end and back-end so it makes sense `go get` would not work anyway.
 
 You can also use [direnv](https://direnv.net/) which sets your environment variables based on your current directory. For instance, you can install direnv, create a file in the root of this project called `.envrc`, and paste in the following:
 
@@ -46,7 +46,7 @@ Save the file and type `direnv allow`. That will automatically set environment v
 
 ## Current Versions
 
-You should use Go 1.10 or newer.
+You should use Go 1.11 or newer.
 
 These are the current versions on the front-end components:
 
@@ -74,10 +74,10 @@ You can run these commands from different terminals to start the services.
 make db-init
 
 # Start the UI in local dev mode.
-make dev-ui
+make ui-dev
 
 # Start the API in local dev mode.
-make dev-api
+make api-dev
 ```
 
 These are other database commands you can use:
@@ -94,6 +94,16 @@ make db-reset
 
 # Delete the DB container.
 make db-rm
+```
+
+Run tests in Go:
+
+```bash
+# Create and run the database container.
+make db-init
+
+# Run the API tests.
+make api-test
 ```
 
 ## Database Migrations

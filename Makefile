@@ -19,18 +19,23 @@ docker-build:
 	# Build the docker containers.
 	bash ${GOPATH}/bash/build-containers.sh
 
-.PHONY: dev-ui
-dev-ui:
+.PHONY: ui-dev
+ui-dev:
 	# Start the UI.
 	cd ${GOPATH}/src/app/ui
 	npm install
 	npm run dev
 
-.PHONY: dev-api
-dev-api:
+.PHONY: api-dev
+api-dev:
 	# Start the API.
 	cd ${GOPATH}/src/app/api
 	go run main.go
+
+.PHONY: api-test
+api-test:
+	cd ${GOPATH}/src/app/api
+	go test ./...
 
 .PHONY: gvt-get
 gvt-get:
