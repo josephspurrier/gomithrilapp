@@ -78,7 +78,7 @@ swagger-gen:
 	## MacOS
 	sed -i '' -e 's/example/x\-example/' ${GOPATH}/src/app/api/static/swagger/swagger.json
 	## Linux
-	sed -i'' -e 's/example/x\-example/' ${GOPATH}/src/app/api/static/swagger/swagger.json
+	#sed -i'' -e 's/example/x\-example/' ${GOPATH}/src/app/api/static/swagger/swagger.json
 
 	# Validate the swagger spec.
 	swagger validate ${GOPATH}/src/app/api/static/swagger/swagger.json
@@ -116,9 +116,9 @@ db-rm:
 .PHONY: nuxt-upgrade
 nuxt-upgrade:
 	# Upgrade nuxt to the latest version.
-	$(shell npm bin)/npm upgrade nuxt
+	cd ${GOPATH}/src/app/ui && npm upgrade nuxt
 
 .PHONY: nuxt-version
 nuxt-version:
 	# Output the version of nuxt.
-	$(shell npm bin)/nuxt --version
+	${GOPATH}/src/app/ui/node_modules/.bin/nuxt --version
