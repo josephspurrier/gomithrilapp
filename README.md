@@ -6,7 +6,7 @@
 
 [![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
-This is an application that uses Vue on the front-end (UI) and Go on the back-end (API). This project uses a [Makefile](Makefile) to help centralize frequently used commands.
+This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools. This project uses a [Makefile](Makefile) to centralize frequently used commands.
 
 ## Quick Start Guide (QSG)
 
