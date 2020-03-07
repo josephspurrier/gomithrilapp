@@ -1,13 +1,13 @@
 package main
 
 import (
-	"app/api/pkg/mock"
 	"log"
 	"net/http"
 	"os"
 
 	"app/api/boot"
 	"app/api/pkg/logger"
+	"app/api/pkg/mock"
 )
 
 func main() {

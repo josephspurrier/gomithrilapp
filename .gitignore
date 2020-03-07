@@ -2,6 +2,9 @@
 .DS_Store
 thumbs.db
 
+# Environment files
+.envrc
+
 # IDE files
 .vscode/
 /src/app/ui/coverage
@@ -16,6 +19,16 @@ thumbs.db
 *.dll
 *.so
 *.dylib
+/src/app/api/cmd/api/api
+/src/app/api/cmd/dbmigrate
+
+# Vendored directories for Swagger and gvt.
+/src/app/api/vendor/**
+!/src/app/api/vendor/manifest
+/src/github.com
+/src/go.mongodb.org
+/src/golang.org
+/src/gopkg.in
 
 # Test binary, build with `go test -c`
 *.test

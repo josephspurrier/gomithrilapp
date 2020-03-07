@@ -6,11 +6,46 @@
 
 [![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
-This is an application that uses Vue on the frontend (UI) and Go on the backend (API).
+This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools. This project uses a [Makefile](Makefile) to centralize frequently used commands.
 
-## Current Versions
+## Quick Start Guide (QSG)
 
-You should use Go 1.10 or newer.
+To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose).
+
+```bash
+# Clone the repo.
+git clone git@github.com:josephspurrier/govueapp.git
+
+# CD to the project directory.
+cd govueapp
+
+# Build the docker containers.
+make docker-build
+
+# Run the docker containers: DB, API, and UI.
+docker-compose up
+
+# Open your browser to the UI: http://localhost
+# Open your browser to the API: http://localhost:8081
+# Open your MySQL tool to the DB: localhost:3306
+
+# Stop and remove the docker containers.
+docker-compose down
+```
+
+## Environment Preparation
+
+Once you have cloned the repo, you will need the following tools for local development.
+
+### Go
+
+You should use Go 1.11 or newer. We recommend [gvm](https://github.com/moovweb/gvm) for installing and managing your versions of Go.
+
+All of the commands below assume you have your GOPATH set to the root of this project directory. This does prevent you from being able to use this command to download and run the project like a typical Go application: `go get github.com/josephspurrier/govueapp`, but we found (after many projects) it is now much easier for you to clone this repo and make changes without having to rewrite imports. This project also has a separate front-end and back-end so it makes sense `go get` would not work anyway.
+
+### Node and npm
+
+You should install [NodeJS and npm](https://nodejs.org/).
 
 These are the current versions on the front-end components:
 
@@ -19,137 +54,111 @@ These are the current versions on the front-end components:
 - Vuex [v3.1.0](https://github.com/vuejs/vuex/releases/tag/v3.1.0)
 - Bulma [v1.2.3](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.3) - you should use the [0.7.4 documentation](https://bulma.io/documentation/)
 
+Yuu can use these commands to interact with nuxt.
+
 ```bash
-# Upgrade nuxt to the 1.0 version.
-npm upgrade nuxt
-
-# Run NPM apps from terminal.
-export PATH=$PATH:$(npm bin)
-
 # Check the version of nuxt.
-nuxt --version
+make nuxt-upgrade
+
+# Upgrade nuxt to the new version.
+make nuxt-upgrade
 ```
 
-## Run Application Locally
+### Environment Variables
 
-To run the application locally, you can run these commands. You don't need any of the the dev tools installed, you only need Docker.
-
-```bash
-# Build the docker containers.
-bash build-containers.sh
-
-# Launch the docker containers.
-docker-compose up
-
-# Open your browser for the UI: localhost
-# Open your browser for the API: localhost:8081
-
-# Bring down the docker containers.
-docker-compose down
-```
-
-If you want to run any of the containers manually, you can build and run them using these commands.
+You can also use [direnv](https://direnv.net/) which sets your environment variables based on your current directory. For instance, you can install direnv, create a file in the root of this project called `.envrc`, and paste in the following:
 
 ```bash
-# Set the GOPATH to the current directory.
+# Set $GOPATH for Go.
 export GOPATH=`pwd`
-
-# CD to the UI folder.
-cd $GOPATH/src/app/ui
-
-# Build the docker container.
-# Reference: https://vuejs.org/v2/cookbook/dockerize-vuejs-app.html
-docker build -t govueapp-ui:1.0 .
-
-# Run the docker container.
-docker run -it -p 80:80 --rm --name govueapp-ui govueapp-ui:1.0
-
-# CD to the API folder.
-cd $GOPATH/src/app/api
-
-# Build the docker container.
-docker build -t govueapp-api:1.0 .
-
-# Run the API docker container.
-docker run -it -p 8081:8081 --rm --name govueapp-api govueapp-api:1.0
-
-# Launch a MySQL database.
-docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d --rm --name mysql56 mysql:5.6
-docker exec mysql56 sh -c 'exec mysql -uroot -ppassword -e "CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;"'
+# Add the bin directory to $PATH.
+export PATH=$PATH:`pwd`/bin
+# Add the npm bin directory to $PATH to allow running NPM apps.
+export PATH=$PATH:$(npm bin)
 ```
+
+Save the file and type `direnv allow`. That will automatically set environment variables when you `CD` into the project root and child folders.
 
 ## Getting Started with Development
 
+You can run these commands from different terminals to start the services.
+
 ```bash
-# Set the GOPATH to the current directory.
-export GOPATH=`pwd`
+# Create and run the database container.
+make db-init
 
-# Start the UI.
-cd $GOPATH/src/app/ui
-npm install
-npm run dev
+# Start the UI in local dev mode after installing dependencies.
+make ui-dep
+make ui-dev
 
-# Start the API.
-cd $GOPATH/src/app/api
-go run main.go
+# Start the API in local dev mode after installing the dependencies.
+make api-dep
+make api-dev
+```
+
+These are other database commands you can use:
+
+```bash
+# Start the DB container.
+make db-start
+
+# Stop the DB container.
+make db-stop
+
+# Drop the database, create a new database, and apply new migrations.
+make db-reset
+
+# Delete the DB container.
+make db-rm
+```
+
+Run tests in Go:
+
+```bash
+# Create and run the database container.
+make db-init
+
+# Run the API tests.
+make api-test
 ```
 
 ## Database Migrations
 
-Migrations are perform at boot by Rove: https://github.com/josephspurrier/rove.
+MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove), a tool very similiar to Liquibase.
 
 ## Go Dependency Management
 
-I was going to use gvt, but decided to use `go mod` instead.
+This projects does not use Go modules - it uses [gvt](https://github.com/FiloSottile/gvt/blob/master/README.old.md) to vendor dependencies to Go. This decision was made because Visual Studio Code support is still lacking and that just happens to be our preferred IDE: ["⚠️ These tools do not provide a good support for Go modules yet."](https://github.com/Microsoft/vscode-go/wiki/Go-modules-support-in-Visual-Studio-Code). We've used gvt on large teams for years so even though it's deprecated, it still works extremely well for our purposes.
 
 ```bash
-# Example of how to vendor a dependency with the experimental module support in Go 1.11.X
-GO111MODULE=on go get github.com/josephspurrier/rove
-# Example of how to vendor all missing dependencies
-GO111MODULE=on go mod vendor
-```
+# Download gvt.
+make gvt-get
 
-This is how I vendored the first dependencies.
+# You can now remove the folder: src/github.com/FiloSottile/gvt
+# You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
 
-```bash
-# Reference: https://github.com/FiloSottile/gvt
-# Reference: https://github.com/golang/go/wiki/Modules
-GO111MODULE=on go mod init
-GO111MODULE=on go mod vendor
+# Make sure you CD to the api folder before using gvt.
+cd $GOPATH/src/app/api
+
+# Here is a sample command to add a new dependency to the project.
+gvt fetch github.com/user/project
 ```
 
 ## Swagger
 
-This projects uses [Swagger v2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) to document the API. The entire Swagger spec is generated from the code in this repository.
-
-### Install Swagger
-
-This tool will generate the Swagger spec from annotations in the Go code. It will read the comments in the code and will pull types from structs.
+This projects uses [Swagger v2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) to document the API. The entire Swagger spec is generated from comments (annotations) in and by analyzing structs and variables.
 
 ```bash
-go get github.com/go-swagger/go-swagger/cmd/swagger
-```
-
-### Generate Swagger Spec
-
-```bash
-# CD to the api folder.
-cd src/app/api/cmd/api
+# Download the Swagger generation tool.
+make swagger-get
 
 # Generate the swagger spec.
-swagger generate spec -o $GOPATH/src/app/api/static/swagger/swagger.json
+make swagger-gen
 
-# Replace 'example' with 'x-example' in the swagger spec.
-## MacOS
-sed -i '' -e 's/example/x\-example/' $GOPATH/src/app/api/static/swagger/swagger.json
-## Linux
-sed -i'' -e 's/example/x\-example/' $GOPATH/src/app/api/static/swagger/swagger.json
+# Your browser will open to: http://petstore.swagger.io/?url=http://localhost:{RANDOMPORT}/swagger.json
 
-# Validate the swagger spec.
-swagger validate $GOPATH/src/app/api/static/swagger/swagger.json
-
-# Serve the spec for the browser.
-swagger serve -F=swagger $GOPATH/src/app/api/static/swagger/swagger.json
+# The output file will be here:
+# src/app/api/static/swagger/swagger.json
 ```
 
 ## Debug UI Tests
