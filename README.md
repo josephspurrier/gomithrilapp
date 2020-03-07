@@ -6,9 +6,9 @@
 
 [![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
-This is an application that uses Vue on the frontend (UI) and Go on the backend (API). This project uses a [Makefile](Makefile) to help centralize frequently used commands.
+This is an application that uses Vue on the front-end (UI) and Go on the back-end (API). This project uses a [Makefile](Makefile) to help centralize frequently used commands.
 
-## Quickstart
+## Quick Start Guide (QSG)
 
 To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose).
 
@@ -16,13 +16,14 @@ To run the application locally, you can run these commands. You don't need any o
 # Build the docker containers.
 make docker-build
 
-# Launch the docker containers.
+# Run the docker containers: DB, API, and UI.
 docker-compose up
 
-# Open your browser for the UI: localhost
-# Open your browser for the API: localhost:8081
+# Open your browser to the UI: http://localhost
+# Open your browser to the API: http://localhost:8081
+# Open your MySQL tool to the DB: localhost:3306
 
-# Bring down the docker containers.
+# Stop and remove the docker containers.
 docker-compose down
 ```
 
@@ -107,7 +108,7 @@ You only need to download gvt if you want to add or update packages. All the ven
 
 ```bash
 # Download gvt.
-go get github.com/FiloSottile/gvt
+make gvt-get
 
 # You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
 

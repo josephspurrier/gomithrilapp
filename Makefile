@@ -32,6 +32,11 @@ dev-api:
 	cd ${GOPATH}/src/app/api
 	go run main.go
 
+.PHONY: gvt-get
+gvt-get:
+	# Download gvt.
+	go get github.com/FiloSottile/gvt
+
 .PHONY: swagger-get
 swagger-get:
 	# Download the Swagger generation tool.

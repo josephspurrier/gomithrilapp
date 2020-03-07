@@ -22,6 +22,12 @@ thumbs.db
 /src/app/api/cmd/api/api
 /src/app/api/cmd/dbmigrate
 
+# Vendored directories for Swagger and gvt.
+/src/github.com
+/src/go.mongodb.org
+/src/golang.org
+/src/gopkg.in
+
 # Test binary, build with `go test -c`
 *.test
 
