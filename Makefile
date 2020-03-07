@@ -36,6 +36,11 @@ ui-dev:
 	# Start the UI.
 	cd ${GOPATH}/src/app/ui && npm run dev
 
+.PHONY: ui-test
+ui-test:
+	# Run the Jest UI tests.
+	cd ${GOPATH}/src/app/ui && npm test
+
 .PHONY: api-dep
 api-dep:
 	# Restore the dependencies. Get gvt if it's not found in $PATH.
