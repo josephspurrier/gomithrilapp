@@ -23,6 +23,8 @@ thumbs.db
 /src/app/api/cmd/dbmigrate
 
 # Vendored directories for Swagger and gvt.
+/src/app/api/vendor/**
+!/src/app/api/vendor/manifest
 /src/github.com
 /src/go.mongodb.org
 /src/golang.org

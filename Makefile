@@ -19,23 +19,31 @@ docker-build:
 	# Build the docker containers.
 	bash ${GOPATH}/bash/build-containers.sh
 
+.PHONY: ui-dep
+ui-dep:
+	# Install the dependencies.
+	cd ${GOPATH}/src/app/ui && npm install
+
 .PHONY: ui-dev
 ui-dev:
 	# Start the UI.
-	cd ${GOPATH}/src/app/ui
-	npm install
-	npm run dev
+	cd ${GOPATH}/src/app/ui && npm run dev
+
+.PHONY: api-dep
+api-dep:
+	# Restore the dependencies. Get gvt if it's not found in $PATH.
+	which gvt || go get github.com/FiloSottile/gvt
+	cd ${GOPATH}/src/app/api && gvt restore
 
 .PHONY: api-dev
 api-dev:
-	# Start the API.
-	cd ${GOPATH}/src/app/api
-	go run main.go
+	# Start the API.	
+	go run ${GOPATH}/src/app/api/cmd/api/main.go
 
 .PHONY: api-test
 api-test:
-	cd ${GOPATH}/src/app/api
-	go test ./...
+	# Run the Go tests.
+	cd ${GOPATH}/src/app/api && go test ./...
 
 .PHONY: gvt-get
 gvt-get:
@@ -49,10 +57,8 @@ swagger-get:
 
 .PHONY: swagger-gen
 swagger-gen:
-	# CD to the api folder.
-	cd ${GOPATH}/src/app/api/cmd/api
-
 	# Generate the swagger spec.
+	cd ${GOPATH}/src/app/api/cmd/api; \
 	swagger generate spec -o ${GOPATH}/src/app/api/static/swagger/swagger.json
 
 	# Replace 'example' with 'x-example' in the swagger spec.

@@ -13,6 +13,12 @@ This is an application that uses Vue on the front-end (UI) and Go on the back-en
 To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose).
 
 ```bash
+# Clone the repo.
+git clone git@github.com:josephspurrier/govueapp.git
+
+# CD to the project directory.
+cd govueapp
+
 # Build the docker containers.
 make docker-build
 
@@ -29,7 +35,19 @@ docker-compose down
 
 ## Environment Preparation
 
-You should use Go 1.11 or newer. All of the commands below assume you have your GOPATH set to the root of this project directory. This does prevent you from being able to use this command to download and run the project like a typical Go application: `go get github.com/josephspurrier/govueapp`, but we found (after many projects) it is now much easier for you to clone this repo and make changes without having to rewrite imports. This project also has a separate front-end and back-end so it makes sense `go get` would not work anyway.
+Once you have cloned the repo, you will need the following for local development.
+
+### Go
+
+You should use Go 1.11 or newer. We recommend [gvm](https://github.com/moovweb/gvm) for installing and managing your versions of Go.
+
+All of the commands below assume you have your GOPATH set to the root of this project directory. This does prevent you from being able to use this command to download and run the project like a typical Go application: `go get github.com/josephspurrier/govueapp`, but we found (after many projects) it is now much easier for you to clone this repo and make changes without having to rewrite imports. This project also has a separate front-end and back-end so it makes sense `go get` would not work anyway.
+
+### Node and npm
+
+You should install [NodeJS and npm](https://nodejs.org/).
+
+### Environment Variables
 
 You can also use [direnv](https://direnv.net/) which sets your environment variables based on your current directory. For instance, you can install direnv, create a file in the root of this project called `.envrc`, and paste in the following:
 
@@ -45,8 +63,6 @@ export PATH=$PATH:$(npm bin)
 Save the file and type `direnv allow`. That will automatically set environment variables when you `CD` into the project root and child folders.
 
 ## Current Versions
-
-You should use Go 1.11 or newer.
 
 These are the current versions on the front-end components:
 
@@ -73,10 +89,12 @@ You can run these commands from different terminals to start the services.
 # Create and run the database container.
 make db-init
 
-# Start the UI in local dev mode.
+# Start the UI in local dev mode after installing dependencies.
+make ui-dep
 make ui-dev
 
-# Start the API in local dev mode.
+# Start the API in local dev mode after installing the dependencies.
+make api-dep
 make api-dev
 ```
 
@@ -108,18 +126,17 @@ make api-test
 
 ## Database Migrations
 
-MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove.), a tool very similiar to Liquibase.
+MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove), a tool very similiar to Liquibase.
 
 ## Go Dependency Management
 
-This projects does not use Go modules - it uses [gvt](https://github.com/FiloSottile/gvt) to vendor dependencies to Go. This decision was made because Visual Studio Code support is still lacking and that just happens to be our preferred IDE: ["⚠️ These tools do not provide a good support for Go modules yet."](https://github.com/Microsoft/vscode-go/wiki/Go-modules-support-in-Visual-Studio-Code). We've used gvt on large teams for years so even though it's deprecated, it still works extremely well for our purposes.
-
-You only need to download gvt if you want to add or update packages. All the vendored files are included to make this project easy to compile.
+This projects does not use Go modules - it uses [gvt](https://github.com/FiloSottile/gvt/blob/master/README.old.md) to vendor dependencies to Go. This decision was made because Visual Studio Code support is still lacking and that just happens to be our preferred IDE: ["⚠️ These tools do not provide a good support for Go modules yet."](https://github.com/Microsoft/vscode-go/wiki/Go-modules-support-in-Visual-Studio-Code). We've used gvt on large teams for years so even though it's deprecated, it still works extremely well for our purposes.
 
 ```bash
 # Download gvt.
 make gvt-get
 
+# You can now remove the folder: src/github.com/FiloSottile/gvt
 # You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
 
 # Make sure you CD to the api folder before using gvt:
