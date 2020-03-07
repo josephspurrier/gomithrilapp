@@ -1,18 +1,25 @@
+# This Makefile is an easy way to run common operations.
+# Execute commands this:
+# * make db-init
+# * make api-dep
+# * make api-dev
+# * make nuxt-version
+#
+# Tip: Each command is run on its own line so you can't CD unless you
+# connect commands together using operators. See examples:
+# A; B    # Run A and then B, regardless of success of A
+# A && B  # Run B if and only if A succeeded
+# A || B  # Run B if and only if A failed
+# A &     # Run A in background.
+# Source: https://askubuntu.com/a/539293
+#
+# Tip: Use $(shell app param) syntax when expanding a shell return value.
+
 # Load the shared environment variables (shared with docker-compose.yml).
 include ${GOPATH}/.env
 
 # Set local environment variables.
 MYSQL_NAME=mysql56
-
-.PHONY: nuxt-upgrade
-nuxt-upgrade:
-	# Upgrade nuxt to the 1.0 version.
-	$(shell npm bin)/npm upgrade nuxt
-
-.PHONY: nuxt-version
-nuxt-version:
-	# Output the version of nuxt.
-	$(shell npm bin)/nuxt --version
 
 .PHONY: docker-build
 docker-build:
@@ -45,6 +52,12 @@ api-test:
 	# Run the Go tests.
 	cd ${GOPATH}/src/app/api && go test ./...
 
+.PHONY: clean
+clean:
+	# Remove binaries.
+	rm -rf ${GOPATH}/src/app/api/cmd/api/api
+	rm -rf ${GOPATH}/src/app/api/cmd/dbmigrate/dbmigrate
+
 .PHONY: gvt-get
 gvt-get:
 	# Download gvt.
@@ -58,7 +71,7 @@ swagger-get:
 .PHONY: swagger-gen
 swagger-gen:
 	# Generate the swagger spec.
-	cd ${GOPATH}/src/app/api/cmd/api; \
+	cd ${GOPATH}/src/app/api/cmd/api && \
 	swagger generate spec -o ${GOPATH}/src/app/api/static/swagger/swagger.json
 
 	# Replace 'example' with 'x-example' in the swagger spec.
@@ -73,29 +86,39 @@ swagger-gen:
 	# Serve the spec for the browser.
 	swagger serve -F=swagger ${GOPATH}/src/app/api/static/swagger/swagger.json
 
-.PHONY: clean
-clean:
-	rm -rf ${GOPATH}/src/app/api/cmd/api/api
-	rm -rf ${GOPATH}/src/app/api/cmd/dbmigrate/dbmigrate
-
 .PHONY: db-init
 db-init:
+	# Launch database container.
 	docker run -d --name=${MYSQL_NAME} -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} ${MYSQL_CONTAINER}
 
 .PHONY: db-start
-db-start: 
+db-start:
+	# Start the stopped database container.
 	docker start ${MYSQL_NAME}
 
 .PHONY: db-stop
 db-stop:
+	# Stop the running database container.
 	docker stop ${MYSQL_NAME}
 
 .PHONY: db-reset
 db-reset:
+	# Drop the database, create the database, and perform the migrations.
 	docker exec ${MYSQL_NAME} sh -c "exec mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e 'DROP DATABASE IF EXISTS main;'"
 	docker exec ${MYSQL_NAME} sh -c "exec mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'"
 	go run ${GOPATH}/src/app/api/cmd/dbmigrate/main.go
 
 .PHONY: db-rm
 db-rm:
+	# Stop and remove the database container.
 	docker rm -f ${MYSQL_NAME}
+
+.PHONY: nuxt-upgrade
+nuxt-upgrade:
+	# Upgrade nuxt to the latest version.
+	$(shell npm bin)/npm upgrade nuxt
+
+.PHONY: nuxt-version
+nuxt-version:
+	# Output the version of nuxt.
+	$(shell npm bin)/nuxt --version
