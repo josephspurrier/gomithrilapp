@@ -6,9 +6,9 @@
           <input
             :id="id"
             v-model="imessage"
+            @keyup="$emit('edit', index, id, imessage)"
             type="text"
             class="input individual-note"
-            @keyup="$emit('edit', index, id, imessage)"
           />
         </div>
       </div>
@@ -16,7 +16,11 @@
         <div class="level-left">
           <a class="level-item">
             <span class="icon is-small has-text-danger">
-              <i class="fa fa-trash-o" @click="$emit('remove', index, id)"></i>
+              <i
+                @click="$emit('remove', index, id)"
+                class="fa fa-trash-o"
+                data-cy="delete-note-link"
+              ></i>
             </span>
           </a>
         </div>

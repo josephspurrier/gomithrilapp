@@ -208,6 +208,13 @@ make swagger-gen
 # src/app/api/static/swagger/swagger.json
 ```
 
+# Cypress for UI Testing
+
+```bash
+# Open Cypress
+npx cypress open
+```
+
 ## Debug UI Tests
 
 Jest is used to run tests on Vue. You can use the steps below to debug the tests.

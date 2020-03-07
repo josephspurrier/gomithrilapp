@@ -2,48 +2,48 @@
   <div>
     <section class="section">
       <div class="container">
-        <h1 class="title">
-          Register
-        </h1>
-        <h2 class="subtitle">
-          Enter your information below.
-        </h2>
+        <h1 class="title">{{ title }}</h1>
+        <h2 class="subtitle">{{ subtitle }}</h2>
       </div>
 
       <div class="container" style="margin-top: 1em;">
         <form name="register">
           <textfield
             v-model="register.first_name"
+            :disabled="isLoading"
             label="First Name"
             name="first_name"
             type="text"
-            :disabled="isLoading"
+            data-cy="first_name"
             required
           ></textfield>
           <textfield
             v-model="register.last_name"
+            :disabled="isLoading"
             label="Last Name"
             name="last_name"
             type="text"
-            :disabled="isLoading"
+            data-cy="last_name"
             required
           ></textfield>
           <textfield
             v-model="register.email"
+            :disabled="isLoading"
             label="Email"
             name="email"
             type="text"
-            :disabled="isLoading"
+            data-cy="email"
             required
           ></textfield>
           <textfield
             v-model="register.password"
+            :disabled="isLoading"
+            @enter="submit"
             label="Password"
             name="password"
             type="password"
-            :disabled="isLoading"
+            data-cy="password"
             required
-            @enter="submit"
           ></textfield>
           <div class="field is-grouped">
             <p class="control">
@@ -55,6 +55,7 @@
                   'is-loading': isLoading
                 }"
                 @click="submit"
+                data-cy="submit"
                 >Create Account</a
               >
             </p>
@@ -86,6 +87,8 @@ export default {
   $validates: true,
   data() {
     return {
+      title: 'Register',
+      subtitle: 'Enter your information below.',
       register: {
         first_name: '',
         last_name: '',
@@ -93,6 +96,11 @@ export default {
         password: ''
       },
       isLoading: false
+    }
+  },
+  head() {
+    return {
+      title: this.title
     }
   },
   middleware: 'notAllowIfAuthenticated',

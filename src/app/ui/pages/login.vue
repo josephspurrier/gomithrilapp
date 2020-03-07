@@ -2,33 +2,31 @@
   <div>
     <section class="section">
       <div class="container">
-        <h1 class="title">
-          {{ title }}
-        </h1>
-        <h2 class="subtitle">
-          {{ subtitle }}
-        </h2>
+        <h1 class="title">{{ title }}</h1>
+        <h2 class="subtitle">{{ subtitle }}</h2>
       </div>
 
       <div class="container" style="margin-top: 1em;">
         <form name="login">
           <textfield
             v-model="login.email"
+            :disabled="isLoading"
+            @enter="submit"
             label="Email"
             name="email"
             type="text"
-            :disabled="isLoading"
+            data-cy="email"
             required
-            @enter="submit"
           ></textfield>
           <textfield
             v-model="login.password"
+            :disabled="isLoading"
+            @enter="submit"
             label="Password"
             name="password"
             type="password"
-            :disabled="isLoading"
+            data-cy="password"
             required
-            @enter="submit"
           ></textfield>
           <div class="field is-grouped">
             <p class="control">
@@ -40,6 +38,7 @@
                   'is-loading': isLoading
                 }"
                 @click="submit"
+                data-cy="submit"
                 >Submit</a
               >
             </p>

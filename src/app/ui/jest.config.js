@@ -1,5 +1,6 @@
 module.exports = {
-  globalSetup: './test/setup.js',
+  globalSetup: './test/global.setup.js',
+  setupFilesAfterEnv: ['./test/jest.setup.js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^~/(.*)$': '<rootDir>/$1',

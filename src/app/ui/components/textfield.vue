@@ -6,6 +6,7 @@
         v-validate="{ required }"
         :name="name"
         :type="type"
+        :data-cy="dataCy"
         :placeholder="placeholder"
         :class="{ input: true, 'is-danger': errors.has(name) }"
         :value="value"
@@ -30,7 +31,8 @@ export default {
     type: { type: String, default: 'text' },
     value: { type: String, default: '' },
     required: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    dataCy: { type: String, default: '' }
   }
 }
 </script>

@@ -19,7 +19,7 @@
 include ${GOPATH}/.env
 
 # Set local environment variables.
-MYSQL_NAME=mysql56
+MYSQL_NAME=govueapp_db_1
 
 .PHONY: docker-build
 docker-build:

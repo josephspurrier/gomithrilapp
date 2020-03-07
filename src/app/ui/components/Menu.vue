@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar is-black" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <nuxt-link class="navbar-item" to="/">
+      <nuxt-link class="navbar-item" to="/" data-cy="home-link">
         <strong>govueapp</strong>
       </nuxt-link>
 
@@ -26,7 +26,7 @@
             About
           </nuxt-link>
           <hr class="navbar-divider" />
-          <a v-if="isAuthenticated" class="dropdown-item" @click="logout"
+          <a v-if="isAuthenticated" @click="logout" class="dropdown-item"
             >Logout</a
           >
           <div class="navbar-item">

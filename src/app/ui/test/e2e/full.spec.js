@@ -9,9 +9,11 @@ describe('full application interaction', () => {
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
+      // slowMo: 50,
       headless: false
     })
     page = (await browser.pages())[0]
+    page.setViewport({ width: 1200, height: 800 })
   })
 
   afterAll(async () => {
@@ -27,7 +29,8 @@ describe('full application interaction', () => {
     await page.type('[name="email"]', 'a@a.com')
     await page.type('[name="password"]', 'a')
     await page.click('#submit')
-    await page.waitForNavigation()
+    // await page.waitForSelector('title')
+    await page.waitFor(1000)
     const title = await page.title()
     expect(title).toBe('Login')
   })
@@ -38,7 +41,7 @@ describe('full application interaction', () => {
     await page.type('[name="email"]', 'a@a.com')
     await page.type('[name="password"]', 'a')
     await page.click('#submit')
-    await page.waitForNavigation()
+    await page.waitForSelector('title')
     const title = await page.title()
     expect(title).toBe('Welcome')
   })

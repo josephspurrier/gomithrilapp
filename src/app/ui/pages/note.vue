@@ -7,11 +7,12 @@
           <div class="control">
             <input
               v-model="inputTodo"
+              @keydown.enter="handleAdd"
               name="note-add"
               class="input"
               type="text"
               placeholder="What would you like to do?"
-              @keydown.enter="handleAdd"
+              data-cy="note-text"
             />
           </div>
         </div>
