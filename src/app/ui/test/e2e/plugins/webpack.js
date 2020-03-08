@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+// Source: https://github.com/bahmutov/cypress-vue-unit-test/issues/200
+// Source: https://gist.github.com/danielroe/72618a5617c637e15613a51a911221ba
 
-const wp = require('@cypress/webpack-preprocessor')
-
-// https://nuxtjs.org/api/nuxt/
-// https://github.com/bahmutov/cypress-vue-unit-test/issues/200
-// https://github.com/hex-digital/nuxt-cypress-example/blob/master/plugins/cypress.js
-// https://github.com/bahmutov/cypress-vue-unit-test#bundling
-// https://gist.github.com/danielroe/72618a5617c637e15613a51a911221ba
-// https://stackoverflow.com/questions/52168030/how-to-do-cypress-unit-tests-with-vue-cli
+// This file will extrack the webpack config from the nuxt.config.js so it can
+// be used with Cypress in the index.js file.
 
 const { Nuxt, Builder } = require('nuxt')
 const config = require('../../../nuxt.config.js')
@@ -33,6 +29,4 @@ const webpackOptions = {
   plugins: nuxtWebpack.plugins
 }
 
-module.exports = wp({
-  webpackOptions
-})
+module.exports = webpackOptions
