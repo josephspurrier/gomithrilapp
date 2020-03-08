@@ -11,7 +11,7 @@ export const HTTP = axios.create({
 export const HTTP2 = {
   send: function(method, endpointURL, form, auth, successMessage, successFunc) {
     const f = new Flash()
-    let success = false
+    // let success = false
 
     let accessToken = ''
     if (auth && auth.loggedIn) {
@@ -37,7 +37,7 @@ export const HTTP2 = {
       if (response.data !== undefined) {
         f.success(successMessage)
         successFunc(response.data)
-        success = true
+        // success = true
       } else {
         f.failed('Token is not in the correct format.')
       }
@@ -55,8 +55,8 @@ export const HTTP2 = {
         }
       })
       .finally(() => {
-        if (!success) {
-        }
+        // if (!success) {
+        // }
       })
   }
 }

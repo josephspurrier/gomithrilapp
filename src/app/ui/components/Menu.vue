@@ -6,9 +6,9 @@
       </nuxt-link>
 
       <button class="button navbar-burger">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span />
+        <span />
+        <span />
       </button>
     </div>
 
@@ -26,7 +26,7 @@
             About
           </nuxt-link>
           <hr class="navbar-divider" />
-          <a v-if="isAuthenticated" @click="logout" class="dropdown-item"
+          <a v-if="isAuthenticated" class="dropdown-item" @click="logout"
             >Logout</a
           >
           <div class="navbar-item">

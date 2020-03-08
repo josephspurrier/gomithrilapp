@@ -14,9 +14,9 @@
     </section>
     <br />
     <div class="container">
-      <nuxt-link :to="note" data-cy="notepad-link">
+      <n-link :to="note" data-cy="notepad-link">
         Click here to access your Notepad.
-      </nuxt-link>
+      </n-link>
     </div>
   </div>
 </template>

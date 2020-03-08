@@ -28,9 +28,7 @@ describe('test the basic functionality', function() {
 
     cy.get('[data-cy=submit]').click()
 
-    cy.contains('user already exists')
-
-    cy.get('[data-cy=home-link]').click()
+    cy.visit('/')
   })
 
   it('login with the user', function() {

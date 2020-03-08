@@ -4,22 +4,21 @@ module.exports = {
     browser: true,
     node: true
   },
+  parser: 'vue-eslint-parser',
   parserOptions: {
     parser: 'babel-eslint'
   },
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended',
-    'plugin:prettier/recommended',
-    'prettier',
+    'plugin:vue/recommended',
+    'eslint:recommended',
     'prettier/vue',
-    //'plugin:vue/recommended'
+    'plugin:prettier/recommended'
   ],
-  plugins: [
-    'prettier'
-  ],
+  plugins: ['prettier'],
   // add your custom rules here
   rules: {
-    //"vue/html-self-closing": "on"
+    // "vue/html-self-closing": "on"
   }
 }

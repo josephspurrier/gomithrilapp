@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 // Source: https://github.com/bahmutov/cypress-vue-unit-test/issues/200
 // Source: https://gist.github.com/danielroe/72618a5617c637e15613a51a911221ba
 

@@ -7,12 +7,12 @@
           <div class="control">
             <input
               v-model="inputTodo"
-              @keydown.enter="handleAdd"
-              name="note-add"
-              class="input"
               type="text"
               placeholder="What would you like to do?"
+              class="input"
+              name="note-add"
               data-cy="note-text"
+              @keydown.enter="handleAdd"
             />
           </div>
         </div>
@@ -48,11 +48,6 @@ export default {
       inputTodo: ''
     }
   },
-  head() {
-    return {
-      title: this.title
-    }
-  },
   computed: {
     todolist() {
       return this.$store.state.todo.list
@@ -71,6 +66,11 @@ export default {
     },
     handleDelete(index, key) {
       this.$store.dispatch('todo/deleteItem', { index, key })
+    }
+  },
+  head() {
+    return {
+      title: this.title
     }
   }
 }

@@ -4,6 +4,8 @@
     "viewportHeight": 1024,
     "responseTimeout": 5000,
     "defaultCommandTimeout": 500,
+    "video": false,
+    "trashAssetsBeforeRuns": true,
     "testFiles": "**/*.spec.js",
     "fixturesFolder": "test/e2e/fixtures",
     "integrationFolder": "test/e2e/integration",

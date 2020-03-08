@@ -7,71 +7,76 @@
       </div>
 
       <div class="container" style="margin-top: 1em;">
-        <form name="login">
-          <textfield
-            v-model="login.email"
-            :disabled="isLoading"
-            @enter="submit"
-            label="Email"
-            name="email"
-            type="text"
-            data-cy="email"
-            required
-          ></textfield>
-          <textfield
-            v-model="login.password"
-            :disabled="isLoading"
-            @enter="submit"
-            label="Password"
-            name="password"
-            type="password"
-            data-cy="password"
-            required
-          ></textfield>
-          <div class="field is-grouped">
-            <p class="control">
-              <a
-                id="submit"
-                :class="{
-                  button: true,
-                  'is-primary': true,
-                  'is-loading': isLoading
-                }"
-                @click="submit"
-                data-cy="submit"
-                >Submit</a
-              >
-            </p>
-            <p class="control">
-              <a
-                :class="{
-                  button: true,
-                  'is-light': true,
-                  'is-loading': isLoading
-                }"
-                @click="clear"
-                >Clear</a
-              >
-            </p>
-            <p class="control">
-              <a
-                :class="{
-                  button: true,
-                  'is-light': true,
-                  'is-loading': isLoading
-                }"
-                :href="register"
-                >Register</a
-              >
-            </p>
-          </div>
-        </form>
+        <ValidationObserver ref="observer">
+          <form name="login" @submit.prevent="onSubmit">
+            <textfield
+              v-model="login.email"
+              :disabled="isLoading"
+              label="Email"
+              name="email"
+              type="text"
+              data-cy="email"
+              required
+            ></textfield>
+            <textfield
+              v-model="login.password"
+              :disabled="isLoading"
+              label="Password"
+              name="password"
+              type="password"
+              data-cy="password"
+              required
+            ></textfield>
+            <div class="field is-grouped">
+              <p class="control">
+                <button
+                  id="submit"
+                  :class="{
+                    button: true,
+                    'is-primary': true,
+                    'is-loading': isLoading
+                  }"
+                  type="submit"
+                  data-cy="submit"
+                >
+                  Submit
+                </button>
+              </p>
+              <p class="control">
+                <button
+                  :class="{
+                    button: true,
+                    'is-light': true,
+                    'is-loading': isLoading
+                  }"
+                  type="button"
+                  @click="clear"
+                >
+                  Clear
+                </button>
+              </p>
+              <p class="control">
+                <n-link
+                  :class="{
+                    button: true,
+                    'is-light': true,
+                    'is-loading': isLoading
+                  }"
+                  to="register"
+                >
+                  Register
+                </n-link>
+              </p>
+            </div>
+          </form>
+        </ValidationObserver>
       </div>
     </section>
   </div>
 </template>
 
 <script>
+import { ValidationObserver } from 'vee-validate'
 import textfield from '~/components/textfield.vue'
 import { HTTP } from '~/modules/http-common'
 import Flash from '~/modules/flash.js'
@@ -79,8 +84,10 @@ import Flash from '~/modules/flash.js'
 const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
-  components: { textfield },
-  $validates: true,
+  components: {
+    textfield,
+    ValidationObserver
+  },
   data() {
     return {
       title: 'Login',
@@ -95,33 +102,25 @@ export default {
       lastError: ''
     }
   },
-  head() {
-    return {
-      title: this.title
-    }
-  },
-  middleware: 'notAllowIfAuthenticated',
   methods: {
     // clear will clear the form.
     clear() {
       this.login.email = ''
       this.login.password = ''
+
+      // Reset the form so there are no errors.
+      this.$refs.observer.reset()
     },
-    submit() {
+    async onSubmit() {
       // Create the flash object.
       const f = new Flash()
 
-      // Validate the form.
-      this.$validator
-        .validateAll()
-        .then(result => {
-          if (result === true) {
-            this.submitReady()
-          }
-        })
-        .catch(() => {
-          f.warning('Could not validate the form.')
-        })
+      const isValid = await this.$refs.observer.validate()
+      if (isValid) {
+        this.submitReady()
+      } else {
+        f.warning('One or more required fields is missing.')
+      }
     },
     // submit will send a login request to the server.
     submitReady() {
@@ -130,6 +129,7 @@ export default {
       this.isLoading = true
       let success = false
       this.count += 1
+
       // Send a login request to the server.
       const headers = {
         headers: {
@@ -172,6 +172,12 @@ export default {
           }
         })
     }
-  }
+  },
+  head() {
+    return {
+      title: this.title
+    }
+  },
+  middleware: 'notAllowIfAuthenticated'
 }
 </script>

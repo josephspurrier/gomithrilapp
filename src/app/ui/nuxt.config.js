@@ -44,8 +44,8 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~plugins/vee-validate.js',
-    { src: '~/plugins/cypress.js', mode: 'client' }
+    { src: '~/plugins/vee-validate.js', mode: 'client' }
+    /* { src: '~/plugins/cypress.js', mode: 'client' } */
   ],
 
   /*
