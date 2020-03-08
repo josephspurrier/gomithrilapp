@@ -3,5 +3,12 @@
     "viewportWidth": 1280,
     "viewportHeight": 1024,
     "responseTimeout": 5000,
-    "defaultCommandTimeout": 500
+    "defaultCommandTimeout": 500,
+    "testFiles": "**/*.spec.js",
+    "fixturesFolder": "test/e2e/fixtures",
+    "integrationFolder": "test/e2e/integration",
+    "pluginsFile": "test/e2e/plugins/index.js",
+    "screenshotsFolder": "test/e2e/screenshots",
+    "supportFile": "test/e2e/support/index.js",
+    "videosFolder": "test/e2e/videos"
 }
