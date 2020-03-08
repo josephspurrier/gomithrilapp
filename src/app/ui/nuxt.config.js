@@ -1,9 +1,5 @@
 /* eslint-disable nuxt/no-cjs-in-config */
 
-// import pkg from './package'
-
-// process.traceDeprecation = true
-
 module.exports = {
   mode: 'universal',
 
@@ -11,13 +7,14 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    /* title: pkg.name, */
+    title: 'gowebvue',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
-        name: 'description' /*, content: pkg.description */
+        name: 'description',
+        content: 'Sample notepad application in Vue and Go.'
       }
     ],
     link: [

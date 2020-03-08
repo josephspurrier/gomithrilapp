@@ -1,7 +1,7 @@
 {
   "name": "nuxtapp",
   "version": "1.0.0",
-  "description": "Application in Vue and Go.",
+  "description": "Sample notepad application in Vue and Go.",
   "author": "Joseph Spurrier",
   "private": true,
   "scripts": {
