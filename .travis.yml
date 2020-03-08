@@ -44,12 +44,16 @@ script:
   - swagger validate ./swagger.json
   - go test ./... -coverprofile cover.out
   - cat cover.out | covfmt $GOPATH/src > lcov.info
+  - go run cmd/api/main.go &
   - cd $GOPATH/src/app/ui
-  - npm run test:cover
+  - npm install -g wait-on
+  - npm run build
+  - npm start & wait-on http://localhost:8080
+  - npm run test
 
 after_success:
   - cd $GOPATH/src/app
-  - cat api/lcov.info ui/coverage/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
+  - cat api/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
 
 notifications:
   webhooks: https://coveralls.io/webhook

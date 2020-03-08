@@ -7,11 +7,12 @@
   "scripts": {
     "dev": "nuxt --port 8080",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "nuxt start --port 8080",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
-    "test": "cypress run"
+    "test": "cypress run",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.9.5",

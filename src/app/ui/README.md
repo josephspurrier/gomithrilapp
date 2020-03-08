@@ -1,22 +1,28 @@
 # nuxtapp
 
-> Application in Vue and Go.
+> Sample notepad application in Vue and Go.
 
 ## Build Setup
 
 ``` bash
-# install dependencies
-$ npm install
+# Install dependencies.
+npm install
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+# Serve with hot reload at localhost:8080.
+npm run dev
 
-# build for production and launch server
-$ npm run build
-$ npm start
+# Build for production and launch server.
+npm run build
+npm start
 
-# generate static project
-$ npm run generate
+# Generate static project.
+npm run generate
+
+# Run tests with Cypress.
+npm run test
+
+# Open cypress GUI.
+npm run cypress
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).

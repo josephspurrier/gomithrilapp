@@ -13,7 +13,6 @@ const nuxt = new Nuxt({
 
 // process.env.DEBUG = 'nuxt:*'
 
-/* eslint-enable */
 config.modules.forEach(module => nuxt.moduleContainer.addModule(module))
 config.buildModules.forEach(module => nuxt.moduleContainer.addModule(module))
 
