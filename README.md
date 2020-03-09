@@ -8,6 +8,8 @@
 
 This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools. This project uses a [Makefile](Makefile) to centralize frequently used commands.
 
+![Demo gif](https://user-images.githubusercontent.com/2394539/76177148-ac753e00-6189-11ea-963b-bff38b29e8ed.gif)
+
 ## Quick Start Guide (QSG)
 
 To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose).
