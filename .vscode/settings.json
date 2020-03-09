@@ -1,6 +1,10 @@
 {
     //
-    // eslint
+    // General settings
+    // 
+    "editor.formatOnSave": true,
+    //
+    // ESlint
     //
     //"editor.formatOnSave": false,
     //"vetur.validation.template": false,
@@ -19,4 +23,9 @@
             "mode": "auto"
         }
     ],
+    //
+    // Go
+    //
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.inferGopath": true,
 }
