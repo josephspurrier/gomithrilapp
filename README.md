@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/josephspurrier/govueapp.svg)](https://travis-ci.org/josephspurrier/govueapp)
 [![Coverage Status](https://coveralls.io/repos/github/josephspurrier/govueapp/badge.svg?branch=master&timestamp=20190531-01)](https://coveralls.io/github/josephspurrier/govueapp?branch=master)
 
-[![Swagger Validator](http://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
+[![Swagger Validator](https://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
 This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools. This project uses a [Makefile](Makefile) to centralize frequently used commands.
 
@@ -71,10 +71,7 @@ npm update
 # https://docs.npmjs.com/cli/audit
 npm audit fix
 
-# Get the current verson of a package.
-npm -v eslint
-
-# Get a list of all packages that rely on another package
+# Get a verion number and a list of all packages that rely on another package.
 # https://docs.npmjs.com/cli/ls
 npm ls typescript
 
@@ -155,7 +152,14 @@ make db-reset
 make db-rm
 ```
 
-Run tests in Go:
+Run tests for UI:
+
+```bash
+# Run the UI tests.
+make ui-test
+```
+
+Run tests for the API:
 
 ```bash
 # Create and run the database container.
@@ -202,6 +206,13 @@ make swagger-gen
 
 # The output file will be here:
 # src/app/api/static/swagger/swagger.json
+```
+
+# Cypress for UI Testing
+
+```bash
+# Open Cypress
+npx cypress open
 ```
 
 ## Debug UI Tests

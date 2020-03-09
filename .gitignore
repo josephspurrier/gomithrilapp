@@ -5,8 +5,7 @@ thumbs.db
 # Environment files
 .envrc
 
-# IDE files
-.vscode/
+# Coverage
 /src/app/ui/coverage
 
 # Go build folders

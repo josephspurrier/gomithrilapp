@@ -1,23 +1,22 @@
 env:
   - COVERALLS_PARALLEL=true
-
 language: go
-
 go_import_path: project-root
-
 services:
   - mysql
-
 go:
   - "1.11"
   - "1.12"
   - "1.13"
   - "1.14"
-
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default - required for Cypress.
+      - libgconf-2-4
 cache:
   directories:
     - $(npm config get prefix)/lib/node_modules
-
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'
   - export GOPATH=$HOME/gopath/src/project-root
@@ -30,13 +29,11 @@ before_install:
   - go get github.com/go-swagger/go-swagger/cmd/swagger
   - go get github.com/FiloSottile/gvt
   - gvt restore
-
 install:
   - cd $GOPATH/src/app/ui
   - npm install
   - cd $GOPATH/src/app/api
   - go install -v ./...
-
 script:
   - cd $GOPATH/src/app/api
   - swagger generate spec -o ./swagger.json
@@ -44,12 +41,14 @@ script:
   - swagger validate ./swagger.json
   - go test ./... -coverprofile cover.out
   - cat cover.out | covfmt $GOPATH/src > lcov.info
+  - go run cmd/api/main.go &
   - cd $GOPATH/src/app/ui
-  - npm run test:cover
-
+  - npm install -g wait-on
+  - npm run build
+  - npm start & wait-on http://localhost:8080
+  - npm run test
 after_success:
   - cd $GOPATH/src/app
-  - cat api/lcov.info ui/coverage/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
-
+  - cat api/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
 notifications:
   webhooks: https://coveralls.io/webhook

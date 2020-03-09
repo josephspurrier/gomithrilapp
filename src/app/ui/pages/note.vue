@@ -7,10 +7,11 @@
           <div class="control">
             <input
               v-model="inputTodo"
-              name="note-add"
-              class="input"
               type="text"
               placeholder="What would you like to do?"
+              class="input"
+              name="note-add"
+              data-cy="note-text"
               @keydown.enter="handleAdd"
             />
           </div>
@@ -19,7 +20,7 @@
       <div>
         <ul id="listTodo">
           <li
-            is="Note"
+            is="note"
             v-for="(v, k) in todolist"
             :id="v.id"
             :key="v.id"
@@ -35,21 +36,16 @@
 </template>
 
 <script>
-import Note from '~/components/Note.vue'
+import note from '~/components/note.vue'
 
 export default {
   components: {
-    Note
+    note
   },
   data() {
     return {
       title: 'Notes',
       inputTodo: ''
-    }
-  },
-  head() {
-    return {
-      title: this.title
     }
   },
   computed: {
@@ -70,6 +66,11 @@ export default {
     },
     handleDelete(index, key) {
       this.$store.dispatch('todo/deleteItem', { index, key })
+    }
+  },
+  head() {
+    return {
+      title: this.title
     }
   }
 }

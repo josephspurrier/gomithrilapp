@@ -21,7 +21,11 @@ func Database(l logger.ILog) *database.DBW {
 	// If the password env var is set, use it.
 	password := os.Getenv("MYSQL_ROOT_PASSWORD")
 	if len(password) == 0 {
-		password = "password"
+		if os.Getenv("TRAVIS") == "true" {
+			password = ""
+		} else {
+			password = "password"
+		}
 	}
 
 	// Set the database connection information.

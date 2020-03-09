@@ -19,7 +19,7 @@
 include ${GOPATH}/.env
 
 # Set local environment variables.
-MYSQL_NAME=mysql56
+MYSQL_NAME=govueapp_db_1
 
 .PHONY: docker-build
 docker-build:
@@ -35,6 +35,11 @@ ui-dep:
 ui-dev:
 	# Start the UI.
 	cd ${GOPATH}/src/app/ui && npm run dev
+
+.PHONY: ui-test
+ui-test:
+	# Run the Jest UI tests.
+	cd ${GOPATH}/src/app/ui && npm test
 
 .PHONY: api-dep
 api-dep:

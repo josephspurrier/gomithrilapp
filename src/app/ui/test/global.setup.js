@@ -5,6 +5,7 @@ module.exports = function globalSetup() {
   exec('bash $GOPATH/bash/reset-db.sh', (err, stdout, stderr) => {
     if (err) {
       // node couldn't execute the command
+      console.log(`err: ${err}`)
       return
     }
 
