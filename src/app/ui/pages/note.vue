@@ -20,7 +20,7 @@
       <div>
         <ul id="listTodo">
           <li
-            is="Note"
+            is="note"
             v-for="(v, k) in todolist"
             :id="v.id"
             :key="v.id"
@@ -36,11 +36,11 @@
 </template>
 
 <script>
-import Note from '~/components/Note.vue'
+import note from '~/components/note.vue'
 
 export default {
   components: {
-    Note
+    note
   },
   data() {
     return {

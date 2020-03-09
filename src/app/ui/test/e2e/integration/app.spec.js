@@ -27,11 +27,11 @@ describe('test the basic functionality', function() {
       .should('have.value', 'a')
 
     cy.get('[data-cy=submit]').click()
-
-    cy.visit('/')
   })
 
   it('login with the user', function() {
+    cy.visit('/')
+
     cy.contains('Login')
     cy.url().should('include', '/')
 
