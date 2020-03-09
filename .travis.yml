@@ -46,7 +46,7 @@ script:
   - npm install -g wait-on
   - npm run build
   - npm start & wait-on http://localhost:8080
-  - npm run test-debug
+  - npm run test
 after_success:
   - cd $GOPATH/src/app
   - cat api/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
