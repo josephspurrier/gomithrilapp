@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/internal/testrequest"
 	"app/api/model"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestIndex(t *testing.T) {
-	p, _ := boot.TestServices(nil)
+	p, _ := config.TestServices(nil)
 	tr := testrequest.New()
 
 	// Home route.
@@ -26,7 +26,7 @@ func TestIndex(t *testing.T) {
 }
 
 func TestStatic(t *testing.T) {
-	p, _ := boot.TestServices(nil)
+	p, _ := config.TestServices(nil)
 	tr := testrequest.New()
 
 	// Success.

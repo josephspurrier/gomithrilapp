@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/pkg/logger"
 )
 
@@ -13,6 +13,6 @@ func main() {
 	l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
 
 	// Migrate the database.
-	boot.Database(l)
+	config.Database(l)
 	l.Printf("Database migration complete.")
 }

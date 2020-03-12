@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
 	"app/api/model"
@@ -20,7 +20,7 @@ import (
 func TestLoginSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	p.Token = m.Token
@@ -55,7 +55,7 @@ func TestLoginSuccess(t *testing.T) {
 func TestLoginFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -112,7 +112,7 @@ func TestLoginFail(t *testing.T) {
 func TestLoginTokenBad(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	p.Token = m.Token
@@ -139,7 +139,7 @@ func TestLoginTokenBad(t *testing.T) {
 }
 
 func TestLoginFailDatabase(t *testing.T) {
-	p, _ := boot.TestServices(nil)
+	p, _ := config.TestServices(nil)
 	tr := testrequest.New()
 
 	// Login with the user.

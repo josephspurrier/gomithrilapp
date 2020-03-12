@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
 	"app/api/model"
@@ -18,7 +18,7 @@ import (
 func TestRegisterSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -40,7 +40,7 @@ func TestRegisterSuccess(t *testing.T) {
 func TestRegisterFailUserExists(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -86,7 +86,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 }
 
 func TestRegisterFailDatabase(t *testing.T) {
-	p, _ := boot.TestServices(nil)
+	p, _ := config.TestServices(nil)
 	tr := testrequest.New()
 
 	// Register the user.
@@ -107,7 +107,7 @@ func TestRegisterFailDatabase(t *testing.T) {
 func TestRegisterFailDatabase2(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	m.Mock.Add("UserStore.Create", "0", errors.New("error creating user"))
@@ -128,7 +128,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 func TestRegisterFailHash(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	mpass := new(testutil.MockPasshash)

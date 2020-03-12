@@ -11,8 +11,8 @@ type Factory struct {
 	Note NoteStore
 }
 
-// LoadFactory will return the factory.
-func LoadFactory(m *mock.Mocker, db api.IDatabase, q api.IQuery) *Factory {
+// NewFactory will return the factory for stores.
+func NewFactory(m *mock.Mocker, db api.IDatabase, q api.IQuery) *Factory {
 	cs := NewCore(m, db, q)
 
 	return &Factory{

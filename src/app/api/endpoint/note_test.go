@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
 	"app/api/model"
@@ -18,7 +18,7 @@ import (
 func TestNoteCreateSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -41,7 +41,7 @@ func TestNoteCreateSuccess(t *testing.T) {
 func TestNoteCreateFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -86,7 +86,7 @@ func TestNoteCreateFail(t *testing.T) {
 func TestNoteIndexSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -128,7 +128,7 @@ func TestNoteIndexSuccess(t *testing.T) {
 func TestNoteIndexFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -150,7 +150,7 @@ func TestNoteIndexFail(t *testing.T) {
 func TestNoteShowSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -182,7 +182,7 @@ func TestNoteShowSuccess(t *testing.T) {
 func TestNoteShowFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -238,7 +238,7 @@ func TestNoteShowFail(t *testing.T) {
 func TestNoteUpdateSuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -280,7 +280,7 @@ func TestNoteUpdateSuccess(t *testing.T) {
 func TestNoteUpdateFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -354,7 +354,7 @@ func TestNoteUpdateFail(t *testing.T) {
 func TestNoteDestroySuccess(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.
@@ -385,7 +385,7 @@ func TestNoteDestroySuccess(t *testing.T) {
 func TestNoteDestroyFail(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 	tr := testrequest.New()
 
 	// Get an auth token.

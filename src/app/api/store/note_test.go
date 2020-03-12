@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/internal/testutil"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +13,7 @@ import (
 func TestNote(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, _ := boot.TestServices(db)
+	p, _ := config.TestServices(db)
 
 	// Create a user.
 	u := p.Store.User
@@ -72,7 +72,7 @@ func TestNote(t *testing.T) {
 func TestNoteMock(t *testing.T) {
 	db := testutil.LoadDatabase()
 	defer testutil.TeardownDatabase(db)
-	p, m := boot.TestServices(db)
+	p, m := config.TestServices(db)
 
 	// Create a user.
 	u := p.Store.User

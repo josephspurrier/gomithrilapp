@@ -1,10 +1,11 @@
 package store
 
 import (
+	"time"
+
 	"app/api"
 	"app/api/internal/query"
 	"app/api/pkg/mock"
-	"time"
 )
 
 // User is a user of the system.

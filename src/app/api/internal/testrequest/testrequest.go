@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"app/api/boot"
+	"app/api/config"
 	"app/api/endpoint"
 )
 
@@ -37,7 +37,7 @@ func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target s
 	v url.Values) *httptest.ResponseRecorder {
 	if !tr.SkipRoutes {
 		// Load the routes.
-		boot.LoadRoutes(core)
+		config.LoadRoutes(core)
 	}
 
 	var body io.Reader
@@ -55,7 +55,7 @@ func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target s
 	w := httptest.NewRecorder()
 
 	if !tr.SkipMiddleware {
-		boot.Middleware(core).ServeHTTP(w, r)
+		config.Middleware(core).ServeHTTP(w, r)
 	} else {
 		tr.SkipMiddleware = false
 		core.Router.ServeHTTP(w, r)
@@ -69,7 +69,7 @@ func (tr *TR) SendJSON(t *testing.T, core endpoint.Core, method string, target s
 	v url.Values) *httptest.ResponseRecorder {
 	if !tr.SkipRoutes {
 		// Load the routes.
-		boot.LoadRoutes(core)
+		config.LoadRoutes(core)
 	}
 
 	var body io.Reader
@@ -88,7 +88,7 @@ func (tr *TR) SendJSON(t *testing.T, core endpoint.Core, method string, target s
 	w := httptest.NewRecorder()
 
 	if !tr.SkipMiddleware {
-		boot.Middleware(core).ServeHTTP(w, r)
+		config.Middleware(core).ServeHTTP(w, r)
 	} else {
 		tr.SkipMiddleware = false
 		core.Router.ServeHTTP(w, r)

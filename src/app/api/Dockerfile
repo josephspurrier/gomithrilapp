@@ -5,7 +5,7 @@ WORKDIR /go/src/app/api
 # Copy over all files.
 COPY . .
 
-# Install dependencies.
+# Get dependencies.
 RUN go get github.com/FiloSottile/gvt && \
     gvt restore
 
