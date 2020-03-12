@@ -37,10 +37,23 @@ func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, err
 		return http.StatusNotFound, nil
 	}
 
-	// FIXME: This should be set with a variable since GOPATH won't exist in
-	// a production environment.
-	basepath := filepath.Join(os.Getenv("GOPATH"), "src/app/api")
+	// Get the location of the executable.
+	basepath, err := os.Executable()
+	if err != nil {
+		return http.StatusInternalServerError, nil
+	}
 
+	// If static folder is found to the executable, serve the file.
+	staticPath := filepath.Join(basepath, "static")
+	if stat, err := os.Stat(staticPath); err == nil && stat.IsDir() {
+		// The static directory is found.
+	} else if len(os.Getenv("GOPATH")) > 0 {
+		// Else get the GOPATH.
+		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/api")
+	}
+
+	// Serve the file to the user.
 	http.ServeFile(w, r, filepath.Join(basepath, r.URL.Path[1:]))
+
 	return http.StatusOK, nil
 }
