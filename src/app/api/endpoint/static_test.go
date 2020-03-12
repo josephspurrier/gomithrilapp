@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"testing"
 
-	"app/api/config"
 	"app/api/internal/testrequest"
+	"app/api/internal/testutil"
 	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestIndex(t *testing.T) {
-	p, _ := config.TestServices(nil)
+	p, _ := testutil.Services(nil)
 	tr := testrequest.New()
 
 	// Home route.
@@ -26,7 +26,7 @@ func TestIndex(t *testing.T) {
 }
 
 func TestStatic(t *testing.T) {
-	p, _ := config.TestServices(nil)
+	p, _ := testutil.Services(nil)
 	tr := testrequest.New()
 
 	// Success.
