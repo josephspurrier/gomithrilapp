@@ -40,8 +40,6 @@ func TestValidJWT(t *testing.T) {
 	s, err := token.Verify(ss)
 	assert.Nil(t, err)
 	assert.Equal(t, "jsmith", s)
-
-	assert.Equal(t, secret, token.Secret())
 }
 
 func TestInvalidSecret(t *testing.T) {
@@ -186,18 +184,3 @@ func TestErrorJWT(t *testing.T) {
 	assert.Equal(t, ErrAudienceInvalid, err)
 	assert.Equal(t, "", s)
 }
-
-/*func TestUnmarshal(t *testing.T) {
-	type container struct {
-		JWT Configuration `json:"JWT"`
-	}
-	config := new(container)
-	path := filepath.Join("testdata", "config.json")
-	b, err := ioutil.ReadFile(path)
-	assert.Nil(t, err)
-
-	err = json.Unmarshal(b, &config)
-	assert.Nil(t, err)
-
-	assert.Equal(t, "0123456789ABCDEF0123456789ABCDEF", string(config.JWT.Secret()))
-}*/

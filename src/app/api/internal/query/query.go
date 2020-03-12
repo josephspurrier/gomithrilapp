@@ -59,9 +59,6 @@ func (q *Q) FindAll(dest api.IRecord) (total int, err error) {
 		return q.Mock.Int(), q.Mock.Error()
 	}
 
-	//TODO: Add in something to handle soft deletes.
-	//WHERE deleted_at IS NULL
-
 	err = q.db.QueryRowScan(&total, fmt.Sprintf(`
 		SELECT COUNT(DISTINCT %s)
 		FROM %s

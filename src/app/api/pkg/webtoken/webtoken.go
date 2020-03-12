@@ -30,28 +30,10 @@ var (
 	ErrSecretTooShort = errors.New("secret must be 256 bit (32 bytes)")
 )
 
-// SecretKey is a byte array.
-type SecretKey []byte
-
-// UnmarshalJSON will unmarshal the value from a base64 encoded value.
-/*func (k *SecretKey) UnmarshalJSON(b []byte) error {
-	unquoted, err := strconv.Unquote(string(b))
-	if err != nil {
-		return nil
-	}
-
-	dec, err := base64.StdEncoding.DecodeString(unquoted)
-	if err != nil {
-		return nil
-	}
-	*k = SecretKey(dec)
-	return err
-}*/
-
 // Configuration contains the JWT dependencies.
 type Configuration struct {
 	clock   IClock
-	secret  SecretKey
+	secret  []byte
 	timeout time.Duration
 }
 
@@ -148,9 +130,4 @@ func (c *Configuration) Verify(s string) (string, error) {
 	}
 
 	return "", err
-}
-
-// Secret will return the secret.
-func (c *Configuration) Secret() []byte {
-	return c.secret
 }
