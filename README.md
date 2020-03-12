@@ -55,6 +55,7 @@ These are the current versions on the front-end components:
 - Vue.js [v2.6.11](https://github.com/vuejs/vue/releases/tag/v2.6.11) - [docs](https://vuejs.org/v2/guide/)
 - Vuex [v3.1.2](https://github.com/vuejs/vuex/releases/tag/v3.1.2) - [docs](https://vuex.vuejs.org/)
 - Bulma [v1.2.7](https://www.npmjs.com/package/@nuxtjs/bulma/v/1.2.7) - [docs](https://bulma.io/documentation/)
+- Swagger UI [v3.25.0](https://github.com/swagger-api/swagger-ui/releases/tag/v3.25.0) - [docs](https://swagger.io/tools/swagger-ui/)
 
 ### Visual Studio Code (VSCode) Setup
 
