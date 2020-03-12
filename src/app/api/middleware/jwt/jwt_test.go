@@ -1,14 +1,16 @@
 package jwt_test
 
 import (
-	"app/api/pkg/mock"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"app/api/internal/requestcontext"
 	"app/api/middleware/jwt"
+	"app/api/pkg/mock"
+	"app/api/pkg/webtoken"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -27,7 +29,8 @@ func TestWhitelistAllowed(t *testing.T) {
 			"GET /v1/auth",
 		}
 
-		token := jwt.New([]byte("secret"), whitelist,
+		webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
+		token := jwt.New(whitelist, webtoken,
 			requestcontext.New(mock.New(false)))
 		h := token.Handler(mux)
 
@@ -54,7 +57,8 @@ func TestWhitelistNotAllowed(t *testing.T) {
 			"GET /v1/auth",
 		}
 
-		token := jwt.New([]byte("secret"), whitelist,
+		webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
+		token := jwt.New(whitelist, webtoken,
 			requestcontext.New(mock.New(false)))
 		h := token.Handler(mux)
 
@@ -75,7 +79,8 @@ func TestWhitelistBadBearer(t *testing.T) {
 		"GET /v1/auth",
 	}
 
-	token := jwt.New([]byte("secret"), whitelist,
+	webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
+	token := jwt.New(whitelist, webtoken,
 		requestcontext.New(mock.New(false)))
 	h := token.Handler(mux)
 

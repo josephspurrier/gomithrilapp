@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"net/http"
-	"time"
 )
 
 // IBind provides bind and validation for requests.
@@ -57,8 +56,8 @@ type IResponse interface {
 
 // IToken provides outputs for the JWT.
 type IToken interface {
-	Generate(userID string, duration time.Duration) (string, error)
-	Secret() []byte
+	Generate(userID string) (string, error)
+	Verify(s string) (string, error)
 }
 
 // IContext provides handlers for type request context.

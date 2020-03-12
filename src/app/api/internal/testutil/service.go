@@ -21,7 +21,11 @@ func Services(db *database.DBW) (endpoint.Core, *CoreTest) {
 	mockToken := new(MockToken)
 	mocker := mock.New(true)
 
-	core := config.Services(mockLogger, db, mocker)
+	// Load the environment variables from defaults.
+	settings := config.LoadEnv(mockLogger, "")
+
+	// Set up the services.
+	core := config.Services(mockLogger, settings, db, mocker)
 
 	// Add all the configurable mocks.
 	m := &CoreTest{

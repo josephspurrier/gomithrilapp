@@ -1,30 +1,29 @@
 package testutil
 
-import "time"
-
 // MockToken is a mocked webtoken.
 type MockToken struct {
 	GenerateFunc GenerateFuncType
-	SecretValue  string
+	VerifyValue  string
+	VerifyError  error
 }
 
 // GenerateFuncType .
-type GenerateFuncType func(userID string, duration time.Duration) (string, error)
+type GenerateFuncType func(userID string) (string, error)
 
 // GenerateFuncDefault .
-var GenerateFuncDefault = func(userID string, duration time.Duration) (string, error) {
+var GenerateFuncDefault = func(userID string) (string, error) {
 	return "", nil
 }
 
 // Generate .
-func (mt *MockToken) Generate(userID string, duration time.Duration) (string, error) {
+func (mt *MockToken) Generate(userID string) (string, error) {
 	if mt.GenerateFunc != nil {
-		return mt.GenerateFunc(userID, duration)
+		return mt.GenerateFunc(userID)
 	}
-	return GenerateFuncDefault(userID, duration)
+	return GenerateFuncDefault(userID)
 }
 
-// Secret .
-func (mt *MockToken) Secret() []byte {
-	return []byte(mt.SecretValue)
+// Verify .
+func (mt *MockToken) Verify(s string) (string, error) {
+	return mt.VerifyValue, mt.VerifyError
 }

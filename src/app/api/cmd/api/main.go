@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,20 +12,19 @@ import (
 )
 
 func main() {
-	// FIXME: This should be an environment variable.
-	port := "8081"
-
 	// Create the logger.
-	//l := logger.New(log.New(os.Stderr, "", log.LstdFlags))
 	l := logger.New(log.New(os.Stderr, "", log.Lshortfile))
 
+	// Load the environment variables.
+	settings := config.LoadEnv(l, "")
+
 	// Setup the services.
-	core := config.Services(l, config.Database(l), mock.New(false))
+	core := config.Services(l, settings, config.Database(l), mock.New(false))
 	config.LoadRoutes(core)
 
 	// Start the web server.
 	l.Printf("Server started.")
-	err := http.ListenAndServe(":"+port, config.Middleware(core))
+	err := http.ListenAndServe(fmt.Sprintf(":%v", settings.Port), config.Middleware(core))
 	if err != nil {
 		l.Printf(err.Error())
 	}

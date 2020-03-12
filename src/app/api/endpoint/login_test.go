@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"testing"
-	"time"
 
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
@@ -23,9 +22,8 @@ func TestLoginSuccess(t *testing.T) {
 	tr := testrequest.New()
 
 	p.Token = m.Token
-	m.Token.SecretValue = "0123456789ABCDEF0123456789ABCDEF"
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
-		enc := base64.StdEncoding.EncodeToString(m.Token.Secret())
+	m.Token.GenerateFunc = func(userID string) (string, error) {
+		enc := base64.StdEncoding.EncodeToString([]byte("0123456789ABCDEF0123456789ABCDEF"))
 		return enc, nil
 	}
 
@@ -115,8 +113,7 @@ func TestLoginTokenBad(t *testing.T) {
 	tr := testrequest.New()
 
 	p.Token = m.Token
-	m.Token.SecretValue = "0123456789ABCDEF0123456789ABCDEF"
-	m.Token.GenerateFunc = func(userID string, duration time.Duration) (string, error) {
+	m.Token.GenerateFunc = func(userID string) (string, error) {
 		return "", errors.New("bad token generation")
 	}
 

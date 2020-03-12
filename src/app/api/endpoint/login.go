@@ -3,7 +3,6 @@ package endpoint
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"app/api/model"
 )
@@ -69,9 +68,8 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	m.Token = ""
 	m.Status = http.StatusText(http.StatusOK)
 
-	// Generate the access tokens.
-	// FIXME: Set this timeout to a confgurable value.
-	m.Token, err = p.Token.Generate(user.ID, 8*time.Hour)
+	// Generate the access token.
+	m.Token, err = p.Token.Generate(user.ID)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

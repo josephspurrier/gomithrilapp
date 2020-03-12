@@ -30,9 +30,9 @@ func TestValidJWT(t *testing.T) {
 	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
 	// Generate a token.
-	token := New(secret)
+	token := New(secret, 999999*time.Hour)
 	token.SetClock(mc)
-	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	ss, err := token.Generate("jsmith")
 	assert.Nil(t, err)
 	assert.NotEmpty(t, ss)
 
@@ -51,14 +51,14 @@ func TestInvalidSecret(t *testing.T) {
 	secret2 := []byte("0123456789ABCDEF0123456789ABCDEF3")
 
 	// Generate a token.
-	token := New(secret)
+	token := New(secret, 999999*time.Hour)
 	token.SetClock(mc)
-	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	ss, err := token.Generate("jsmith")
 	assert.Nil(t, err)
 	assert.NotEmpty(t, ss)
 
 	// Verify the token.
-	token2 := New(secret2)
+	token2 := New(secret2, 999999*time.Hour)
 	token.SetClock(mc)
 	s, err := token2.Verify(ss)
 	assert.Equal(t, ErrSignatureInvalid, err)
@@ -69,9 +69,9 @@ func TestNoSecret(t *testing.T) {
 	mc := new(MockClock)
 
 	// Generate a token.
-	token := New([]byte(""))
+	token := New([]byte(""), 999999*time.Hour)
 	token.SetClock(mc)
-	ss, err := token.Generate("jsmith", 999999*time.Hour)
+	ss, err := token.Generate("jsmith")
 	assert.Equal(t, ErrSecretTooShort, err)
 	assert.Equal(t, "", ss)
 
@@ -92,9 +92,9 @@ func TestFutureJWT(t *testing.T) {
 	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
 	// Generate a token.
-	token := New(secret)
+	token := New(secret, 24*time.Hour)
 	token.SetClock(mc)
-	ss, err := token.Generate("jsmith", 24*time.Hour)
+	ss, err := token.Generate("jsmith")
 	assert.Nil(t, err)
 	assert.NotEmpty(t, ss)
 
@@ -120,9 +120,9 @@ func TestPastJWT(t *testing.T) {
 	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
 	// Generate a token.
-	token := New(secret)
+	token := New(secret, 1*time.Minute)
 	token.SetClock(mc)
-	ss, err := token.Generate("jsmith", 1*time.Minute)
+	ss, err := token.Generate("jsmith")
 	assert.Nil(t, err)
 	assert.NotEmpty(t, ss)
 
@@ -143,7 +143,7 @@ func TestErrorJWT(t *testing.T) {
 	secret := []byte("0123456789ABCDEF0123456789ABCDEF")
 
 	// Generate a token object.
-	token := New(secret)
+	token := New(secret, 1*time.Minute)
 	token.SetClock(mc)
 
 	// Random text in three sections.

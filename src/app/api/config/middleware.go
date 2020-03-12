@@ -11,14 +11,13 @@ import (
 func Middleware(core endpoint.Core) http.Handler {
 	return middleware.Factory(core.Router,
 		core.Log,
-		core.Token.Secret(),
-		// JWT whitelist.
-		[]string{
+		[]string{ // JWT whitelist.
 			"GET /favicon.ico",
 			"GET /v1",
 			"GET /static/*",
 			"POST /v1/login",
 			"POST /v1/register",
 		},
+		core.Token,
 		core.Context)
 }

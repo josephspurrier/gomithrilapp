@@ -50,15 +50,17 @@ type SecretKey []byte
 
 // Configuration contains the JWT dependencies.
 type Configuration struct {
-	clock  IClock
-	secret SecretKey
+	clock   IClock
+	secret  SecretKey
+	timeout time.Duration
 }
 
 // New creates a new JWT configuration.
-func New(secret []byte) *Configuration {
+func New(secret []byte, sessionTimeout time.Duration) *Configuration {
 	return &Configuration{
-		clock:  new(clock),
-		secret: secret,
+		clock:   new(clock),
+		secret:  secret,
+		timeout: sessionTimeout,
 	}
 }
 
@@ -79,7 +81,7 @@ func randomID() (string, error) {
 }
 
 // Generate will generate a JWT.
-func (c *Configuration) Generate(userID string, duration time.Duration) (string, error) {
+func (c *Configuration) Generate(userID string) (string, error) {
 	// Ensure a secret is present.
 	if len(c.secret) < 32 {
 		return "", ErrSecretTooShort
@@ -100,7 +102,7 @@ func (c *Configuration) Generate(userID string, duration time.Duration) (string,
 		Audience:  userID,
 		NotBefore: now.Unix(),
 		IssuedAt:  now.Unix(),
-		ExpiresAt: now.Add(duration).Unix(),
+		ExpiresAt: now.Add(c.timeout).Unix(),
 	}
 
 	// Create the token.

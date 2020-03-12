@@ -3,17 +3,17 @@
 # Requires: Docker Engine 17.09.0 and higher
 version: '3.4'
 
-# Microservice template.
+# Template.
 x-template: &service-template
   restart: always
   env_file:
     - .env
   networks:
-    - cnet
+    - dnet
 
-# Networks.
+# Network.
 networks:
-  cnet:
+  dnet:
     driver: bridge
 
 # Services.
@@ -32,4 +32,4 @@ services:
     <<: *service-template
     image: "govueapp-api:${APP_VERSION}"
     ports:
-      - "8081:8081"
+      - "${API_PORT}:${API_PORT}"

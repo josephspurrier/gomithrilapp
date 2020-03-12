@@ -8,22 +8,21 @@ import (
 
 	"app/api"
 	"app/api/model"
-	"app/api/pkg/webtoken"
 )
 
 // Config contains the dependencies for the handler.
 type Config struct {
-	secret    []byte
 	whitelist []string
+	webtoken  api.IToken
 	ctx       api.IContext
 }
 
 // New returns a new loq request middleware.
-func New(secret []byte, whitelist []string, ctx api.IContext) *Config {
+func New(whitelist []string, webtoken api.IToken, ctx api.IContext) *Config {
 	return &Config{
-		secret:    secret,
 		whitelist: whitelist,
 		ctx:       ctx,
+		webtoken:  webtoken,
 	}
 }
 
@@ -46,8 +45,7 @@ func (c *Config) Handler(next http.Handler) http.Handler {
 				return
 			}
 
-			token := webtoken.New(c.secret)
-			userID, err := token.Verify(bearer[7:])
+			userID, err := c.webtoken.Verify(bearer[7:])
 			if err != nil {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusUnauthorized)
