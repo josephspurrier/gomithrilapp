@@ -20,6 +20,7 @@ cache:
   directories:
     - $(npm config get prefix)/lib/node_modules
 before_install:
+  - mysql -e 'SHOW VARIABLES LIKE "%version%";'
   - mysql -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'
   - export GOPATH=$HOME/gopath/src/project-root
   - export PATH=$HOME/gopath/src/project-root/bin:$PATH
