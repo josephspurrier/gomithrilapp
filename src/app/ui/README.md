@@ -1,4 +1,4 @@
-# nuxtapp
+# govueapp
 
 > Sample notepad application in Vue and Go.
 

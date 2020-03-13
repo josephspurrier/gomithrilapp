@@ -53,17 +53,17 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 	if err != nil {
 		return http.StatusInternalServerError, err
 	} else if !found {
-		return http.StatusBadRequest, errors.New("user not found (1)")
+		return http.StatusBadRequest, errors.New("login information does not match")
 	}
 
-	// Ensure the user's password matches.
+	// Ensure the user's password matches. Use the same error message to prevent
+	// brute-force from finding usernames.
 	if !p.Password.Match(user.Password, req.Body.Password) {
-		return http.StatusBadRequest, errors.New("user not found (2)")
+		return http.StatusBadRequest, errors.New("login information does not match")
 	}
 
 	// Create the response.
 	m := new(model.LoginResponse).Body
-	m.Token = ""
 	m.Status = http.StatusText(http.StatusOK)
 
 	// Generate the access token.

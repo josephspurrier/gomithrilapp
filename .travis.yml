@@ -11,9 +11,11 @@ go:
   - "1.14"
 addons:
   apt:
+    sources:
+      - mysql-5.7-trusty
     packages:
-      # Ubuntu 16+ does not install this dependency by default - required for Cypress.
-      - libgconf-2-4
+      - libgconf-2-4 # Ubuntu 16+ does not install this dependency by default - required for Cypress.
+      - mysql-server
 cache:
   directories:
     - $(npm config get prefix)/lib/node_modules
