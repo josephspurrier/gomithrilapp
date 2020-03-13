@@ -22,7 +22,7 @@ type Core struct {
 // NewCore returns a core for all the endpoints.
 func NewCore(l logger.ILog,
 	mux *router.Mux,
-	binder api.IBind,
+	bind api.IBind,
 	resp api.IResponse,
 	token api.IToken,
 	pass api.IPassword,
@@ -31,7 +31,7 @@ func NewCore(l logger.ILog,
 	c := Core{
 		Log:      l,
 		Router:   mux,
-		Bind:     binder,
+		Bind:     bind,
 		Response: resp,
 		Token:    token,
 		Password: pass,
