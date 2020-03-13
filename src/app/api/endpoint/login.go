@@ -43,9 +43,7 @@ func (p *LoginEndpoint) Login(w http.ResponseWriter, r *http.Request) (int, erro
 
 	// Request validation.
 	req := new(request)
-	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
 		return http.StatusBadRequest, err
 	}
 

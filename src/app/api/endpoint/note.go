@@ -49,9 +49,7 @@ func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, erro
 
 	// Request validation.
 	req := new(request)
-	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
 		return http.StatusBadRequest, err
 	}
 
@@ -137,9 +135,7 @@ func (p NoteEndpoint) Show(w http.ResponseWriter, r *http.Request) (int, error) 
 
 	// Request validation.
 	req := new(request)
-	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
 		return http.StatusBadRequest, err
 	}
 
@@ -198,9 +194,7 @@ func (p *NoteEndpoint) Update(w http.ResponseWriter, r *http.Request) (int, erro
 
 	// Request validation.
 	req := new(request)
-	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
 		return http.StatusBadRequest, err
 	}
 
@@ -250,9 +244,7 @@ func (p NoteEndpoint) Destroy(w http.ResponseWriter, r *http.Request) (int, erro
 
 	// Request validation.
 	req := new(request)
-	if err := p.Bind.Unmarshal(req, r); err != nil {
-		return http.StatusBadRequest, err
-	} else if err = p.Bind.Validate(req); err != nil {
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
 		return http.StatusBadRequest, err
 	}
 

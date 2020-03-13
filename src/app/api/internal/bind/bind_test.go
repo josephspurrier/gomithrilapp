@@ -39,9 +39,53 @@ func TestFormSuccess(t *testing.T) {
 
 			req := new(request)
 			b := bind.New(mock.New(false), mux)
+			assert.Nil(t, b.UnmarshalAndValidate(req, r))
 
-			assert.Nil(t, b.Unmarshal(&req, r))
-			assert.Nil(t, b.Validate(req))
+			assert.Equal(t, "10", req.UserID)
+			assert.Equal(t, "john", req.FirstName)
+			assert.Equal(t, "smith", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	form := url.Values{}
+	form.Add("first_name", "john")
+	form.Add("last_name", "smith")
+
+	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(form.Encode()))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
+func TestFormFailValidate(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: path
+				UserID string `json:"user_id" validate:"required"`
+				// in: formData
+				// Required: true
+				FirstName string `json:"first_name" validate:"required"`
+				// in: formData
+				// Required: true
+				LastName string `json:"last_name" validate:"required"`
+			}
+
+			req := new(request)
+			b := bind.New(mock.New(true), mux)
+
+			e := errors.New("test error")
+			b.Mock.Add("Binder.Validate", e)
+			assert.NotNil(t, b.UnmarshalAndValidate(&req, r))
 
 			assert.Equal(t, "10", req.UserID)
 			assert.Equal(t, "john", req.FirstName)
@@ -280,6 +324,49 @@ func TestJSONFailureNil(t *testing.T) {
 	assert.Equal(t, true, called)
 }
 
+func TestJSONFailureDataType(t *testing.T) {
+	called := false
+
+	mux := router.New()
+
+	mux.Post("/user/:user_id", router.Handler(
+		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
+			called = true
+
+			// swagger:parameters UserCreate
+			type request struct {
+				// in: body
+				Body struct {
+					// in: path
+					UserID string `json:"user_id" validate:"required"`
+					// Required: true
+					FirstName string `json:"first_name" validate:"required"`
+					// Required: true
+					LastName string `json:"last_name" validate:"required"`
+				}
+			}
+
+			req := new(request).Body
+
+			b := bind.New(mock.New(false), mux)
+
+			assert.Nil(t, b.Unmarshal(&req, r))
+
+			assert.Equal(t, "10", req.UserID)
+			assert.Equal(t, "", req.FirstName)
+			assert.Equal(t, "", req.LastName)
+			return http.StatusOK, nil
+		}))
+
+	// Try to parse to JSON and should not fail.
+	r := httptest.NewRequest("POST", "/user/10", strings.NewReader("food text"))
+	r.Header.Add("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, r)
+
+	assert.Equal(t, true, called)
+}
+
 func TestMock(t *testing.T) {
 	b := bind.New(mock.New(true), nil)
 
@@ -290,4 +377,7 @@ func TestMock(t *testing.T) {
 
 	b.Mock.Add("Binder.Validate", e)
 	assert.Equal(t, e, b.Validate(nil))
+
+	b.Mock.Add("Binder.Unmarshal", e)
+	assert.Equal(t, e, b.UnmarshalAndValidate(nil, nil))
 }

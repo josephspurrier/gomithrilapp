@@ -81,7 +81,6 @@ func TestRegisterFailUserExists(t *testing.T) {
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-
 }
 
 func TestRegisterFailDatabase(t *testing.T) {

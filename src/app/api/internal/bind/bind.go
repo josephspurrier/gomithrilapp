@@ -32,6 +32,17 @@ func New(mock *mock.Mocker, r IRouter) *Binder {
 	}
 }
 
+// UnmarshalAndValidate will unmarshal and validate a struct using the validator.
+func (b *Binder) UnmarshalAndValidate(s interface{}, r *http.Request) (err error) {
+	if err = b.Unmarshal(s, r); err != nil {
+		return
+	} else if err = b.Validate(s); err != nil {
+		return
+	}
+
+	return
+}
+
 // Validate will validate a struct using the validator.
 func (b *Binder) Validate(s interface{}) error {
 	if b.Mock != nil && b.Mock.Enabled() {
