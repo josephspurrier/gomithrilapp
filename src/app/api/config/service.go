@@ -6,12 +6,12 @@ import (
 	"app/api/endpoint"
 	"app/api/internal/bind"
 	"app/api/internal/query"
-	"app/api/internal/requestcontext"
 	"app/api/internal/response"
 	"app/api/pkg/database"
 	"app/api/pkg/logger"
 	"app/api/pkg/mock"
 	"app/api/pkg/passhash"
+	"app/api/pkg/requestcontext"
 	"app/api/pkg/router"
 	"app/api/pkg/webtoken"
 	"app/api/store"
@@ -36,7 +36,7 @@ func Services(l logger.ILog, settings *Settings, dbx *database.DBW,
 			dbx,
 			query.New(mocker, dbx),
 		),
-		requestcontext.New(mocker),
+		requestcontext.New(),
 	)
 
 	// Set up the router.

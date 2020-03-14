@@ -1291,12 +1291,29 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/stretchr/objx",
+			"repository": "https://github.com/stretchr/objx",
+			"vcs": "git",
+			"revision": "35313a95ee26395aa17d366c71a2ccf788fa69b6",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
 			"vcs": "git",
 			"revision": "9388656bebce51bb6aef41ae66659b4cd72b8e2f",
 			"branch": "master",
 			"path": "/assert",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stretchr/testify/mock",
+			"repository": "https://github.com/stretchr/testify",
+			"vcs": "git",
+			"revision": "f6cbfc0d0341bd4f04831a275adbef45a2221690",
+			"branch": "master",
+			"path": "/mock",
 			"notests": true
 		},
 		{
