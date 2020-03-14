@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // StaticEndpoint .
@@ -16,12 +17,12 @@ func SetupStatic(core Core) {
 	p := new(StaticEndpoint)
 	p.Core = core
 
-	p.Router.Get("/v1", p.Index)
-	p.Router.Get("/static...", p.Static)
+	p.Router.Get("/api/v1", p.Index)
+	p.Router.Get("/api/static...", p.Static)
 }
 
 // Index .
-// swagger:route GET /v1 healthcheck Ready
+// swagger:route GET /api/v1 healthcheck Ready
 //
 // API is ready.
 //
@@ -33,7 +34,7 @@ func (p StaticEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, erro
 
 // Static .
 func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, error) {
-	if r.URL.Path == "/static/" {
+	if r.URL.Path == "/api/static/" {
 		return http.StatusNotFound, nil
 	}
 
@@ -53,7 +54,7 @@ func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, err
 	}
 
 	// Serve the file to the user.
-	http.ServeFile(w, r, filepath.Join(basepath, r.URL.Path[1:]))
+	http.ServeFile(w, r, filepath.Join(basepath, strings.TrimPrefix(r.URL.Path, "/api/")))
 
 	return http.StatusOK, nil
 }

@@ -26,7 +26,7 @@ func TestRegisterSuccess(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -51,7 +51,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 	r := new(model.BadRequestResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -63,7 +63,7 @@ func TestRegisterFailUserExists(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "b@a.com")
 	//form.Set("password", "a")
-	w = tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 	r = new(model.BadRequestResponse)
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -72,11 +72,11 @@ func TestRegisterFailUserExists(t *testing.T) {
 	// Invalid unmarshal.
 	e := errors.New("bad error")
 	m.Mock.Add("Binder.Unmarshal", e)
-	w = tr.SendJSON(t, p, "POST", "/v1/register", nil)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/register", nil)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	// Invalid validate.
-	w = tr.SendJSON(t, p, "POST", "/v1/register", nil)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/register", nil)
 	r = new(model.BadRequestResponse)
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -93,7 +93,7 @@ func TestRegisterFailDatabase(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 
 	// Verify the response.
 	r := new(model.CreatedResponse)
@@ -116,7 +116,7 @@ func TestRegisterFailDatabase2(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 	r := new(model.InternalServerErrorResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -139,7 +139,7 @@ func TestRegisterFailHash(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/register", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 	r := new(model.InternalServerErrorResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)

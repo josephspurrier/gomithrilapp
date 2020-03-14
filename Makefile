@@ -23,8 +23,8 @@ MYSQL_NAME=govueapp_db_1
 
 .PHONY: docker-build
 docker-build:
-	# Build the docker containers.
-	bash ${GOPATH}/bash/build-containers.sh
+	# Build the docker images.
+	bash ${GOPATH}/bash/build-images.sh
 
 .PHONY: ui-dep
 ui-dep:

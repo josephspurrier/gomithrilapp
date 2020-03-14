@@ -12,8 +12,7 @@ module.exports = {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
-        hid: 'description',
-        name: 'description',
+        name: 'govueapp',
         content: 'Sample notepad application in Vue and Go.'
       }
     ],
@@ -25,6 +24,13 @@ module.exports = {
           'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
       }
     ]
+  },
+
+  /*
+   ** Environment variables
+   */
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:8081/api'
   },
 
   /*

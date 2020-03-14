@@ -12,6 +12,9 @@ COPY . .
 # Install project dependencies.
 RUN npm install
 
+# Set the API path.
+ENV BASE_URL=http://localhost/api
+
 # Build app for production with minification.
 RUN npm run build
 
@@ -19,7 +22,7 @@ RUN npm run build
 ENV NUXT_HOST=0.0.0.0
 
 # Set app port.
-ENV NUXT_PORT=80
+ENV NUXT_PORT=8080
 
-EXPOSE 80
+EXPOSE 8080
 CMD [ "npm", "start" ]

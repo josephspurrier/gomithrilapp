@@ -15,11 +15,11 @@ func SetupRegister(core Core) {
 	p := new(RegisterEndpoint)
 	p.Core = core
 
-	p.Router.Post("/v1/register", p.Register)
+	p.Router.Post("/api/v1/register", p.Register)
 }
 
 // Register .
-// swagger:route POST /v1/register authentication UserRegister
+// swagger:route POST /api/v1/register authentication UserRegister
 //
 // Register a user.
 //

@@ -17,11 +17,11 @@ func SetupLogin(c Core) {
 	p := new(LoginEndpoint)
 	p.Core = c
 
-	p.Router.Post("/v1/login", p.Login)
+	p.Router.Post("/api/v1/login", p.Login)
 }
 
 // Login .
-// swagger:route POST /v1/login authentication UserLogin
+// swagger:route POST /api/v1/login authentication UserLogin
 //
 // Authenticate a user.
 //

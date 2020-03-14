@@ -12,7 +12,7 @@ This is a sample notepad application that uses Vue on the front-end (UI) and Go 
 
 ## Quick Start Guide (QSG)
 
-To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose).
+To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The ingress container is a reverse proxy that allows you to use 1 URL to access 2 different docker containers by URL path.
 
 ```bash
 # Clone the repo.
@@ -24,12 +24,12 @@ cd govueapp
 # Build the docker containers.
 make docker-build
 
-# Run the docker containers: DB, API, and UI.
-docker-compose up
+# Run the docker containers: ingress, DB, API, and UI.
+docker-compose up -d
 
-# Open your browser to the UI: http://localhost
-# Open your browser to the API: http://localhost:8081
-# Open your MySQL tool to the DB: localhost:3306
+# Open your browser to the UI (via ingress): http://localhost
+# Open your browser to the API (via ingress): http://localhost/api
+# Open your MySQL tool to the DB: localhost:3306 (root:password)
 
 # Stop and remove the docker containers.
 docker-compose down
@@ -143,11 +143,13 @@ cd ${GOPATH}/src/app/ui
 # Check the versions of packages.
 npm outdated
 
-# Update all the packages to the latest version (specified by the tag config), respecting semver.
+# Update all the packages to the latest version (specified by the tag config),
+# respecting semver.
 # https://docs.npmjs.com/cli-commands/update.html
 npm update
 
-# Scan your project for vulnerabilities and automatically install any compatible updates to vulnerable dependencies.
+# Scan your project for vulnerabilities and automatically install any compatible
+# updates to vulnerable dependencies.
 # https://docs.npmjs.com/cli/audit
 npm audit fix
 
@@ -172,8 +174,10 @@ npm install lodash@4.17.4
 # https://docs.npmjs.com/cli/uninstall
 npm uninstall eslint-config-standard
 
-# Use --save (-S) to add a package to the package.json dependencies (packages required when the app is built).
-# Use --save-dev (-D) to add a package to the package.json devDependencies (packages used during dev to build, bundle, lint).
+# Use --save (-S) to add a package to the package.json dependencies (packages
+# required when the app is built).
+# Use --save-dev (-D) to add a package to the package.json devDependencies
+# (packages used during dev to build, bundle, lint).
 
 # Check the version of nuxt.
 make nuxt-version
@@ -214,7 +218,8 @@ This projects does not use Go modules - it uses [gvt](https://github.com/FiloSot
 make api-dep
 
 # You can now remove the folder: src/github.com/FiloSottile/gvt
-# You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
+# You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt
+# available from your terminal.
 ```
 
 These are other commands you can use:
@@ -224,7 +229,8 @@ These are other commands you can use:
 make gvt-get
 
 # You can now remove the folder: src/github.com/FiloSottile/gvt
-# You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt available from your terminal.
+# You should now add the {PROJECTROOT}/bin folder to your $PATH to make gvt
+# available from your terminal.
 
 # Make sure you CD to the api folder before using gvt.
 cd $GOPATH/src/app/api
@@ -244,13 +250,16 @@ This projects uses [Swagger v2](https://github.com/OAI/OpenAPI-Specification/blo
 # Download the Swagger generation tool.
 make swagger-get
 
-# You can now remove all the folders from the 'src' directory except the 'app' folder.
-# You should now add the {PROJECTROOT}/bin folder to your $PATH to make swagger available from your terminal.
+# You can now remove all the folders from the 'src' directory except the
+# 'app' folder.
+# You should now add the {PROJECTROOT}/bin folder to your $PATH to make swagger
+# available from your terminal.
 
 # Generate the swagger spec.
 make swagger-gen
 
-# Your browser will open to: http://petstore.swagger.io/?url=http://localhost:{RANDOMPORT}/swagger.json
+# Your browser will open to:
+# http://petstore.swagger.io/?url=http://localhost:{RANDOMPORT}/swagger.json
 
 # The output file will be here:
 # src/app/api/static/swagger/swagger.json

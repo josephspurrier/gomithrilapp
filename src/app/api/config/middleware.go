@@ -12,11 +12,11 @@ func Middleware(core endpoint.Core) http.Handler {
 	return middleware.Factory(core.Router,
 		core.Log,
 		[]string{ // JWT whitelist.
-			"GET /favicon.ico",
-			"GET /v1",
-			"GET /static/*",
-			"POST /v1/login",
-			"POST /v1/register",
+			"GET /api/favicon.ico",
+			"GET /api/v1",
+			"GET /api/static/*",
+			"POST /api/v1/login",
+			"POST /api/v1/register",
 		},
 		core.Token,
 		core.Context)

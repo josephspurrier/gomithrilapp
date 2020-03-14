@@ -4,8 +4,7 @@ import Flash from '~/modules/flash.js'
 // Source: https://alligator.io/vuejs/rest-api-axios/
 
 export const HTTP = axios.create({
-  // baseURL: process.env.baseURL
-  baseURL: 'http://localhost:8081'
+  baseURL: process.env.baseUrl
 })
 
 export const HTTP2 = {

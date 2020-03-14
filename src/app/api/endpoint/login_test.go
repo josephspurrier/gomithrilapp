@@ -33,13 +33,13 @@ func TestLoginSuccess(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/v1/register", form)
+	tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 
 	// Login with the user.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -61,13 +61,13 @@ func TestLoginFail(t *testing.T) {
 	form.Set("last_name", "a@a.com")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/v1/register", form)
+	tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 
 	// Wrong password.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "wrong-password")
-	w := tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 	r := new(model.BadRequestResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -76,7 +76,7 @@ func TestLoginFail(t *testing.T) {
 	// Missing password.
 	form = url.Values{}
 	form.Set("email", "a@a.com")
-	w = tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 	r = new(model.BadRequestResponse)
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -86,14 +86,14 @@ func TestLoginFail(t *testing.T) {
 	form = url.Values{}
 	form.Set("email", "b@b.com")
 	form.Set("password", "a")
-	w = tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 	r = new(model.BadRequestResponse)
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 
 	// Login with the user.
-	w = tr.SendJSON(t, p, "POST", "/v1/login", nil)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/login", nil)
 	r = new(model.BadRequestResponse)
 	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
 	assert.Nil(t, err)
@@ -102,7 +102,7 @@ func TestLoginFail(t *testing.T) {
 	// Invalid unmarshal.
 	e := errors.New("bad error")
 	m.Mock.Add("Binder.Unmarshal", e)
-	w = tr.SendJSON(t, p, "POST", "/v1/login", nil)
+	w = tr.SendJSON(t, p, "POST", "/api/v1/login", nil)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 
@@ -124,7 +124,7 @@ func TestLoginTokenBad(t *testing.T) {
 	form := url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 
 	// Verify the response.
 	r := new(model.LoginResponse)
@@ -142,7 +142,7 @@ func TestLoginFailDatabase(t *testing.T) {
 	form := url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 
 	// Verify the response.
 	r := new(model.InternalServerErrorResponse)

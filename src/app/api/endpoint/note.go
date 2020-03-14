@@ -18,15 +18,15 @@ func SetupNotepad(c Core) {
 	p := new(NoteEndpoint)
 	p.Core = c
 
-	p.Router.Post("/v1/note", p.Create)
-	p.Router.Get("/v1/note", p.Index)
-	p.Router.Get("/v1/note/:note_id", p.Show)
-	p.Router.Put("/v1/note/:note_id", p.Update)
-	p.Router.Delete("/v1/note/:note_id", p.Destroy)
+	p.Router.Post("/api/v1/note", p.Create)
+	p.Router.Get("/api/v1/note", p.Index)
+	p.Router.Get("/api/v1/note/:note_id", p.Show)
+	p.Router.Put("/api/v1/note/:note_id", p.Update)
+	p.Router.Delete("/api/v1/note/:note_id", p.Destroy)
 }
 
 // Create .
-// swagger:route POST /v1/note note NoteCreate
+// swagger:route POST /api/v1/note note NoteCreate
 //
 // Create a note.
 //
@@ -69,7 +69,7 @@ func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, erro
 }
 
 // Index .
-// swagger:route GET /v1/note note NoteIndex
+// swagger:route GET /api/v1/note note NoteIndex
 //
 // List notes.
 //
@@ -114,7 +114,7 @@ func (p NoteEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, error)
 }
 
 // Show .
-// swagger:route GET /v1/note/{note_id} note NoteShow
+// swagger:route GET /api/v1/note/{note_id} note NoteShow
 //
 // Show a note.
 //
@@ -169,7 +169,7 @@ func (p NoteEndpoint) Show(w http.ResponseWriter, r *http.Request) (int, error) 
 }
 
 // Update .
-// swagger:route PUT /v1/note/{note_id} note NoteUpdate
+// swagger:route PUT /api/v1/note/{note_id} note NoteUpdate
 //
 // Update a note.
 //
@@ -223,7 +223,7 @@ func (p *NoteEndpoint) Update(w http.ResponseWriter, r *http.Request) (int, erro
 }
 
 // Destroy .
-// swagger:route DELETE /v1/note/{note_id} note NoteDestroy
+// swagger:route DELETE /api/v1/note/{note_id} note NoteDestroy
 //
 // Delete a note.
 //

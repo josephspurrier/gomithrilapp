@@ -10,7 +10,7 @@ type NoteIndexResponse struct {
 	}
 }
 
-// Note .
+// Note is a note of a user.
 type Note struct {
 	// Required: true
 	UserID string `json:"id"`

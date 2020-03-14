@@ -19,7 +19,7 @@ func register(t *testing.T, tr *testrequest.TR, p endpoint.Core) {
 	form.Set("last_name", "a")
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/v1/register", form)
+	tr.SendJSON(t, p, "POST", "/api/v1/register", form)
 }
 
 func auth(t *testing.T, tr *testrequest.TR, p endpoint.Core) string {
@@ -29,7 +29,7 @@ func auth(t *testing.T, tr *testrequest.TR, p endpoint.Core) string {
 	form := url.Values{}
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/v1/login", form)
+	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
 
 	r := new(model.LoginResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
