@@ -38,6 +38,15 @@ func EnsureBadRequest(t *testing.T, w *httptest.ResponseRecorder) *model.BadRequ
 	return r
 }
 
+// EnsureUnauthorized tests for HTTP status 401.
+func EnsureUnauthorized(t *testing.T, w *httptest.ResponseRecorder) *model.UnauthorizedResponse {
+	r := new(model.UnauthorizedResponse)
+	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
+	return r
+}
+
 // EnsureInternalServerError tests for http status 500.
 func EnsureInternalServerError(t *testing.T, w *httptest.ResponseRecorder) *model.InternalServerErrorResponse {
 	r := new(model.InternalServerErrorResponse)

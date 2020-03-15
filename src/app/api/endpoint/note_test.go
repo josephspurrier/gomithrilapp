@@ -1,391 +1,150 @@
 package endpoint_test
 
 import (
-	"encoding/json"
 	"errors"
-	"net/http"
-	"net/url"
+	"fmt"
+	"strings"
 	"testing"
 
 	"app/api/internal/testutil"
-	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNoteCreateSuccess(t *testing.T) {
+func TestNote(t *testing.T) {
+	c := testutil.Setup()
+
+	// Get an auth token.
+	token, _ := testutil.Auth(t, c.Request, c.Core)
+
+	tests := []struct {
+		Method string
+		Path   string
+	}{
+		{"POST", "/api/v1/note"},
+		{"GET", "/api/v1/note"},
+		{"GET", "/api/v1/note/"},
+		{"PUT", "/api/v1/note/"},
+		{"DELETE", "/api/v1/note/"},
+	}
+
+	noteID := ""
+	limit := 2
+	for i := 0; i < limit; i++ {
+		if i > 0 {
+			c.Teardown()
+		}
+		for _, tt := range tests {
+			t.Run(fmt.Sprint(i)+tt.Method+tt.Path, func(t *testing.T) {
+				c.Request.Header.Set("Authorization", "Bearer "+token)
+				add := ""
+				if strings.HasSuffix(tt.Path, "/") {
+					add = noteID
+				}
+				w := c.Request.SendJSON(t, c.Core, tt.Method, tt.Path+add, nil)
+
+				if i > 0 {
+					testutil.EnsureInternalServerError(t, w)
+				} else {
+					// Create a note.
+					if tt.Method == "POST" {
+						r := testutil.EnsureCreated(t, w)
+						noteID = r.Body.RecordID
+						assert.Equal(t, 36, len(noteID))
+					} else {
+						testutil.EnsureOK(t, w)
+					}
+				}
+			})
+		}
+	}
+}
+
+func TestNoteUnauthorized(t *testing.T) {
+	c := testutil.Setup()
+	defer c.Teardown()
+
+	tests := []struct {
+		Method string
+		Path   string
+	}{
+		{"POST", "/api/v1/note"},
+		{"GET", "/api/v1/note"},
+		{"GET", "/api/v1/note/1"},
+		{"PUT", "/api/v1/note/1"},
+		{"DELETE", "/api/v1/note/1"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Method+tt.Path, func(t *testing.T) {
+			w := c.Request.SendJSON(t, c.Core, tt.Method, tt.Path, nil)
+			testutil.EnsureUnauthorized(t, w)
+		})
+	}
+}
+
+func TestNoteFailContext(t *testing.T) {
+	c := testutil.Setup()
+	defer c.Teardown()
+
+	// Get an auth token.
+	token, userID := testutil.Auth(t, c.Request, c.Core)
+
+	ctx := new(testutil.Context)
+	ctx.On("SetUserID", userID).Return()
+	ctx.On("UserID").Return("2", true)
+	c.Core.Context = ctx
+
+	tests := []struct {
+		Method string
+		Path   string
+	}{
+		{"POST", "/api/v1/note"},
+		{"GET", "/api/v1/note"},
+		{"GET", "/api/v1/note/1"},
+		{"PUT", "/api/v1/note/1"},
+		{"DELETE", "/api/v1/note/1"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Method+tt.Path, func(t *testing.T) {
+			c.Request.Header.Set("Authorization", "Bearer "+token)
+			w := c.Request.SendJSON(t, c.Core, tt.Method, tt.Path, nil)
+			testutil.EnsureInternalServerError(t, w)
+		})
+	}
+}
+
+func TestNoteFailDatabase(t *testing.T) {
 	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Get an auth token.
 	token, _ := testutil.Auth(t, c.Request, c.Core)
 
-	// Mock the context.
-	//m.Context.On("SetUserID", userID).Return()
-	//m.Context.On("UserID").Return(userID, true)
-
 	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
 	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
+	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", nil)
 	r := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(r.Body.RecordID))
-}
 
-func TestNoteCreateFail(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// SUCCESS: Allow no message.
-	form := url.Values{}
-	form.Set("message", "")
+	c.Test.Mock.Add("NoteStore.FindOneByIDAndUser", false, nil)
 	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	testutil.EnsureCreated(t, w)
-
-	// Invalid unmarshal.
-	//e := errors.New("bad error")
-	//c.Test.Mock.Add("Binder.Unmarshal", e)
-
-	// Mock the context.
-	//m.Context.On("SetUserID", tr, "foo").Return()
-	//m.Context.On("UserID", tr).Return("foo")
-
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", nil)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// SUCCESS: Allow no message.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", nil)
-	testutil.EnsureCreated(t, w)
-
-	// // Invalid user.
-	// c.Test.Mock.Add("CTX.UserID", "", false)
-	// form = url.Values{}
-	// form.Set("message", "foo")
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	// assert.Equal(t, http.StatusInternalServerError, w.Code)
-
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.Create", "0", errors.New("error creating note"))
-	form = url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	testutil.EnsureInternalServerError(t, w)
-}
-
-func TestNoteIndexSuccess(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Get the notes - there should be none.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note", nil)
-	rr := new(model.NoteIndexResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, 0, len(rr.Body.Notes))
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-
-	// Create another note.
-	form = url.Values{}
-	form.Set("message", "foo2")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-
-	// Get the notes.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note", nil)
-
-	// Verify the response.
-	rr = new(model.NoteIndexResponse)
-	err = json.Unmarshal(w.Body.Bytes(), &rr.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, 2, len(rr.Body.Notes))
-}
-
-func TestNoteIndexFail(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// // Invalid user.
-	// c.Test.Mock.Add("CTX.UserID", "", false)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w := c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note", nil)
-	// assert.Equal(t, http.StatusInternalServerError, w.Code)
-
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.FindAllByUser", 0, errors.New("no notes"))
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note", nil)
-	testutil.EnsureInternalServerError(t, w)
-}
-
-func TestNoteShowSuccess(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	r := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(r.Body.RecordID))
-
-	recordID := r.Body.RecordID
-
-	// Get the note.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	rr := new(model.NoteShowResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, "foo", rr.Body.Message)
-}
-
-func TestNoteShowFail(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	rr := new(model.CreatedResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &rr.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusCreated, w.Code)
-	assert.Equal(t, 36, len(rr.Body.RecordID))
-
-	recordID := rr.Body.RecordID
-
-	// Note not found.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/bad-id", nil)
+	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+r.Body.RecordID, nil)
 	testutil.EnsureBadRequest(t, w)
 
-	// // Invalid unmarshal.
-	// e := errors.New("bad error")
-	// c.Test.Mock.Add("Binder.Unmarshal", e)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid validate.
-	// c.Test.Mock.Add("Binder.Validate", e)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid user.
-	// c.Test.Mock.Add("CTX.UserID", "", false)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusInternalServerError, w.Code)
-
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.FindOneByIDAndUser", false, errors.New("no note"))
+	c.Test.Mock.Add("NoteStore.FindOneByIDAndUser", false, nil)
 	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	testutil.EnsureInternalServerError(t, w)
-}
-
-func TestNoteUpdateSuccess(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	rr := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(rr.Body.RecordID))
-
-	recordID := rr.Body.RecordID
-
-	// Update the note.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	form = url.Values{}
-	form.Set("message", "bar")
-	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
-	testutil.EnsureOK(t, w)
-
-	// Get the note.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "GET", "/api/v1/note/"+recordID, nil)
-	rrrr := new(model.NoteShowResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &rrrr.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, "bar", rrrr.Body.Message)
-}
-
-func TestNoteUpdateFail(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	rr := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(rr.Body.RecordID))
-
-	recordID := rr.Body.RecordID
-
-	// Note not found.
-	form = url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/bad-id", form)
+	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+r.Body.RecordID, nil)
 	testutil.EnsureBadRequest(t, w)
 
-	// // Invalid unmarshal.
-	// e := errors.New("bad error")
-	// c.Test.Mock.Add("Binder.Unmarshal", e)
-	// form = url.Values{}
-	// form.Set("message", "foo")
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid validate.
-	// c.Test.Mock.Add("Binder.Validate", e)
-	// form = url.Values{}
-	// form.Set("message", "foo")
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid user.
-	// form = url.Values{}
-	// form.Set("message", "foo")
-	// c.Test.Mock.Add("CTX.UserID", "", false)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
-	// assert.Equal(t, http.StatusInternalServerError, w.Code)
-
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.FindOneByIDAndUser", false, errors.New("no note"))
-	form = url.Values{}
-	form.Set("message", "foo")
+	err := errors.New("bad error")
+	c.Test.Mock.Add("NoteStore.Update", 0, err)
 	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
+	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+r.Body.RecordID, nil)
 	testutil.EnsureInternalServerError(t, w)
 
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.Update", 0, errors.New("no note"))
-	form = url.Values{}
-	form.Set("message", "foo")
+	c.Test.Mock.Add("NoteStore.DeleteOneByIDAndUser", 0, nil)
 	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "PUT", "/api/v1/note/"+recordID, form)
-	testutil.EnsureInternalServerError(t, w)
-}
-
-func TestNoteDestroySuccess(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	rr := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(rr.Body.RecordID))
-
-	recordID := rr.Body.RecordID
-
-	// Get the note.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+recordID, nil)
-	testutil.EnsureOK(t, w)
-}
-
-func TestNoteDestroyFail(t *testing.T) {
-	c := testutil.Setup()
-	defer c.Teardown()
-
-	// Get an auth token.
-	token, _ := testutil.Auth(t, c.Request, c.Core)
-
-	// Create a note.
-	form := url.Values{}
-	form.Set("message", "foo")
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/note", form)
-	rr := testutil.EnsureCreated(t, w)
-	assert.Equal(t, 36, len(rr.Body.RecordID))
-
-	recordID := rr.Body.RecordID
-
-	// Note not found.
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/bad-id", nil)
+	w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+r.Body.RecordID, nil)
 	testutil.EnsureBadRequest(t, w)
-
-	// // Invalid unmarshal.
-	// e := errors.New("bad error")
-	// c.Test.Mock.Add("Binder.Unmarshal", e)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid validate.
-	// c.Test.Mock.Add("Binder.Validate", e)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// // Invalid user.
-	// c.Test.Mock.Add("CTX.UserID", "", false)
-	// c.Request.Header.Set("Authorization", "Bearer "+token)
-	// w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+recordID, nil)
-	// assert.Equal(t, http.StatusInternalServerError, w.Code)
-
-	// Invalid DB.
-	c.Test.Mock.Add("NoteStore.DeleteOneByIDAndUser", 0, errors.New("no note"))
-	c.Request.Header.Set("Authorization", "Bearer "+token)
-	w = c.Request.SendJSON(t, c.Core, "DELETE", "/api/v1/note/"+recordID, nil)
-	testutil.EnsureInternalServerError(t, w)
 }
