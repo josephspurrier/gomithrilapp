@@ -10,16 +10,15 @@ import (
 )
 
 func TestNote(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, _ := testutil.Services(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	// Create a user.
-	u := p.Store.User
+	u := c.Core.Store.User
 	userID, err := u.Create("first", "last", "email", "password")
 	assert.NoError(t, err)
 
-	s := p.Store.Note
+	s := c.Core.Store.Note
 	ID, err := s.Create(userID, "foo")
 	assert.NoError(t, err)
 	assert.Equal(t, 36, len(ID))
@@ -69,41 +68,40 @@ func TestNote(t *testing.T) {
 }
 
 func TestNoteMock(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, m := testutil.Services(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	// Create a user.
-	u := p.Store.User
+	u := c.Core.Store.User
 	userID, err := u.Create("first", "last", "email", "password")
 	assert.NoError(t, err)
 
-	s := p.Store.Note
+	s := c.Core.Store.Note
 
 	e := errors.New("yes")
-	m.Mock.Add("NoteStore.Create", "1", e)
+	c.Test.Mock.Add("NoteStore.Create", "1", e)
 	ID, err := s.Create(userID, "foo")
 	assert.Equal(t, e, err)
 	assert.Equal(t, "1", ID)
 
-	m.Mock.Add("NoteStore.Update", 33, e)
+	c.Test.Mock.Add("NoteStore.Update", 33, e)
 	affected, err := s.Update(ID, userID, "bar")
 	assert.Equal(t, e, err)
 	assert.Equal(t, 33, affected)
 
 	group := s.NewGroup()
-	m.Mock.Add("NoteStore.FindAllByUser", 99, e)
+	c.Test.Mock.Add("NoteStore.FindAllByUser", 99, e)
 	total, err := s.FindAllByUser(&group, userID)
 	assert.Equal(t, e, err)
 	assert.Equal(t, 99, total)
 
 	item := s.New()
-	m.Mock.Add("NoteStore.FindOneByIDAndUser", true, e)
+	c.Test.Mock.Add("NoteStore.FindOneByIDAndUser", true, e)
 	exists, err := s.FindOneByIDAndUser(&item, "bad ID", userID)
 	assert.Equal(t, e, err)
 	assert.Equal(t, true, exists)
 
-	m.Mock.Add("NoteStore.DeleteOneByIDAndUser", 25, e)
+	c.Test.Mock.Add("NoteStore.DeleteOneByIDAndUser", 25, e)
 	affected, err = s.DeleteOneByIDAndUser(&item, "bad ID", userID)
 	assert.Equal(t, e, err)
 	assert.Equal(t, 25, affected)

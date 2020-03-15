@@ -12,17 +12,15 @@ import (
 type Mocks struct {
 	Log  *MockLogger
 	Mock *mock.Mocker
-	//Context *Context
 }
 
 // Services sets up the test services.
 func Services(db *database.DBW) (endpoint.Core, *Mocks) {
 	// Set up the mocked dependencies.
-	mockLogger := new(MockLogger)
+	mockLogger := NewMockLogger()
 	mocker := mock.New(true)
 
 	// Set up the mocked dependencies.
-	//ctx := new(Context)
 	ctx := requestcontext.New()
 
 	// Load the environment variables from defaults.
@@ -35,7 +33,6 @@ func Services(db *database.DBW) (endpoint.Core, *Mocks) {
 	m := &Mocks{
 		Log:  mockLogger,
 		Mock: mocker,
-		//Context: ctx,
 	}
 
 	return core, m

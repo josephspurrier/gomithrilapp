@@ -9,6 +9,7 @@ import (
 
 	"app/api/migration"
 	"app/api/pkg/database"
+	"app/api/pkg/logger"
 
 	"github.com/josephspurrier/rove/pkg/adapter/mysql"
 )
@@ -18,7 +19,7 @@ func init() {
 }
 
 // LoadDatabase will set up the DB and apply migrations for the tests.
-func LoadDatabase() *database.DBW {
+func LoadDatabase(ml logger.ILog) *database.DBW {
 	unique := "T" + fmt.Sprint(rand.Intn(500))
 
 	password := "password"
@@ -35,8 +36,6 @@ func LoadDatabase() *database.DBW {
 		Port:      3306,
 		Parameter: "parseTime=true&allowNativePasswords=true&collation=utf8mb4_unicode_ci&multiStatements=true",
 	}
-
-	ml := new(MockLogger)
 
 	db, err := database.Migrate(ml, con, migration.Changesets)
 	if err != nil {

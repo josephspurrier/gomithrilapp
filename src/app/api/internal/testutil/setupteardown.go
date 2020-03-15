@@ -17,7 +17,7 @@ type CoreTest struct {
 // Setup will set up the test utilities.
 func Setup() *CoreTest {
 	ct := new(CoreTest)
-	ct.DB = LoadDatabase()
+	ct.DB = LoadDatabase(ct.Core.Log)
 	ct.Core, ct.Test = Services(ct.DB)
 	ct.Request = testrequest.New()
 	return ct

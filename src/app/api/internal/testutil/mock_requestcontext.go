@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// Context .
+// Context is a mocked requestcontext.
 type Context struct {
 	mock.Mock
 }

@@ -16,7 +16,7 @@ func TestLoginSuccess(t *testing.T) {
 	defer c.Teardown()
 
 	// Mock the token service.
-	mt := new(testutil.MockToken)
+	mt := testutil.NewMockToken()
 	mt.GenerateFunc = func(userID string) (string, error) {
 		enc := base64.StdEncoding.EncodeToString([]byte("0123456789ABCDEF0123456789ABCDEF"))
 		return enc, nil
@@ -67,7 +67,7 @@ func TestLoginTokenBad(t *testing.T) {
 	defer c.Teardown()
 
 	// Mock the token service.
-	mt := new(testutil.MockToken)
+	mt := testutil.NewMockToken()
 	mt.GenerateFunc = func(userID string) (string, error) {
 		return "", errors.New("bad token generation")
 	}

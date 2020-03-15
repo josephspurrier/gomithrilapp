@@ -2,25 +2,23 @@ package testutil
 
 // MockToken is a mocked webtoken.
 type MockToken struct {
-	GenerateFunc GenerateFuncType
+	GenerateFunc func(userID string) (string, error)
 	VerifyValue  string
 	VerifyError  error
 }
 
-// GenerateFuncType .
-type GenerateFuncType func(userID string) (string, error)
-
-// GenerateFuncDefault .
-var GenerateFuncDefault = func(userID string) (string, error) {
-	return "", nil
+// NewMockToken returns a new mock token.
+func NewMockToken() *MockToken {
+	return &MockToken{
+		GenerateFunc: func(userID string) (string, error) {
+			return "", nil
+		},
+	}
 }
 
 // Generate .
 func (mt *MockToken) Generate(userID string) (string, error) {
-	if mt.GenerateFunc != nil {
-		return mt.GenerateFunc(userID)
-	}
-	return GenerateFuncDefault(userID)
+	return mt.GenerateFunc(userID)
 }
 
 // Verify .

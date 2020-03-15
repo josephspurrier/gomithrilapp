@@ -10,11 +10,10 @@ import (
 )
 
 func TestUser(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, _ := testutil.Services(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
-	s := p.Store.User
+	s := c.Core.Store.User
 
 	ID, err := s.Create("a", "b", "c", "d")
 	assert.NoError(t, err)
@@ -40,19 +39,18 @@ func TestUser(t *testing.T) {
 }
 
 func TestUserMock(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, m := testutil.Services(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
-	s := p.Store.User
+	s := c.Core.Store.User
 
 	e := errors.New("yes")
-	m.Mock.Add("UserStore.Create", "1", e)
+	c.Test.Mock.Add("UserStore.Create", "1", e)
 	ID, err := s.Create("aaa", "bbb", "ccc", "ddd")
 	assert.Equal(t, e, err)
 	assert.Equal(t, "1", ID)
 
-	m.Mock.Add("UserStore.Update", 22, e)
+	c.Test.Mock.Add("UserStore.Update", 22, e)
 	affected, err := s.Update(ID, "aa", "bb", "cc", "dd")
 	assert.Equal(t, e, err)
 	assert.Equal(t, 22, affected)

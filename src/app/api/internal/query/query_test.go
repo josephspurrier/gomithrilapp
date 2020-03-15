@@ -13,13 +13,13 @@ import (
 )
 
 func TestFindOneByID(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
@@ -44,13 +44,13 @@ func TestFindOneByID(t *testing.T) {
 }
 
 func TestFindOneByField(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
@@ -75,13 +75,13 @@ func TestFindOneByField(t *testing.T) {
 }
 
 func TestFindAll(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	group := store.NewGroup()
 	user := store.NewUser()
 
@@ -111,13 +111,13 @@ func TestFindAll(t *testing.T) {
 }
 
 func TestDeleteOneByID(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
@@ -144,13 +144,13 @@ func TestDeleteOneByID(t *testing.T) {
 }
 
 func TestDeleteAll(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
@@ -181,13 +181,13 @@ func TestDeleteAll(t *testing.T) {
 }
 
 func TestExistsByID(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
@@ -216,13 +216,13 @@ func TestExistsByID(t *testing.T) {
 }
 
 func TestExistsByField(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
+	c := testutil.Setup()
+	defer c.Teardown()
 
 	mocker := mock.New(true)
-	q := query.New(mocker, db)
+	q := query.New(mocker, c.DB)
 
-	cs := store.NewUserStore(mocker, db, q)
+	cs := store.NewUserStore(mocker, c.DB, q)
 	user := store.NewUser()
 
 	ID, err := cs.Create("1", "a", "b", "c", "d")
