@@ -24,7 +24,7 @@ func Services(db *database.DBW) (endpoint.Core, *Mocks) {
 	settings := config.LoadEnv(mockLogger, "")
 
 	// Set up the services.
-	core := config.Services(mockLogger, settings, db, mocker, requestcontext.New())
+	core := config.Services(mockLogger, settings, db, requestcontext.New(), mocker)
 
 	// Add all the configurable mocks.
 	m := &Mocks{

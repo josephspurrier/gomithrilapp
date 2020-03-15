@@ -19,8 +19,7 @@ func main() {
 	settings := config.LoadEnv(l, "")
 
 	// Setup the services.
-	core := config.Services(l, settings, config.Database(l), nil,
-		requestcontext.New())
+	core := config.Services(l, settings, config.Database(l), requestcontext.New(), nil)
 	config.LoadRoutes(core)
 
 	// Start the web server.

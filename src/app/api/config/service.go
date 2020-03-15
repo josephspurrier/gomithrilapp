@@ -19,7 +19,7 @@ import (
 
 // Services sets up the production services.
 func Services(l logger.ILog, settings *Settings, dbx *database.DBW,
-	mocker *mock.Mocker, ctx api.IContext) endpoint.Core {
+	ctx api.IContext, mocker *mock.Mocker) endpoint.Core {
 	// Configure the services.
 	mux := router.New()
 
