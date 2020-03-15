@@ -1,11 +1,12 @@
-package endpoint_test
+package testutil
 
 import (
-	"app/api/model"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -19,7 +20,7 @@ func EnsureOK(t *testing.T, w *httptest.ResponseRecorder) *model.OKResponse {
 	return r
 }
 
-// EnsureInternalServerError tests for http status 201.
+// EnsureCreated tests for http status 201.
 func EnsureCreated(t *testing.T, w *httptest.ResponseRecorder) *model.CreatedResponse {
 	r := new(model.CreatedResponse)
 	err := json.Unmarshal(w.Body.Bytes(), &r.Body)

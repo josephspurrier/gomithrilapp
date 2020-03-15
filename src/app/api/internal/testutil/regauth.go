@@ -1,4 +1,4 @@
-package endpoint_test
+package testutil
 
 import (
 	"encoding/json"

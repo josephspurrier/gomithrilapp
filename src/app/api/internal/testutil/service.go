@@ -8,15 +8,15 @@ import (
 	"app/api/pkg/requestcontext"
 )
 
-// CoreTest contains all the configurable dependencies.
-type CoreTest struct {
+// Mocks contains all the configurable dependencies.
+type Mocks struct {
 	Log  *MockLogger
 	Mock *mock.Mocker
 	//Context *Context
 }
 
 // Services sets up the test services.
-func Services(db *database.DBW) (endpoint.Core, *CoreTest) {
+func Services(db *database.DBW) (endpoint.Core, *Mocks) {
 	// Set up the mocked dependencies.
 	mockLogger := new(MockLogger)
 	mocker := mock.New(true)
@@ -32,7 +32,7 @@ func Services(db *database.DBW) (endpoint.Core, *CoreTest) {
 	core := config.Services(mockLogger, settings, db, mocker, ctx)
 
 	// Add all the configurable mocks.
-	m := &CoreTest{
+	m := &Mocks{
 		Log:  mockLogger,
 		Mock: mocker,
 		//Context: ctx,

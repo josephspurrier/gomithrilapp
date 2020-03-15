@@ -16,7 +16,7 @@ func TestIndex(t *testing.T) {
 
 	// Home route.
 	w := tr.SendForm(t, p, "GET", "/api/v1", nil)
-	r := EnsureOK(t, w)
+	r := testutil.EnsureOK(t, w)
 	assert.Equal(t, "OK", r.Body.Status)
 }
 

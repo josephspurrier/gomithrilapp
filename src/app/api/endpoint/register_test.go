@@ -11,7 +11,7 @@ import (
 )
 
 func TestRegisterSuccess(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Register the user.
@@ -21,16 +21,16 @@ func TestRegisterSuccess(t *testing.T) {
 	form.Set("email", "fbar@example.com")
 	form.Set("password", "password")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	r := EnsureCreated(t, w)
+	r := testutil.EnsureCreated(t, w)
 	assert.Equal(t, 36, len(r.Body.RecordID))
 }
 
 func TestRegisterFailUserExists(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Register the user.
-	Register(t, c.Request, c.Core)
+	testutil.Register(t, c.Request, c.Core)
 
 	// Try to register the same user.
 	form := url.Values{}
@@ -39,11 +39,11 @@ func TestRegisterFailUserExists(t *testing.T) {
 	form.Set("email", "fbar@example.com")
 	form.Set("password", "guess123")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 }
 
 func TestRegisterFailInvalidRequest(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Missing password.
@@ -53,15 +53,15 @@ func TestRegisterFailInvalidRequest(t *testing.T) {
 	form.Set("email", "b@a.com")
 	//form.Set("password", "a")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 
 	// Invalid unmarshal.
 	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", nil)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 }
 
 func TestRegisterFailDatabase(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	c.Teardown() // Teardown now to test a bad DB connection.
 
 	// Register the user.
@@ -71,11 +71,11 @@ func TestRegisterFailDatabase(t *testing.T) {
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	EnsureInternalServerError(t, w)
+	testutil.EnsureInternalServerError(t, w)
 }
 
 func TestRegisterFailHash(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Mock the password hash library.
@@ -90,11 +90,11 @@ func TestRegisterFailHash(t *testing.T) {
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	EnsureInternalServerError(t, w)
+	testutil.EnsureInternalServerError(t, w)
 }
 
 func TestRegisterFailCreateUser(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Force the operation to fail.
@@ -107,5 +107,5 @@ func TestRegisterFailCreateUser(t *testing.T) {
 	form.Set("email", "a@a.com")
 	form.Set("password", "a")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/register", form)
-	EnsureInternalServerError(t, w)
+	testutil.EnsureInternalServerError(t, w)
 }

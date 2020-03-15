@@ -12,7 +12,7 @@ import (
 )
 
 func TestLoginSuccess(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Mock the token service.
@@ -24,46 +24,46 @@ func TestLoginSuccess(t *testing.T) {
 	c.Core.Token = mt
 
 	// Register and login with the user.
-	userToken, _ := Auth(t, c.Request, c.Core)
+	userToken, _ := testutil.Auth(t, c.Request, c.Core)
 
 	// Verify the response.
 	assert.Equal(t, "MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=", userToken)
 }
 
 func TestLoginFail(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Register the user.
-	Register(t, c.Request, c.Core)
+	testutil.Register(t, c.Request, c.Core)
 
 	// Wrong password.
 	form := url.Values{}
 	form.Set("email", "fbar@example.com")
 	form.Set("password", "wrong-password")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 
 	// Missing password.
 	form = url.Values{}
 	form.Set("email", "fbar@example.com")
 	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 
 	// Wrong user.
 	form = url.Values{}
 	form.Set("email", "other@example.com")
 	form.Set("password", "guess123")
 	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 
 	// Invalid unmarshal.
 	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", nil)
-	EnsureBadRequest(t, w)
+	testutil.EnsureBadRequest(t, w)
 }
 
 func TestLoginTokenBad(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	defer c.Teardown()
 
 	// Mock the token service.
@@ -74,18 +74,18 @@ func TestLoginTokenBad(t *testing.T) {
 	c.Core.Token = mt
 
 	// Register the user.
-	Register(t, c.Request, c.Core)
+	testutil.Register(t, c.Request, c.Core)
 
 	// Login with the user.
 	form := url.Values{}
 	form.Set("email", "fbar@example.com")
 	form.Set("password", "guess123")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
-	EnsureInternalServerError(t, w)
+	testutil.EnsureInternalServerError(t, w)
 }
 
 func TestLoginFailDatabase(t *testing.T) {
-	c := Setup()
+	c := testutil.Setup()
 	c.Teardown() // Teardown now to test a bad DB connection.
 
 	// Login with the user.
@@ -93,5 +93,5 @@ func TestLoginFailDatabase(t *testing.T) {
 	form.Set("email", "fbar@example.com")
 	form.Set("password", "guess123")
 	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
-	EnsureInternalServerError(t, w)
+	testutil.EnsureInternalServerError(t, w)
 }
