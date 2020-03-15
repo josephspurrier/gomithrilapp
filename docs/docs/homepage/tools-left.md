@@ -1,0 +1,7 @@
+- [Vue.js](https://vuejs.org/), a progressive JavaScript framework for the front-end GUI
+- [Go](https://golang.org/), a high-performance language for the back-end API
+- [MySQL](https://www.mysql.com/), a relational database for storage of data
+- [Bulma](https://bulma.io/documentation/), a CSS framework for the front-end
+- [Cypress](https://www.cypress.io/), a JavaScript testing framework for end to end tests
+- [Docker](https://www.docker.com/), a virtualization platform to easily deploy the microservices in containers
+- [ESLint](https://eslint.org/), a JavaScript linting utility to enforce UI formatting rules

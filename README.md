@@ -6,7 +6,9 @@
 
 [![Swagger Validator](https://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json)
 
-This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools. This project uses a [Makefile](Makefile) to centralize frequently used commands. The code coverage badge above is only for the API.
+This is a sample notepad application that uses Vue on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools.
+
+[Documentation](https://josephspurrier.github.io/govueapp/) is generated using [Docusaurus](https://docusaurus.io/) and hosted using [GitHub Pages](https://pages.github.com/). This project uses a [Makefile](Makefile) to centralize frequently used commands. The code coverage badge above is only for the back-end API - not the front-end.
 
 ![Demo gif](https://user-images.githubusercontent.com/2394539/76177148-ac753e00-6189-11ea-963b-bff38b29e8ed.gif)
 
