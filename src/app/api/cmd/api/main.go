@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"app/api/config"
+	"app/api/internal/requestcontext"
 	"app/api/pkg/logger"
-	"app/api/pkg/requestcontext"
 )
 
 func main() {

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"app/api/internal/requestcontext"
 	"app/api/middleware/jwt"
-	"app/api/pkg/requestcontext"
 	"app/api/pkg/webtoken"
 
 	"github.com/stretchr/testify/assert"

@@ -3,9 +3,9 @@ package testutil
 import (
 	"app/api/config"
 	"app/api/endpoint"
+	"app/api/internal/requestcontext"
 	"app/api/pkg/database"
 	"app/api/pkg/mock"
-	"app/api/pkg/requestcontext"
 )
 
 // Mocks contains all the configurable dependencies.
@@ -20,14 +20,11 @@ func Services(db *database.DBW) (endpoint.Core, *Mocks) {
 	mockLogger := NewMockLogger()
 	mocker := mock.New(true)
 
-	// Set up the mocked dependencies.
-	ctx := requestcontext.New()
-
 	// Load the environment variables from defaults.
 	settings := config.LoadEnv(mockLogger, "")
 
 	// Set up the services.
-	core := config.Services(mockLogger, settings, db, mocker, ctx)
+	core := config.Services(mockLogger, settings, db, mocker, requestcontext.New())
 
 	// Add all the configurable mocks.
 	m := &Mocks{

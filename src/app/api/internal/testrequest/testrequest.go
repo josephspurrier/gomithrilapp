@@ -15,23 +15,23 @@ import (
 
 // TR is a test request.
 type TR struct {
+	// Request is cleared before use.
+	Request *http.Request
 	// Header clears after use.
 	Header http.Header
 	// SkipMiddleware resets to false after use.
 	SkipMiddleware bool
 	// SkipRoutes resets to false after use.
 	SkipRoutes bool
-
-	Request *http.Request
 }
 
 // New returns a new TR.
 func New() *TR {
 	return &TR{
+		Request:        new(http.Request),
 		Header:         make(http.Header),
 		SkipMiddleware: false,
 		SkipRoutes:     false,
-		Request:        new(http.Request),
 	}
 }
 

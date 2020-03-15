@@ -32,7 +32,7 @@ func LoadDatabase(ml logger.ILog) *database.DBW {
 		Hostname:  "127.0.0.1",
 		Username:  "root",
 		Password:  password,
-		Name:      "webapitest" + unique,
+		Name:      "govueapptest" + unique,
 		Port:      3306,
 		Parameter: "parseTime=true&allowNativePasswords=true&collation=utf8mb4_unicode_ci&multiStatements=true",
 	}
@@ -45,8 +45,7 @@ func LoadDatabase(ml logger.ILog) *database.DBW {
 	return database.New(db, con.Name)
 }
 
-// TeardownDatabase will destroy the test database and unset the environment
-// variables.
+// TeardownDatabase will destroy the test database.
 func TeardownDatabase(db *database.DBW) {
 	_, err := db.Exec(`DROP DATABASE IF EXISTS ` + db.Name())
 	if err != nil {
