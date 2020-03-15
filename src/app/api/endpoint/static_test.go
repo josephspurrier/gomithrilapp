@@ -1,13 +1,11 @@
 package endpoint_test
 
 import (
-	"encoding/json"
 	"net/http"
 	"testing"
 
 	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
-	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,10 +16,7 @@ func TestIndex(t *testing.T) {
 
 	// Home route.
 	w := tr.SendForm(t, p, "GET", "/api/v1", nil)
-	r := new(model.OKResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
+	r := EnsureOK(t, w)
 	assert.Equal(t, "OK", r.Body.Status)
 }
 

@@ -7,9 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"app/api/internal/requestcontext"
 	"app/api/middleware/jwt"
-	"app/api/pkg/mock"
+	"app/api/pkg/requestcontext"
 	"app/api/pkg/webtoken"
 
 	"github.com/stretchr/testify/assert"
@@ -31,7 +30,7 @@ func TestWhitelistAllowed(t *testing.T) {
 
 		webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
 		token := jwt.New(whitelist, webtoken,
-			requestcontext.New(mock.New(false)))
+			requestcontext.New())
 		h := token.Handler(mux)
 
 		r := httptest.NewRequest(arr[0], arr[1], nil)
@@ -59,7 +58,7 @@ func TestWhitelistNotAllowed(t *testing.T) {
 
 		webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
 		token := jwt.New(whitelist, webtoken,
-			requestcontext.New(mock.New(false)))
+			requestcontext.New())
 		h := token.Handler(mux)
 
 		r := httptest.NewRequest(arr[0], arr[1], nil)
@@ -81,7 +80,7 @@ func TestWhitelistBadBearer(t *testing.T) {
 
 	webtoken := webtoken.New([]byte("secret"), 1*time.Minute)
 	token := jwt.New(whitelist, webtoken,
-		requestcontext.New(mock.New(false)))
+		requestcontext.New())
 	h := token.Handler(mux)
 
 	r := httptest.NewRequest("POST", "/v1/user", nil)

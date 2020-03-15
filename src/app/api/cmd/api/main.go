@@ -8,7 +8,7 @@ import (
 
 	"app/api/config"
 	"app/api/pkg/logger"
-	"app/api/pkg/mock"
+	"app/api/pkg/requestcontext"
 )
 
 func main() {
@@ -19,7 +19,8 @@ func main() {
 	settings := config.LoadEnv(l, "")
 
 	// Setup the services.
-	core := config.Services(l, settings, config.Database(l), mock.New(false))
+	core := config.Services(l, settings, config.Database(l), nil,
+		requestcontext.New())
 	config.LoadRoutes(core)
 
 	// Start the web server.

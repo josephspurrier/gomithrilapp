@@ -1,16 +1,15 @@
 package bind_test
 
 import (
-	"errors"
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"strings"
 	"testing"
 
-	"app/api/internal/bind"
-	"app/api/internal/testrequest"
-	"app/api/pkg/mock"
+	"app/api/pkg/bind"
 	"app/api/pkg/router"
 
 	"github.com/stretchr/testify/assert"
@@ -38,7 +37,7 @@ func TestFormSuccess(t *testing.T) {
 			}
 
 			req := new(request)
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 			assert.Nil(t, b.UnmarshalAndValidate(req, r))
 
 			assert.Equal(t, "10", req.UserID)
@@ -81,10 +80,8 @@ func TestFormFailValidate(t *testing.T) {
 			}
 
 			req := new(request)
-			b := bind.New(mock.New(true), mux)
+			b := bind.New(mux)
 
-			e := errors.New("test error")
-			b.Mock.Add("Binder.Validate", e)
 			assert.NotNil(t, b.UnmarshalAndValidate(&req, r))
 
 			assert.Equal(t, "10", req.UserID)
@@ -127,7 +124,7 @@ func TestFormNil(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -167,7 +164,7 @@ func TestFormMissingPointer(t *testing.T) {
 			}
 
 			req := request{}
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -213,7 +210,7 @@ func TestJSONSuccess(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 			assert.Nil(t, b.Validate(req))
@@ -224,11 +221,12 @@ func TestJSONSuccess(t *testing.T) {
 			return http.StatusOK, nil
 		}))
 
-	form := url.Values{}
-	form.Add("first_name", "john")
-	form.Add("last_name", "smith")
+	form := make(map[string]string)
+	form["first_name"] = "john"
+	form["last_name"] = "smith"
+	jf, _ := json.Marshal(form)
 
-	r := httptest.NewRequest("POST", "/user/10", strings.NewReader(testrequest.ToJSON(form)))
+	r := httptest.NewRequest("POST", "/user/10", bytes.NewReader(jf))
 	r.Header.Add("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, r)
@@ -260,9 +258,9 @@ func TestJSONFailure(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
-			assert.NotNil(t, b.Unmarshal(req, r))
+			assert.NotNil(t, b.UnmarshalAndValidate(req, r))
 
 			assert.Equal(t, "", req.UserID)
 			assert.Equal(t, "", req.FirstName)
@@ -306,7 +304,7 @@ func TestJSONFailureNil(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
 			assert.NotNil(t, b.Unmarshal(req, r))
 
@@ -348,7 +346,7 @@ func TestJSONFailureDataType(t *testing.T) {
 
 			req := new(request).Body
 
-			b := bind.New(mock.New(false), mux)
+			b := bind.New(mux)
 
 			assert.Nil(t, b.Unmarshal(&req, r))
 
@@ -365,19 +363,4 @@ func TestJSONFailureDataType(t *testing.T) {
 	mux.ServeHTTP(w, r)
 
 	assert.Equal(t, true, called)
-}
-
-func TestMock(t *testing.T) {
-	b := bind.New(mock.New(true), nil)
-
-	e := errors.New("test error")
-
-	b.Mock.Add("Binder.Unmarshal", e)
-	assert.Equal(t, e, b.Unmarshal(nil, nil))
-
-	b.Mock.Add("Binder.Validate", e)
-	assert.Equal(t, e, b.Validate(nil))
-
-	b.Mock.Add("Binder.Unmarshal", e)
-	assert.Equal(t, e, b.UnmarshalAndValidate(nil, nil))
 }

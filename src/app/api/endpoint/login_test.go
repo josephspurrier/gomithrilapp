@@ -2,151 +2,96 @@ package endpoint_test
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"errors"
-	"net/http"
 	"net/url"
 	"testing"
 
-	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
-	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestLoginSuccess(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, m := testutil.Services(db)
-	tr := testrequest.New()
+	c := Setup()
+	defer c.Teardown()
 
-	p.Token = m.Token
-	m.Token.GenerateFunc = func(userID string) (string, error) {
+	// Mock the token service.
+	mt := new(testutil.MockToken)
+	mt.GenerateFunc = func(userID string) (string, error) {
 		enc := base64.StdEncoding.EncodeToString([]byte("0123456789ABCDEF0123456789ABCDEF"))
 		return enc, nil
 	}
+	c.Core.Token = mt
 
-	// Register the user.
-	form := url.Values{}
-	form.Set("first_name", "a@a.com")
-	form.Set("last_name", "a@a.com")
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/api/v1/register", form)
-
-	// Login with the user.
-	form = url.Values{}
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
+	// Register and login with the user.
+	userToken, _ := Auth(t, c.Request, c.Core)
 
 	// Verify the response.
-	r := new(model.LoginResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, "MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=", r.Body.Token)
+	assert.Equal(t, "MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=", userToken)
 }
 
 func TestLoginFail(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, m := testutil.Services(db)
-	tr := testrequest.New()
+	c := Setup()
+	defer c.Teardown()
 
 	// Register the user.
-	form := url.Values{}
-	form.Set("first_name", "a@a.com")
-	form.Set("last_name", "a@a.com")
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	tr.SendJSON(t, p, "POST", "/api/v1/register", form)
+	Register(t, c.Request, c.Core)
 
 	// Wrong password.
-	form = url.Values{}
-	form.Set("email", "a@a.com")
+	form := url.Values{}
+	form.Set("email", "fbar@example.com")
 	form.Set("password", "wrong-password")
-	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
-	r := new(model.BadRequestResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
+	EnsureBadRequest(t, w)
 
 	// Missing password.
 	form = url.Values{}
-	form.Set("email", "a@a.com")
-	w = tr.SendJSON(t, p, "POST", "/api/v1/login", form)
-	r = new(model.BadRequestResponse)
-	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	form.Set("email", "fbar@example.com")
+	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
+	EnsureBadRequest(t, w)
 
 	// Wrong user.
 	form = url.Values{}
-	form.Set("email", "b@b.com")
-	form.Set("password", "a")
-	w = tr.SendJSON(t, p, "POST", "/api/v1/login", form)
-	r = new(model.BadRequestResponse)
-	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-
-	// Login with the user.
-	w = tr.SendJSON(t, p, "POST", "/api/v1/login", nil)
-	r = new(model.BadRequestResponse)
-	err = json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	form.Set("email", "other@example.com")
+	form.Set("password", "guess123")
+	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
+	EnsureBadRequest(t, w)
 
 	// Invalid unmarshal.
-	e := errors.New("bad error")
-	m.Mock.Add("Binder.Unmarshal", e)
-	w = tr.SendJSON(t, p, "POST", "/api/v1/login", nil)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
+	w = c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", nil)
+	EnsureBadRequest(t, w)
 }
 
 func TestLoginTokenBad(t *testing.T) {
-	db := testutil.LoadDatabase()
-	defer testutil.TeardownDatabase(db)
-	p, m := testutil.Services(db)
-	tr := testrequest.New()
+	c := Setup()
+	defer c.Teardown()
 
-	p.Token = m.Token
-	m.Token.GenerateFunc = func(userID string) (string, error) {
+	// Mock the token service.
+	mt := new(testutil.MockToken)
+	mt.GenerateFunc = func(userID string) (string, error) {
 		return "", errors.New("bad token generation")
 	}
+	c.Core.Token = mt
 
 	// Register the user.
-	register(t, tr, p)
+	Register(t, c.Request, c.Core)
 
 	// Login with the user.
 	form := url.Values{}
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
-
-	// Verify the response.
-	r := new(model.LoginResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusInternalServerError, w.Code)
-	assert.Equal(t, "", r.Body.Token)
+	form.Set("email", "fbar@example.com")
+	form.Set("password", "guess123")
+	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
+	EnsureInternalServerError(t, w)
 }
 
 func TestLoginFailDatabase(t *testing.T) {
-	p, _ := testutil.Services(nil)
-	tr := testrequest.New()
+	c := Setup()
+	c.Teardown() // Teardown now to test a bad DB connection.
 
 	// Login with the user.
 	form := url.Values{}
-	form.Set("email", "a@a.com")
-	form.Set("password", "a")
-	w := tr.SendJSON(t, p, "POST", "/api/v1/login", form)
-
-	// Verify the response.
-	r := new(model.InternalServerErrorResponse)
-	err := json.Unmarshal(w.Body.Bytes(), &r.Body)
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusInternalServerError, w.Code)
+	form.Set("email", "fbar@example.com")
+	form.Set("password", "guess123")
+	w := c.Request.SendJSON(t, c.Core, "POST", "/api/v1/login", form)
+	EnsureInternalServerError(t, w)
 }

@@ -21,6 +21,8 @@ type TR struct {
 	SkipMiddleware bool
 	// SkipRoutes resets to false after use.
 	SkipRoutes bool
+
+	Request *http.Request
 }
 
 // New returns a new TR.
@@ -29,6 +31,7 @@ func New() *TR {
 		Header:         make(http.Header),
 		SkipMiddleware: false,
 		SkipRoutes:     false,
+		Request:        new(http.Request),
 	}
 }
 
@@ -45,20 +48,22 @@ func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target s
 		body = strings.NewReader(v.Encode())
 	}
 
-	r := httptest.NewRequest(method, target, body)
-	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	tr.Request = httptest.NewRequest(method, target, body)
+	tr.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	for k, v := range tr.Header {
-		r.Header.Set(k, v[0])
+		tr.Request.Header.Set(k, v[0])
 	}
+
+	// Reset the header values.
 	tr.Header = make(http.Header)
 
 	w := httptest.NewRecorder()
 
 	if !tr.SkipMiddleware {
-		config.Middleware(core).ServeHTTP(w, r)
+		config.Middleware(core).ServeHTTP(w, tr.Request)
 	} else {
 		tr.SkipMiddleware = false
-		core.Router.ServeHTTP(w, r)
+		core.Router.ServeHTTP(w, tr.Request)
 	}
 
 	return w
@@ -77,21 +82,22 @@ func (tr *TR) SendJSON(t *testing.T, core endpoint.Core, method string, target s
 		body = strings.NewReader(ToJSON(v))
 	}
 
-	r := httptest.NewRequest(method, target, body)
-
-	r.Header.Set("Content-Type", "application/json")
+	tr.Request = httptest.NewRequest(method, target, body)
+	tr.Header.Set("Content-Type", "application/json")
 	for k, v := range tr.Header {
-		r.Header.Set(k, v[0])
+		tr.Request.Header.Set(k, v[0])
 	}
+
+	// Reset the header values.
 	tr.Header = make(http.Header)
 
 	w := httptest.NewRecorder()
 
 	if !tr.SkipMiddleware {
-		config.Middleware(core).ServeHTTP(w, r)
+		config.Middleware(core).ServeHTTP(w, tr.Request)
 	} else {
 		tr.SkipMiddleware = false
-		core.Router.ServeHTTP(w, r)
+		core.Router.ServeHTTP(w, tr.Request)
 	}
 
 	return w
