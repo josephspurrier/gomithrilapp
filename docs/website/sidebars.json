@@ -1,0 +1,14 @@
+{
+  "docs": {
+    "Getting Started": [
+      "tutorial/run-locally",
+      "tutorial/env-prep",
+      "tutorial/database",
+      "tutorial/front-end",
+      "tutorial/back-end"
+    ],
+    "Guides": [
+      "wip"
+    ]
+  }
+}
