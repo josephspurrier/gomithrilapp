@@ -7,14 +7,13 @@ import (
 	"testing"
 
 	"app/api/endpoint"
-	"app/api/internal/testrequest"
 	"app/api/model"
 
 	"github.com/stretchr/testify/assert"
 )
 
 // Register a user and return the user ID.
-func Register(t *testing.T, tr *testrequest.TR, p endpoint.Core) (userID string) {
+func Register(t *testing.T, tr *Request, p endpoint.Core) (userID string) {
 	// Register the user.
 	form := url.Values{}
 	form.Set("first_name", "Foo")
@@ -34,7 +33,7 @@ func Register(t *testing.T, tr *testrequest.TR, p endpoint.Core) (userID string)
 }
 
 // Auth will register a user, login, and return the user token and user ID.
-func Auth(t *testing.T, tr *testrequest.TR, p endpoint.Core) (userToken string, userID string) {
+func Auth(t *testing.T, tr *Request, p endpoint.Core) (userToken string, userID string) {
 	userID = Register(t, tr, p)
 
 	// Login with the user.

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"testing"
 
-	"app/api/internal/testrequest"
 	"app/api/internal/testutil"
 
 	"github.com/stretchr/testify/assert"
@@ -12,7 +11,7 @@ import (
 
 func TestIndex(t *testing.T) {
 	p, _ := testutil.Services(nil)
-	tr := testrequest.New()
+	tr := testutil.NewRequest()
 
 	// Home route.
 	w := tr.SendForm(t, p, "GET", "/api/v1", nil)
@@ -22,7 +21,7 @@ func TestIndex(t *testing.T) {
 
 func TestStatic(t *testing.T) {
 	p, _ := testutil.Services(nil)
-	tr := testrequest.New()
+	tr := testutil.NewRequest()
 
 	// Success.
 	w := tr.SendForm(t, p, "GET", "/api/static/healthcheck.html", nil)

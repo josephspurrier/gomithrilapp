@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"app/api/pkg/bind"
-	"app/api/pkg/router"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,9 +17,9 @@ import (
 func TestFormSuccess(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -61,9 +60,9 @@ func TestFormSuccess(t *testing.T) {
 func TestFormFailValidate(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -105,9 +104,9 @@ func TestFormFailValidate(t *testing.T) {
 func TestFormNil(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -145,9 +144,9 @@ func TestFormNil(t *testing.T) {
 func TestFormMissingPointer(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -189,9 +188,9 @@ func TestFormMissingPointer(t *testing.T) {
 func TestJSONSuccess(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -237,9 +236,9 @@ func TestJSONSuccess(t *testing.T) {
 func TestJSONFailure(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -283,9 +282,9 @@ func TestJSONFailure(t *testing.T) {
 func TestJSONFailureNil(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 
@@ -325,9 +324,9 @@ func TestJSONFailureNil(t *testing.T) {
 func TestJSONFailureDataType(t *testing.T) {
 	called := false
 
-	mux := router.New()
+	mux := NewRouter()
 
-	mux.Post("/user/:user_id", router.Handler(
+	mux.Handle("POST", "/user/:user_id", Handler(
 		func(w http.ResponseWriter, r *http.Request) (status int, err error) {
 			called = true
 

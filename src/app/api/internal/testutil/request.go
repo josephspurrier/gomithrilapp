@@ -1,4 +1,4 @@
-package testrequest
+package testutil
 
 import (
 	"encoding/json"
@@ -13,8 +13,8 @@ import (
 	"app/api/endpoint"
 )
 
-// TR is a test request.
-type TR struct {
+// Request is a test request.
+type Request struct {
 	// Request is cleared before use.
 	Request *http.Request
 	// Header clears after use.
@@ -25,9 +25,9 @@ type TR struct {
 	SkipRoutes bool
 }
 
-// New returns a new TR.
-func New() *TR {
-	return &TR{
+// NewRequest returns a new test request.
+func NewRequest() *Request {
+	return &Request{
 		Request:        new(http.Request),
 		Header:         make(http.Header),
 		SkipMiddleware: false,
@@ -36,7 +36,7 @@ func New() *TR {
 }
 
 // SendForm is a helper to quickly make a form request.
-func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target string,
+func (tr *Request) SendForm(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
 	if !tr.SkipRoutes {
 		// Load the routes.
@@ -70,7 +70,7 @@ func (tr *TR) SendForm(t *testing.T, core endpoint.Core, method string, target s
 }
 
 // SendJSON is a helper to quickly make a JSON request.
-func (tr *TR) SendJSON(t *testing.T, core endpoint.Core, method string, target string,
+func (tr *Request) SendJSON(t *testing.T, core endpoint.Core, method string, target string,
 	v url.Values) *httptest.ResponseRecorder {
 	if !tr.SkipRoutes {
 		// Load the routes.
