@@ -31,7 +31,7 @@ func Database(l logger.ILog) *database.DBW {
 		Parameter: "collation=utf8mb4_unicode_ci&parseTime=true&multiStatements=true",
 	}
 
-	// Migration the database.
+	// Migrate the database.
 	dbx, err := database.Migrate(l, con, migration.Changesets)
 	if err != nil {
 		l.Fatalf(err.Error())

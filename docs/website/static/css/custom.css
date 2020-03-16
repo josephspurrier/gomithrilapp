@@ -7,6 +7,14 @@
  
 /* your custom css */
 
+strong, b {
+    font-weight: 700;
+}
+
+code {
+    background-color: lightgray;
+}
+
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 

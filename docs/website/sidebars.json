@@ -5,10 +5,12 @@
       "tutorial/env-prep",
       "tutorial/database",
       "tutorial/front-end",
-      "tutorial/back-end"
+      "tutorial/back-end",
+      "tutorial/style-guide"
     ],
     "Guides": [
-      "wip"
+      "wip",
+      "database"
     ]
   }
 }
