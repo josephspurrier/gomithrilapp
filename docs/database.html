@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Database · govueapp</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Docker"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Database · govueapp"/><meta property="og:type" content="website"/><meta property="og:url" content="https://josephspurrier.github.io/govueapp/"/><meta property="og:description" content="## Docker"/><meta property="og:image" content="https://josephspurrier.github.io/govueapp/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://josephspurrier.github.io/govueapp/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/govueapp/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/agate.min.css"/><link rel="alternate" type="application/atom+xml" href="https://josephspurrier.github.io/govueapp/blog/atom.xml" title="govueapp Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://josephspurrier.github.io/govueapp/blog/feed.xml" title="govueapp Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/govueapp/js/scrollSpy.js"></script><link rel="stylesheet" href="/govueapp/css/main.css"/><script src="/govueapp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/govueapp/"><h2 class="headerTitle">govueapp</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/govueapp/docs/tutorial/run-locally" target="_self">Getting Started</a></li><li class="siteNavGroupActive"><a href="/govueapp/docs/wip" target="_self">Docs</a></li><li class=""><a href="/govueapp/blog/" target="_self">Blog</a></li><li class=""><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json" target="_self">API</a></li><li class=""><a href="/govueapp/help" target="_self">Help</a></li><li class=""><a href="http://github.com/josephspurrier/govueapp" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Guides</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Getting Started</h3><ul class=""><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/run-locally">Run Locally</a></li><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/env-prep">Environment Prep</a></li><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/database">Database</a></li><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/front-end">Front-End</a></li><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/back-end">Back-End</a></li><li class="navListItem"><a class="navItem" href="/govueapp/docs/tutorial/style-guide">Style Guide</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/govueapp/docs/wip">Welcome</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/govueapp/docs/database">Database</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Database</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="docker"></a><a href="#docker" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Docker</h2>
+<p>To get a MySQL running on your computer, we recommend you use <a href="https://www.docker.com/">Docker</a>. You need to make sure it's installed. Docker makes it easy to run software on your computer without having to install to. Docker also makes it easy reset or clear your environment so you can bring up new services like MySQL quickly and easily. This makes testing or working on multiple projects very easy.</p>
+<p>You can also install MySQL using <code>brew install mysql@5.7</code> on MacOS or install from their <a href="https://dev.mysql.com/downloads/installer/">website</a>, but many of the commands below don't apply.</p>
+<p>We'll be using the <a href="https://hub.docker.com/_/mysql">standard MySQL Docker image</a> which you can read about on their Docker Hub website.</p>
+<h3><a class="anchor" aria-hidden="true" id="create-container"></a><a href="#create-container" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create Container</h3>
+<p>Create a new MySQL 5.7 database container. The username will be <strong>root</strong> and the password will be <strong>password</strong>. You can also connect to it via <strong>127.0.0.1:3306</strong> using a tool like <a href="https://www.sequelpro.com/">Sequel Pro</a> or the <a href="https://dev.mysql.com/downloads/workbench/">MySQL Workbench</a>.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-comment"># Makefile</span>
+make db-init
+
+<span class="hljs-comment"># Manual</span>
+docker run -d --name=govueapp_db_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.7
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="stop-container"></a><a href="#stop-container" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Stop Container</h3>
+<p>Stop a running MySQL database container. This will preserve the database data.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-comment"># Makefile</span>
+make db-stop
+
+<span class="hljs-comment"># Manual</span>
+docker stop govueapp_db_1
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="start-a-stopped-container"></a><a href="#start-a-stopped-container" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Start a Stopped Container</h3>
+<p>Start a stopped MySQL database container.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-comment"># Makefile</span>
+make db-start
+
+<span class="hljs-comment"># Manual</span>
+docker start govueapp_db_1
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="reset-container"></a><a href="#reset-container" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reset Container</h3>
+<p>Drop the database table and then re-run migrations.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-comment"># Makefile</span>
+make db-reset
+
+<span class="hljs-comment"># Manual</span>
+docker <span class="hljs-built_in">exec</span> govueapp_db_1 sh -c <span class="hljs-string">"exec mysql -h 127.0.0.1 -uroot -ppassword -e 'DROP DATABASE IF EXISTS main;'"</span>
+docker <span class="hljs-built_in">exec</span> govueapp_db_1 sh -c <span class="hljs-string">"exec mysql -h 127.0.0.1 -uroot -ppassword -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'"</span>
+go run <span class="hljs-variable">${GOPATH}</span>/src/app/api/cmd/dbmigrate/main.go
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="delete-the-container"></a><a href="#delete-the-container" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Delete the Container</h3>
+<p>Stop and then remove the container - all database data will be deleted as well.</p>
+<pre><code class="hljs css language-bash"><span class="hljs-comment"># Makefile</span>
+make db-rm
+
+<span class="hljs-comment"># Manual</span>
+docker rm -f govueapp_db_1
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="migrations"></a><a href="#migrations" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Migrations</h2>
+<p>Database migrations are a great way to manage incremental database changes. The migration state is stored in the same database and recorded in the <strong>rovechangelog</strong> table.</p>
+<p>The primary motivation behind <a href="https://github.com/josephspurrier/rove">Rove</a> tool was to provide a simple and quick Go (instead of Java) based database migration tool that allows loading migrations from anywhere, including from inside your code so you can distribute single binary applications. You can write the migration and rollback SQL, then Rove will apply it for you properly.</p>
+<h3><a class="anchor" aria-hidden="true" id="how-do-migrations-work"></a><a href="#how-do-migrations-work" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How do migrations work?</h3>
+<p>Database migrations are necessary when you make changes to your applications. You may need a new table or a new column so you have to write the SQL commands to make the changes. The tricky piece is when you perform an upgrade, how do you manage which SQL queries will run? Do you run all of them again and then the new ones after? Or is there an easy way to track which queries have been run so you only run new ones? What if you have to rollback your database because of a feature that was released too early and is causing problem? How do you manage those queries? You can definitely write your own code to manage the migration process, but Rove makes the process much easier for you. You also don't have to convert your SQL code to a another format like JSON or XML, you can just add a few comments around it and Rove will handle the rest.</p>
+<h3><a class="anchor" aria-hidden="true" id="how-does-rove-work"></a><a href="#how-does-rove-work" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How does Rove work?</h3>
+<p>You'll need to write your changes queries and rollback queries in migration files. These are plain SQL files that can be imported directly into MySQL. Rove just uses comments to help break them into smaller manageable pieces. When you run tell Rove to apply your changes, a table called <strong>rovechangelog</strong> is created in the database to track which changesets have been applied and metadata about them. The tool will ensure no changes have been made to the existing changesets that are already in the database. Changeset checksums are then compared against the changelog table checksums. Any new changesets that are not in the changelog are applied to the database and then a new record is inserted into the changelog for each changeset. Rove supports labeling changesets with a <strong>tag</strong> as well as rolling back to specific tags.</p>
+<h3><a class="anchor" aria-hidden="true" id="rove-vs-liquibase"></a><a href="#rove-vs-liquibase" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Rove vs Liquibase</h3>
+<p>Rove and Liquibase use different changelog tables. Rove includes MySQL out of the box, but it supports adding your own adapters to work with any type of data storage. The Rove changesets can use a very similar plain SQL (no XML or JSON) file format for simplicity and portability. For the most teams, you'll be able use your existing SQL migration files with Rove without making any changes.</p>
+<p>To assist with switching from Liquibase to Rove, you can use the CLI tool with the <code>rove convert</code> argument to convert a Liquibase <strong>DATABASECHANGELOG</strong> table to a Rove <strong>rovechangelog</strong> table. If you don't run the <code>rove convert</code> command first on a database that was originally managed by Liquibase, Rove will try to rerun the same migrations over again if you use the same migration files. The tools use different changelog table names, table schemas, and use different methods for calculating their checksums.</p>
+<h3><a class="anchor" aria-hidden="true" id="sample-migration-file-from-rove"></a><a href="#sample-migration-file-from-rove" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sample Migration File from Rove</h3>
+<p>Below is an example of what a migration file looks likes. Writing the files like this provides you with a few benefits:</p>
+<ul>
+<li>Easily see who created the database migration</li>
+<li>Description of what the changeset does.</li>
+<li>Rollback command to reverse a migration if you need to move back to an earlier version of the software if there is a bug.</li>
+<li>Break your changesets into multiple files so it's easy to separate out for instance dev vs prod changesets.</li>
+</ul>
+<pre><code class="hljs css language-sql"><span class="hljs-comment">--changeset josephspurrier:1</span>
+<span class="hljs-comment">--description Create the user status table.</span>
+<span class="hljs-comment">--description Set deleted_at as a timestamp.</span>
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> user_status (
+    <span class="hljs-keyword">id</span> <span class="hljs-built_in">TINYINT</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">UNSIGNED</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,
+    
+    <span class="hljs-keyword">status</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">25</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+    
+    created_at <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,
+    updated_at <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,
+    deleted_at <span class="hljs-built_in">TIMESTAMP</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">NULL</span>,
+    
+    PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-keyword">id</span>)
+);
+<span class="hljs-comment">--rollback DROP TABLE user_status;</span>
+
+<span class="hljs-comment">--include anotherfile.sql</span>
+
+<span class="hljs-comment">--changeset josephspurrier:2</span>
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> user_status (<span class="hljs-keyword">id</span>, <span class="hljs-keyword">status</span>, created_at, updated_at, deleted) <span class="hljs-keyword">VALUES</span>
+(<span class="hljs-number">1</span>, <span class="hljs-string">'active'</span>,   <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,  <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,  <span class="hljs-number">0</span>),
+(<span class="hljs-number">2</span>, <span class="hljs-string">'inactive'</span>, <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,  <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,  <span class="hljs-number">0</span>);
+<span class="hljs-comment">--rollback TRUNCATE TABLE user_status;</span>
+</code></pre>
+<p>You can read more about <a href="https://github.com/josephspurrier/rove">Rove on GitHub</a>.</p>
+<h2><a class="anchor" aria-hidden="true" id="changsets"></a><a href="#changsets" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Changsets</h2>
+<p>A changeset is one or more SQL queries that Rove will apply to the database. Each changeset should have the SQL queries to run during the migration and then rollback SQL queries.</p>
+<p>The current changesets are here: <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go">src/app/api/migration/changeset.go</a></p>
+<h3><a class="anchor" aria-hidden="true" id="when-do-migrations-apply"></a><a href="#when-do-migrations-apply" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>When do migrations apply?</h3>
+<p>To simply the setup process, the migrations are run on the database when the API runs up.</p>
+<pre><code class="hljs css language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-comment">// Create the logger.</span>
+    l := logger.New(log.New(os.Stderr, <span class="hljs-string">""</span>, log.Lshortfile))
+
+    <span class="hljs-comment">// Load the environment variables.</span>
+    settings := config.LoadEnv(l, <span class="hljs-string">""</span>)
+
+    <span class="hljs-comment">// Setup the services.</span>
+    core := config.Services(l, settings, config.Database(l), requestcontext.New(), <span class="hljs-literal">nil</span>)
+    config.LoadRoutes(core)
+
+    <span class="hljs-comment">// Start the web server.</span>
+    l.Printf(<span class="hljs-string">"Server started."</span>)
+    err := http.ListenAndServe(fmt.Sprintf(<span class="hljs-string">":%v"</span>, settings.Port), config.Middleware(core))
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        l.Printf(err.Error())
+    }
+}
+</code></pre>
+<p>View <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/cmd/api/main.go">src/app/api/cmd/api/main.go</a>.</p>
+<p>The database is setup and migrations are called here: <code>config.Database(l)</code>.</p>
+<pre><code class="hljs css language-go">core := config.Services(l, settings, config.Database(l), requestcontext.New(), <span class="hljs-literal">nil</span>)
+</code></pre>
+<p>The <code>config.Database()</code> function connects to the database, then runs the migrations on the database.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// Database migrates the database and then returns the database connection.</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Database</span><span class="hljs-params">(l logger.ILog)</span> *<span class="hljs-title">database</span>.<span class="hljs-title">DBW</span></span> {
+    <span class="hljs-comment">// If the host env var is set, use it.</span>
+    host := os.Getenv(<span class="hljs-string">"MYSQL_HOST"</span>)
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(host) == <span class="hljs-number">0</span> {
+        host = <span class="hljs-string">"127.0.0.1"</span>
+    }
+
+    <span class="hljs-comment">// If the password env var is set, use it.</span>
+    password := os.Getenv(<span class="hljs-string">"MYSQL_ROOT_PASSWORD"</span>)
+
+    <span class="hljs-comment">// Set the database connection information.</span>
+    con := &amp;mysql.Connection{
+        Hostname:  host,
+        Username:  <span class="hljs-string">"root"</span>,
+        Password:  password,
+        Name:      <span class="hljs-string">"main"</span>,
+        Port:      <span class="hljs-number">3306</span>,
+        Parameter: <span class="hljs-string">"collation=utf8mb4_unicode_ci&amp;parseTime=true&amp;multiStatements=true"</span>,
+    }
+
+    <span class="hljs-comment">// Migrate the database.</span>
+    dbx, err := database.Migrate(l, con, migration.Changesets)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        l.Fatalf(err.Error())
+    }
+
+    <span class="hljs-keyword">return</span> database.New(dbx, con.Name)
+}
+</code></pre>
+<p>View <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/database.go">src/app/api/config/database.go</a>.</p>
+<p>Below is the code that references the changets and applies them - if there is an error applying them, then the application will shutdown to prevent the database from being in an invalid state.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// Migrate the database.</span>
+dbx, err := database.Migrate(l, con, migration.Changesets)
+<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+    l.Fatalf(err.Error())
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="add-a-changeset"></a><a href="#add-a-changeset" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Add a Changeset</h3>
+<p>To add a new changset, open up the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go">src/app/api/migration/changeset.go</a> file and add a new changeset to the bottom.</p>
+<p>Notice <code>--changeset josephspurrier:2</code> - each changeset must be unique so you should increment the number at the end by one when you add your changeset.</p>
+<p>You should always include a rollback - the rollback can span multiple lines like this:</p>
+<pre><code class="hljs css language-sql"><span class="hljs-comment">--rollback DELETE FROM user_status WHERE id=2;</span>
+<span class="hljs-comment">--rollback DELETE FROM user_status WHERE id=1;</span>
+</code></pre>
+<p>Once a migration has been applied to a system, you cannot change the existing migration. This is important - if you can a migration that has already been applied, you will receive an error stating the checksum doesn't match. Changing an existing changeset could break functionality so it's not supported.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/govueapp/docs/wip"><span class="arrow-prev">← </span><span>Welcome</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#docker">Docker</a><ul class="toc-headings"><li><a href="#create-container">Create Container</a></li><li><a href="#stop-container">Stop Container</a></li><li><a href="#start-a-stopped-container">Start a Stopped Container</a></li><li><a href="#reset-container">Reset Container</a></li><li><a href="#delete-the-container">Delete the Container</a></li></ul></li><li><a href="#migrations">Migrations</a><ul class="toc-headings"><li><a href="#how-do-migrations-work">How do migrations work?</a></li><li><a href="#how-does-rove-work">How does Rove work?</a></li><li><a href="#rove-vs-liquibase">Rove vs Liquibase</a></li><li><a href="#sample-migration-file-from-rove">Sample Migration File from Rove</a></li></ul></li><li><a href="#changsets">Changsets</a><ul class="toc-headings"><li><a href="#when-do-migrations-apply">When do migrations apply?</a></li><li><a href="#add-a-changeset">Add a Changeset</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/govueapp/" class="nav-home"></a><div><h5>Docs</h5><a href="/govueapp/docs/en/tutorial/run-locally.html">Getting Started</a><a href="/govueapp/docs/en/wip.html">Guides</a><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json">API Reference</a></div><div><h5>Community</h5><a href="https://github.com/josephspurrier/govueapp/issues" target="_blank" rel="noreferrer noopener">GitHub Issues/Requests</a></div><div><h5>More</h5><a href="/govueapp/blog">Blog</a><a href="https://github.com/josephspurrier/govueapp">GitHub</a><a class="github-button" href="https://github.com/josephspurrier/govueapp" data-icon="octicon-star" data-count-href="/josephspurrier/govueapp/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 Joseph Spurrier</section></footer></div></body></html>
