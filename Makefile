@@ -20,6 +20,7 @@ include ${GOPATH}/.env
 
 # Set local environment variables.
 MYSQL_NAME=govueapp_db_1
+GITHUB_USERNAME=josephspurrier
 
 .PHONY: docker-build
 docker-build:
@@ -127,3 +128,9 @@ nuxt-upgrade:
 nuxt-version:
 	# Output the version of nuxt.
 	${GOPATH}/src/app/ui/node_modules/.bin/nuxt --version
+
+.PHONY: doc-publish
+nuxt-version:
+	# Push the docs to GitHub pages.
+	cd ${GOPATH}/docs/website && \
+	GIT_USER=${GITHUB_USERNAME} CURRENT_BRANCH=master USE_SSH=true npm run publish-gh-pages
