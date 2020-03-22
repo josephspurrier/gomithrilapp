@@ -129,8 +129,13 @@ nuxt-version:
 	# Output the version of nuxt.
 	${GOPATH}/src/app/ui/node_modules/.bin/nuxt --version
 
+.PHONY: doc-dep
+doc-dep:
+	# Install the doc dependencies.
+	cd ${GOPATH}/docs/website && npm install
+
 .PHONY: doc-publish
-nuxt-version:
+doc-publish:
 	# Push the docs to GitHub pages.
 	cd ${GOPATH}/docs/website && \
 	GIT_USER=${GITHUB_USERNAME} CURRENT_BRANCH=master USE_SSH=true npm run publish-gh-pages
