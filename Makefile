@@ -134,6 +134,11 @@ doc-dep:
 	# Install the doc dependencies.
 	cd ${GOPATH}/docs/website && npm install
 
+.PHONY: doc-dev
+doc-dev:
+	# Start the doc server.
+	cd ${GOPATH}/docs/website && npm start
+
 .PHONY: doc-publish
 doc-publish:
 	# Push the docs to GitHub pages.

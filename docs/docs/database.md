@@ -75,6 +75,8 @@ docker rm -f govueapp_db_1
 
 ## Migrations
 
+MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove), a tool very similiar to Liquibase. The migrations are run when API starts up - they are located [here](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go).
+
 Database migrations are a great way to manage incremental database changes. The migration state is stored in the same database and recorded in the **rovechangelog** table.
 
 The primary motivation behind [Rove](https://github.com/josephspurrier/rove) tool was to provide a simple and quick Go (instead of Java) based database migration tool that allows loading migrations from anywhere, including from inside your code so you can distribute single binary applications. You can write the migration and rollback SQL, then Rove will apply it for you properly.
@@ -130,7 +132,7 @@ INSERT INTO user_status (id, status, created_at, updated_at, deleted) VALUES
 
 You can read more about [Rove on GitHub](https://github.com/josephspurrier/rove).
 
-## Changsets
+## Changesets
 
 A changeset is one or more SQL queries that Rove will apply to the database. Each changeset should have the SQL queries to run during the migration and then rollback SQL queries.
 
@@ -217,7 +219,7 @@ if err != nil {
 
 ### Add a Changeset
 
-To add a new changset, open up the [src/app/api/migration/changeset.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go) file and add a new changeset to the bottom.
+To add a new changeset, open up the [src/app/api/migration/changeset.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go) file and add a new changeset to the bottom.
 
 Notice `--changeset josephspurrier:2` - each changeset must be unique so you should increment the number at the end by one when you add your changeset.
 

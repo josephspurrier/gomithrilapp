@@ -3,14 +3,13 @@
     "Getting Started": [
       "tutorial/run-locally",
       "tutorial/env-prep",
-      "tutorial/database",
-      "tutorial/front-end",
-      "tutorial/back-end",
       "tutorial/style-guide"
     ],
     "Guides": [
       "wip",
-      "database"
+      "database",
+      "front-end",
+      "back-end"
     ]
   }
 }
