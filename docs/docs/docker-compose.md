@@ -7,7 +7,57 @@ title: Docker Compose
 
 [Compose](https://docs.docker.com/compose/) is a tool that helps you easily run multi-container Docker applications. The configuration is defined using a YAML file and you have control over different aspects of the containers like mountpoints, networks, and environment variables.
 
-The configuration is defined in the [docker-compose.yml](https://github.com/josephspurrier/govueapp/blob/master/docker-compose.yml) file.
+You should ensure you have [Docker Compose installed](https://docs.docker.com/compose/install/). You probably already do if you have [Docker installed](https://www.docker.com/get-started).
+
+The commands below should be run in the root of the project directory. The command will use the **docker-compose.yml** file in the current directory if it's found.
+
+### Build the Containers
+
+Build the docker containers.
+
+```bash
+# Makefile
+make docker-build
+
+# Manual
+bash ${GOPATH}/bash/build-images.sh
+```
+
+### Start the Containers
+
+Create or start stopped docker containers in detached mode.
+
+```bash
+docker-compose up -d
+```
+
+### View Container Logs
+
+View the logs of all the docker containers. You can also add `-f` to the end to follow the logs.
+
+```bash
+docker-compose logs
+```
+
+### Stop the Containers
+
+Stop the docker containers but retain the data.
+
+```bash
+docker-compose down
+```
+
+### Remove the Containers
+
+Stop and delete the docker containers and all data.
+
+```bash
+docker-compose rm -f
+```
+
+## docker-compose.yml
+
+The configuration is defined in the [**docker-compose.yml**](https://github.com/josephspurrier/govueapp/blob/master/docker-compose.yml) file.
 
 ### Version
 

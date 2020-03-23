@@ -61,6 +61,10 @@ make ui-dev
 # Start the API in local dev mode after installing the dependencies.
 make api-dep
 make api-dev
+
+# Start the documentation service in local dev mode after install the dependencies.
+make doc-dep
+make doc-dev
 ```
 
 These are other database commands you can use:
