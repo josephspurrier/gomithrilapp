@@ -14,7 +14,7 @@ This is a sample notepad application that uses Vue on the front-end (UI) and Go 
 
 ## Quick Start Guide (QSG)
 
-To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The ingress container is a reverse proxy that allows you to use 1 URL to access 2 different docker containers by URL path.
+To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The ingress container is a reverse proxy that allows you to use a single URL to access multiple different docker containers depending on the URL.
 
 ```bash
 # Clone the repo.
@@ -45,4 +45,5 @@ Below are links to various section of the documentation.
 - [Database](https://josephspurrier.github.io/govueapp/docs/database)
 - [Front-End](https://josephspurrier.github.io/govueapp/docs/front-end)
 - [Back-End](https://josephspurrier.github.io/govueapp/docs/back-end)
+- [Docker Compose](https://josephspurrier.github.io/govueapp/docs/docker-compose)
 - [Documentation](https://josephspurrier.github.io/govueapp/docs/documentation)

@@ -10,6 +10,7 @@
       "database",
       "front-end",
       "back-end",
+      "docker-compose",
       "documentation"
     ]
   }
