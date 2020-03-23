@@ -45,3 +45,4 @@ Below are links to various section of the documentation.
 - [Database](https://josephspurrier.github.io/govueapp/docs/database)
 - [Front-End](https://josephspurrier.github.io/govueapp/docs/front-end)
 - [Back-End](https://josephspurrier.github.io/govueapp/docs/back-end)
+- [Documentation](https://josephspurrier.github.io/govueapp/docs/documentation)
