@@ -29,6 +29,9 @@ const siteConfig = {
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
+  // Google Analytics tracking code
+  gaTrackingId: 'UA-161449546-1',
+
   // Used for publishing and more
   projectName: 'govueapp',
   organizationName: 'josephspurrier',
