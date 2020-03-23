@@ -36,7 +36,7 @@ npm install
 
 ### Run the Docusaurus Live Server
 
-Run the server that displays the documentation locally. Changes are made without having to reload, but you must kill and re-run the commands when you make changes to the **siteConfig.js** or **sidebars.js** files.
+Run the server that displays the documentation locally. Changes are made without having to reload, but you must kill and re-run the commands when you make changes to the **sidebars.js** file.
 
 ```bash
 # Makefile

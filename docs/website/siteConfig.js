@@ -41,8 +41,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {doc: 'tutorial/run-locally', label: 'Getting Started'},
-    {doc: 'wip', label: 'Docs'},
+    {doc: 'tutorial/run-locally', label: 'Docs'},
     {blog: true, label: 'Blog'},
     {href: 'https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json', label: 'API'},
     {page: 'help', label: 'Help'},

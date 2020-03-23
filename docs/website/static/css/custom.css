@@ -7,12 +7,20 @@
  
 /* your custom css */
 
+/* Make bold stronger. */
 strong, b {
     font-weight: 700;
 }
 
+/* Emphasize the code between ticks more. */
 code {
     background-color: lightgray;
+}
+
+/* Bold the menu item when on the page. */
+.navigationSlider .slidingNav ul li.siteNavItemActive > a,
+.navigationSlider .slidingNav ul li.siteNavGroupActive > a {
+    font-weight: 700;
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
