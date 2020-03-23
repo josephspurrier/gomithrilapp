@@ -4,7 +4,7 @@
         <title>govueapp Blog</title>
         <link>https://josephspurrier.github.io/govueapp/blog</link>
         <description>The best place to stay up-to-date with the latest govueapp news and events.</description>
-        <lastBuildDate>Sun, 15 Mar 2020 06:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 23 Mar 2020 06:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,20 @@
             <link>https://josephspurrier.github.io/govueapp/blog</link>
         </image>
         <copyright>Copyright © 2020 Joseph Spurrier</copyright>
+        <item>
+            <title><![CDATA[Guides for Docker Compose and Documentation]]></title>
+            <link>https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html</link>
+            <guid>https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html</guid>
+            <pubDate>Mon, 23 Mar 2020 06:00:00 GMT</pubDate>
+            <description><![CDATA[<p>I added a few new pages to the Guides section:</p>
+<ul>
+<li><a href="https://josephspurrier.github.io/govueapp/docs/docker-compose">Docker Compose</a></li>
+<li><a href="https://josephspurrier.github.io/govueapp/docs/documentation">Documentation</a></li>
+</ul>
+<p>The Docker Compose guide goes over how to use the <code>docker-compose</code> commands and explains the configuration in the <code>docker-compose.yml</code> file.</p>
+<p>On the documentation front, it feels like inception - I'm using documentation to write documentation around how to generate documentation!</p>
+]]></description>
+        </item>
         <item>
             <title><![CDATA[Docs through Docusaurus]]></title>
             <link>https://josephspurrier.github.io/govueapp/blog/2020/03/15/docusaurus.html</link>

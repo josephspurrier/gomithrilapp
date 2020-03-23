@@ -2,12 +2,31 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://josephspurrier.github.io/govueapp/blog</id>
     <title>govueapp Blog</title>
-    <updated>2020-03-15T06:00:00.000Z</updated>
+    <updated>2020-03-23T06:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://josephspurrier.github.io/govueapp/blog"/>
     <subtitle>The best place to stay up-to-date with the latest govueapp news and events.</subtitle>
     <logo>https://josephspurrier.github.io/govueapp/undefined</logo>
     <rights>Copyright © 2020 Joseph Spurrier</rights>
+    <entry>
+        <title type="html"><![CDATA[Guides for Docker Compose and Documentation]]></title>
+        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html</id>
+        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html"/>
+        <updated>2020-03-23T06:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>I added a few new pages to the Guides section:</p>
+<ul>
+<li><a href="https://josephspurrier.github.io/govueapp/docs/docker-compose">Docker Compose</a></li>
+<li><a href="https://josephspurrier.github.io/govueapp/docs/documentation">Documentation</a></li>
+</ul>
+<p>The Docker Compose guide goes over how to use the <code>docker-compose</code> commands and explains the configuration in the <code>docker-compose.yml</code> file.</p>
+<p>On the documentation front, it feels like inception - I'm using documentation to write documentation around how to generate documentation!</p>
+]]></summary>
+        <author>
+            <name>Joseph Spurrier</name>
+            <email/>
+            <uri>http://github.com/josephspurrier</uri>
+        </author>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Docs through Docusaurus]]></title>
         <id>https://josephspurrier.github.io/govueapp/blog/2020/03/15/docusaurus.html</id>
