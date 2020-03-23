@@ -42,5 +42,6 @@ docker-compose down
 Below are links to various section of the documentation.
 
 - [Environment Preparation](https://josephspurrier.github.io/govueapp/docs/tutorial/env-prep)
-- [Front-End](http://localhost:3000/govueapp/docs/front-end)
-- [Back-End](http://localhost:3000/govueapp/docs/back-end)
+- [Database](https://josephspurrier.github.io/govueapp/docs/database)
+- [Front-End](https://josephspurrier.github.io/govueapp/docs/front-end)
+- [Back-End](https://josephspurrier.github.io/govueapp/docs/back-end)
