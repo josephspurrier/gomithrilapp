@@ -9,7 +9,7 @@ Once you have cloned the repo, you will need the following tools for local devel
 
 You should use Go 1.11 or newer. We recommend [gvm](https://github.com/moovweb/gvm) for installing and managing your versions of Go.
 
-All of the commands below assume you have your GOPATH set to the root of this project directory. This is by design because we found (after many projects) it is much easier for you to clone this repo and make changes without having to rewrite imports if they are all contained within the project.
+All of the commands below assume you have your `GOPATH` set to the root of the project directory. This is by design because we found (after many projects) it is much easier for you to clone the repo and make changes without having to rewrite imports if they are all contained within the project.
 
 ### Node and npm
 
