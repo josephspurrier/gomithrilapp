@@ -36,25 +36,6 @@ gvt fetch github.com/user/project
 gvt restore
 ```
 
-## Swagger for the API
+## Request Validation
 
-This projects uses [Swagger v2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) to document the API. The entire Swagger spec is generated from comments (annotations) in and by analyzing structs and variables.
-
-```bash
-# Download the Swagger generation tool.
-make swagger-get
-
-# You can now remove all the folders from the 'src' directory except the
-# 'app' folder.
-# You should now add the {PROJECTROOT}/bin folder to your $PATH to make swagger
-# available from your terminal.
-
-# Generate the swagger spec.
-make swagger-gen
-
-# Your browser will open to:
-# http://petstore.swagger.io/?url=http://localhost:{RANDOMPORT}/swagger.json
-
-# The output file will be here:
-# src/app/api/static/swagger/swagger.json
-```
+WIP.

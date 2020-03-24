@@ -45,5 +45,6 @@ Below are links to various section of the documentation.
 - [Database](https://josephspurrier.github.io/govueapp/docs/database)
 - [Front-End](https://josephspurrier.github.io/govueapp/docs/front-end)
 - [Back-End](https://josephspurrier.github.io/govueapp/docs/back-end)
+- [Swagger](https://josephspurrier.github.io/govueapp/docs/swagger)
 - [Docker Compose](https://josephspurrier.github.io/govueapp/docs/docker-compose)
 - [Documentation](https://josephspurrier.github.io/govueapp/docs/documentation)
