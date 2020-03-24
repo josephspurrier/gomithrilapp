@@ -3,6 +3,8 @@ id: run-locally
 title: Run Locally
 ---
 
+## Quick Start with Docker Compose
+
 To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The ingress container is a reverse proxy that allows you to use 1 URL to access 2 different docker containers by URL path.
 
 ```bash
