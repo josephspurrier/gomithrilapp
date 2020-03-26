@@ -196,23 +196,208 @@ You'll notice many of the packages in the **pkg** folder are wrappers around thi
 - you can easily swap out the third-party package
 - you can extended functionality of the third-party package
 
-Even with these advantages, you may be [overengineering](https://solidstudio.io/blog/origin-of-overengineering.html) your solution. You may not need abstractions in all cases - especially if the public interfaces are simple or unchanging throughout the lifecycle of the project.
+Even with these advantages, you may be [overengineering](https://solidstudio.io/blog/origin-of-overengineering.html) your solution. You may not need abstractions in all cases - especially if the public interfaces are simple or unchanging throughout the life of the project.
 
 ## Interfaces
 
-We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the **api** folder in the [interface.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/interface.go) file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). These are not allowed in Go and will throw an error at build time.
+We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the **api** folder in the [interface.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/interface.go) file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). Circular dependencies are not allowed in Go and will throw an error at build time.
 
-## Routing
+Here are a few of the interfaces:
 
-Go has a [built-in router](https://golang.org/pkg/net/http/#ServeMux), but it doesn't support wildcard parameters in the URL path. For this project, we selected [Way](https://github.com/matryer/way) because it's "deliberately simple" and "extremely fast".
+```go
+// IRecord provides table information.
+type IRecord interface {
+	Table() string
+	PrimaryKey() string
+}
+
+// IResponse provides outputs for data.
+type IResponse interface {
+	JSON(w http.ResponseWriter, body interface{}) (int, error)
+	Created(w http.ResponseWriter, recordID string) (int, error)
+	OK(w http.ResponseWriter, message string) (int, error)
+}
+
+// IToken provides outputs for the JWT.
+type IToken interface {
+	Generate(userID string) (string, error)
+	Verify(s string) (string, error)
+}
+
+// IContext provides handlers for type request context.
+type IContext interface {
+	SetUserID(r *http.Request, val string)
+	UserID(r *http.Request) (string, bool)
+}
+```
+
+To help distinguish between interfaces, we've add a capital `I` to the beginning of each one. This is not a [standard Go convention](https://golang.org/doc/effective_go.html#interface-names), but we like it because it's easy to see if we've used an interface or not.
 
 ## Middleware
 
+
+
+## Routing
+
+Go has a [built-in router](https://golang.org/pkg/net/http/#ServeMux), but it doesn't support path parameters. For this project, we selected [Way](https://github.com/matryer/way) because it's "deliberately simple" and "extremely fast".
+
+In addtion to using a third-party router, we are also using a custom `http.Handler` inspired by [Caddy](https://github.com/caddyserver/caddy/wiki/Writing-a-Plugin:-HTTP-Middleware#writing-a-handler). The [h](https://github.com/josephspurrier/h) project is an example of how to extend the HTTP handler. This convention forces you to return both the HTTP status and an optional error so it's easily to see what the response will be for each request.
+
+The router logic is configured in the [router.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/router.go) file. You can see the type of response is based on the status code. Any status code below 400 leaves it up to the calling function to output a response. Any status code 400 and above will return an error and then any status code of 500 and above will log an error since it's probably a bug or system error. This greatly simplifies logic that is otherwise scattered throughout codebases.
+
+```go
+// Set the handling of all responses.
+mux.CustomServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, err error) {
+    // Handle only errors.
+    if status >= 400 {
+        resp := new(model.GenericResponse)
+        resp.Body.Status = http.StatusText(status)
+        if err != nil {
+            resp.Body.Message = err.Error()
+        }
+
+        // Write the content.
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(status)
+        err := json.NewEncoder(w).Encode(resp.Body)
+        if err != nil {
+            w.Write([]byte(`{"status":"Internal Server Error",` +
+                `"message":"problem encoding JSON"}`))
+            return
+        }
+    }
+
+    // Display server errors.
+    if status >= 500 {
+        if err != nil {
+            l.Printf("%v", err)
+        }
+    }
+}
+```
+
+
+### Defining the Route
+
+You'll find the routes at the top of every file in the [endpoints](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/endpoint) folder. Below is an example of the routes in the [note.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go) endpoint file.
+
+```go
+// NoteEndpoint .
+type NoteEndpoint struct {
+	Core
+}
+
+// SetupNotepad .
+func SetupNotepad(c Core) {
+	p := new(NoteEndpoint)
+	p.Core = c
+
+	p.Router.Post("/api/v1/note", p.Create)
+	p.Router.Get("/api/v1/note", p.Index)
+	p.Router.Get("/api/v1/note/:note_id", p.Show)
+	p.Router.Put("/api/v1/note/:note_id", p.Update)
+	p.Router.Delete("/api/v1/note/:note_id", p.Destroy)
+}
+```
+
+### Path Parameters
+
+The router supports prefixing path parameter with a colon and then you can retrieve them like using the `Bind` package. You need to make sure the `json` tag for the field matches the variable name. It must also have the `in: path` annotation for the `Bind` package to extract it.
+
+```go
+// swagger:parameters NoteShow
+type request struct {
+    // in: path
+    NoteID string `json:"note_id" validate:"required"`
+}
+
+// Request validation.
+req := new(request)
+if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
+    return http.StatusBadRequest, err
+}
+```
+
+You can alternatively return the path parameter like this:
+
+```go
+noteID := p.Router.Param(r, "note_id")
+```
+
 ## Endpoints
 
-### Request Validation
+Each of the endpoint files contain the functions that process requests and return responses. These are the API endpoints. For these examples, we'll reference the [note.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go) file.
+
+### Core
+
+Each endpoint has an anonymous `Core` struct inside of it. This provides all the methods with the same core functionality and prevents naming collisions for methods that are in the same package.
+
+```go
+// NoteEndpoint .
+type NoteEndpoint struct {
+	Core
+}
+```
+
+### Setup
+
+You should also have a setup function at the top of the endpoint file as well. Each of these setup functions should be called by the [route.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/route.go) file that is in the **config** directory. The setup function should always take in `endpoint.Core`, assign it, and then register each fo the routes on the `Router`. The router is a pointer so there is nothing the needs to be returned.
+
+```go
+// SetupNotepad .
+func SetupNotepad(c Core) {
+	p := new(NoteEndpoint)
+	p.Core = c
+
+	p.Router.Post("/api/v1/note", p.Create)
+	p.Router.Get("/api/v1/note", p.Index)
+	p.Router.Get("/api/v1/note/:note_id", p.Show)
+	p.Router.Put("/api/v1/note/:note_id", p.Update)
+	p.Router.Delete("/api/v1/note/:note_id", p.Destroy)
+}
+```
+
+### Handler
+
+Each handler method should take in the standard `http.ResponseWriter` and `*http.Request` and then return the status code and an optional error.
+
+```go
+func (p *NoteEndpoint) Create(w http.ResponseWriter, r *http.Request) (int, error) {
+	// swagger:parameters NoteCreate
+	type request struct {
+		// in: body
+		Body struct {
+			Message string `json:"message"`
+		}
+	}
+
+	// Request validation.
+	req := new(request)
+	if err := p.Bind.UnmarshalAndValidate(req, r); err != nil {
+		return http.StatusBadRequest, err
+	}
+
+	// Get the user ID.
+	userID, ok := p.Context.UserID(r)
+	if !ok {
+		return http.StatusInternalServerError, errors.New("invalid user")
+	}
+
+	// Create the note.
+	ID, err := p.Store.Note.Create(userID, req.Body.Message)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	return p.Response.Created(w, ID)
+}
+```
+
+## Requests
 
 ## Models
+
+## Responses
 
 ## Testing Methodologies
 
