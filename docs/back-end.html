@@ -193,16 +193,165 @@ store/user_test.go - tests the user code
 <li>you can easily swap out the third-party package</li>
 <li>you can extended functionality of the third-party package</li>
 </ul>
-<p>Even with these advantages, you may be <a href="https://solidstudio.io/blog/origin-of-overengineering.html">overengineering</a> your solution. You may not need abstractions in all cases - especially if the public interfaces are simple or unchanging throughout the lifecycle of the project.</p>
+<p>Even with these advantages, you may be <a href="https://solidstudio.io/blog/origin-of-overengineering.html">overengineering</a> your solution. You may not need abstractions in all cases - especially if the public interfaces are simple or unchanging throughout the life of the project.</p>
 <h2><a class="anchor" aria-hidden="true" id="interfaces"></a><a href="#interfaces" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Interfaces</h2>
-<p>We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the <strong>api</strong> folder in the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/interface.go">interface.go</a> file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). These are not allowed in Go and will throw an error at build time.</p>
-<h2><a class="anchor" aria-hidden="true" id="routing"></a><a href="#routing" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Routing</h2>
-<p>Go has a <a href="https://golang.org/pkg/net/http/#ServeMux">built-in router</a>, but it doesn't support wildcard parameters in the URL path. For this project, we selected <a href="https://github.com/matryer/way">Way</a> because it's &quot;deliberately simple&quot; and &quot;extremely fast&quot;.</p>
+<p>We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the <strong>api</strong> folder in the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/interface.go">interface.go</a> file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). Circular dependencies are not allowed in Go and will throw an error at build time.</p>
+<p>Here are a few of the interfaces:</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// IRecord provides table information.</span>
+<span class="hljs-keyword">type</span> IRecord <span class="hljs-keyword">interface</span> {
+    Table() <span class="hljs-keyword">string</span>
+    PrimaryKey() <span class="hljs-keyword">string</span>
+}
+
+<span class="hljs-comment">// IResponse provides outputs for data.</span>
+<span class="hljs-keyword">type</span> IResponse <span class="hljs-keyword">interface</span> {
+    JSON(w http.ResponseWriter, body <span class="hljs-keyword">interface</span>{}) (<span class="hljs-keyword">int</span>, error)
+    Created(w http.ResponseWriter, recordID <span class="hljs-keyword">string</span>) (<span class="hljs-keyword">int</span>, error)
+    OK(w http.ResponseWriter, message <span class="hljs-keyword">string</span>) (<span class="hljs-keyword">int</span>, error)
+}
+
+<span class="hljs-comment">// IToken provides outputs for the JWT.</span>
+<span class="hljs-keyword">type</span> IToken <span class="hljs-keyword">interface</span> {
+    Generate(userID <span class="hljs-keyword">string</span>) (<span class="hljs-keyword">string</span>, error)
+    Verify(s <span class="hljs-keyword">string</span>) (<span class="hljs-keyword">string</span>, error)
+}
+
+<span class="hljs-comment">// IContext provides handlers for type request context.</span>
+<span class="hljs-keyword">type</span> IContext <span class="hljs-keyword">interface</span> {
+    SetUserID(r *http.Request, val <span class="hljs-keyword">string</span>)
+    UserID(r *http.Request) (<span class="hljs-keyword">string</span>, <span class="hljs-keyword">bool</span>)
+}
+</code></pre>
+<p>To help distinguish between interfaces, we've add a capital <code>I</code> to the beginning of each one. This is not a <a href="https://golang.org/doc/effective_go.html#interface-names">standard Go convention</a>, but we like it because it's easy to see if we've used an interface or not.</p>
 <h2><a class="anchor" aria-hidden="true" id="middleware-1"></a><a href="#middleware-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Middleware</h2>
+<h2><a class="anchor" aria-hidden="true" id="routing"></a><a href="#routing" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Routing</h2>
+<p>Go has a <a href="https://golang.org/pkg/net/http/#ServeMux">built-in router</a>, but it doesn't support path parameters. For this project, we selected <a href="https://github.com/matryer/way">Way</a> because it's &quot;deliberately simple&quot; and &quot;extremely fast&quot;.</p>
+<p>In addtion to using a third-party router, we are also using a custom <code>http.Handler</code> inspired by <a href="https://github.com/caddyserver/caddy/wiki/Writing-a-Plugin:-HTTP-Middleware#writing-a-handler">Caddy</a>. The <a href="https://github.com/josephspurrier/h">h</a> project is an example of how to extend the HTTP handler. This convention forces you to return both the HTTP status and an optional error so it's easily to see what the response will be for each request.</p>
+<p>The router logic is configured in the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/router.go">router.go</a> file. You can see the type of response is based on the status code. Any status code below 400 leaves it up to the calling function to output a response. Any status code 400 and above will return an error and then any status code of 500 and above will log an error since it's probably a bug or system error. This greatly simplifies logic that is otherwise scattered throughout codebases.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// Set the handling of all responses.</span>
+mux.CustomServeHTTP = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request, status <span class="hljs-keyword">int</span>, err error)</span></span> {
+    <span class="hljs-comment">// Handle only errors.</span>
+    <span class="hljs-keyword">if</span> status &gt;= <span class="hljs-number">400</span> {
+        resp := <span class="hljs-built_in">new</span>(model.GenericResponse)
+        resp.Body.Status = http.StatusText(status)
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            resp.Body.Message = err.Error()
+        }
+
+        <span class="hljs-comment">// Write the content.</span>
+        w.Header().Set(<span class="hljs-string">"Content-Type"</span>, <span class="hljs-string">"application/json"</span>)
+        w.WriteHeader(status)
+        err := json.NewEncoder(w).Encode(resp.Body)
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            w.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">`{"status":"Internal Server Error",`</span> +
+                <span class="hljs-string">`"message":"problem encoding JSON"}`</span>))
+            <span class="hljs-keyword">return</span>
+        }
+    }
+
+    <span class="hljs-comment">// Display server errors.</span>
+    <span class="hljs-keyword">if</span> status &gt;= <span class="hljs-number">500</span> {
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            l.Printf(<span class="hljs-string">"%v"</span>, err)
+        }
+    }
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="defining-the-route"></a><a href="#defining-the-route" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Defining the Route</h3>
+<p>You'll find the routes at the top of every file in the <a href="https://github.com/josephspurrier/govueapp/tree/master/src/app/api/endpoint">endpoints</a> folder. Below is an example of the routes in the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go">note.go</a> endpoint file.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// NoteEndpoint .</span>
+<span class="hljs-keyword">type</span> NoteEndpoint <span class="hljs-keyword">struct</span> {
+    Core
+}
+
+<span class="hljs-comment">// SetupNotepad .</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">SetupNotepad</span><span class="hljs-params">(c Core)</span></span> {
+    p := <span class="hljs-built_in">new</span>(NoteEndpoint)
+    p.Core = c
+
+    p.Router.Post(<span class="hljs-string">"/api/v1/note"</span>, p.Create)
+    p.Router.Get(<span class="hljs-string">"/api/v1/note"</span>, p.Index)
+    p.Router.Get(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Show)
+    p.Router.Put(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Update)
+    p.Router.Delete(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Destroy)
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="path-parameters"></a><a href="#path-parameters" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Path Parameters</h3>
+<p>The router supports prefixing path parameter with a colon and then you can retrieve them like using the <code>Bind</code> package. You need to make sure the <code>json</code> tag for the field matches the variable name. It must also have the <code>in: path</code> annotation for the <code>Bind</code> package to extract it.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// swagger:parameters NoteShow</span>
+<span class="hljs-keyword">type</span> request <span class="hljs-keyword">struct</span> {
+    <span class="hljs-comment">// in: path</span>
+    NoteID <span class="hljs-keyword">string</span> <span class="hljs-string">`json:"note_id" validate:"required"`</span>
+}
+
+<span class="hljs-comment">// Request validation.</span>
+req := <span class="hljs-built_in">new</span>(request)
+<span class="hljs-keyword">if</span> err := p.Bind.UnmarshalAndValidate(req, r); err != <span class="hljs-literal">nil</span> {
+    <span class="hljs-keyword">return</span> http.StatusBadRequest, err
+}
+</code></pre>
+<p>You can alternatively return the path parameter like this:</p>
+<pre><code class="hljs css language-go">noteID := p.Router.Param(r, <span class="hljs-string">"note_id"</span>)
+</code></pre>
 <h2><a class="anchor" aria-hidden="true" id="endpoints"></a><a href="#endpoints" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Endpoints</h2>
-<h3><a class="anchor" aria-hidden="true" id="request-validation"></a><a href="#request-validation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Request Validation</h3>
+<p>Each of the endpoint files contain the functions that process requests and return responses. These are the API endpoints. For these examples, we'll reference the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go">note.go</a> file.</p>
+<h3><a class="anchor" aria-hidden="true" id="core"></a><a href="#core" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Core</h3>
+<p>Each endpoint has an anonymous <code>Core</code> struct inside of it. This provides all the methods with the same core functionality and prevents naming collisions for methods that are in the same package.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// NoteEndpoint .</span>
+<span class="hljs-keyword">type</span> NoteEndpoint <span class="hljs-keyword">struct</span> {
+    Core
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="setup"></a><a href="#setup" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup</h3>
+<p>You should also have a setup function at the top of the endpoint file as well. Each of these setup functions should be called by the <a href="https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/route.go">route.go</a> file that is in the <strong>config</strong> directory. The setup function should always take in <code>endpoint.Core</code>, assign it, and then register each fo the routes on the <code>Router</code>. The router is a pointer so there is nothing the needs to be returned.</p>
+<pre><code class="hljs css language-go"><span class="hljs-comment">// SetupNotepad .</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">SetupNotepad</span><span class="hljs-params">(c Core)</span></span> {
+    p := <span class="hljs-built_in">new</span>(NoteEndpoint)
+    p.Core = c
+
+    p.Router.Post(<span class="hljs-string">"/api/v1/note"</span>, p.Create)
+    p.Router.Get(<span class="hljs-string">"/api/v1/note"</span>, p.Index)
+    p.Router.Get(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Show)
+    p.Router.Put(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Update)
+    p.Router.Delete(<span class="hljs-string">"/api/v1/note/:note_id"</span>, p.Destroy)
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="handler"></a><a href="#handler" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Handler</h3>
+<p>Each handler method should take in the standard <code>http.ResponseWriter</code> and <code>*http.Request</code> and then return the status code and an optional error.</p>
+<pre><code class="hljs css language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *NoteEndpoint)</span> <span class="hljs-title">Create</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, error)</span></span> {
+    <span class="hljs-comment">// swagger:parameters NoteCreate</span>
+    <span class="hljs-keyword">type</span> request <span class="hljs-keyword">struct</span> {
+        <span class="hljs-comment">// in: body</span>
+        Body <span class="hljs-keyword">struct</span> {
+            Message <span class="hljs-keyword">string</span> <span class="hljs-string">`json:"message"`</span>
+        }
+    }
+
+    <span class="hljs-comment">// Request validation.</span>
+    req := <span class="hljs-built_in">new</span>(request)
+    <span class="hljs-keyword">if</span> err := p.Bind.UnmarshalAndValidate(req, r); err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> http.StatusBadRequest, err
+    }
+
+    <span class="hljs-comment">// Get the user ID.</span>
+    userID, ok := p.Context.UserID(r)
+    <span class="hljs-keyword">if</span> !ok {
+        <span class="hljs-keyword">return</span> http.StatusInternalServerError, errors.New(<span class="hljs-string">"invalid user"</span>)
+    }
+
+    <span class="hljs-comment">// Create the note.</span>
+    ID, err := p.Store.Note.Create(userID, req.Body.Message)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> http.StatusInternalServerError, err
+    }
+
+    <span class="hljs-keyword">return</span> p.Response.Created(w, ID)
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="requests"></a><a href="#requests" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Requests</h2>
 <h2><a class="anchor" aria-hidden="true" id="models"></a><a href="#models" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Models</h2>
+<h2><a class="anchor" aria-hidden="true" id="responses"></a><a href="#responses" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Responses</h2>
 <h2><a class="anchor" aria-hidden="true" id="testing-methodologies"></a><a href="#testing-methodologies" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Testing Methodologies</h2>
 <p>Don't want to much testing. Don't want to go for code coverage alone.</p>
 <p>WIP.</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/govueapp/docs/front-end"><span class="arrow-prev">← </span><span>Front-End</span></a><a class="docs-next button" href="/govueapp/docs/swagger"><span>Swagger</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#go">Go</a></li><li><a href="#dependency-management">Dependency Management</a><ul class="toc-headings"><li><a href="#download-gvt">Download gvt</a></li><li><a href="#fetch-dependencies">Fetch Dependencies</a></li><li><a href="#add-a-dependency">Add a Dependency</a></li></ul></li><li><a href="#folder-structure">Folder Structure</a><ul class="toc-headings"><li><a href="#cmd">cmd</a></li><li><a href="#config">config</a></li><li><a href="#endpoint">endpoint</a></li><li><a href="#internal">internal</a></li><li><a href="#middleware">middleware</a></li><li><a href="#model">model</a></li><li><a href="#pkg">pkg</a></li><li><a href="#static">static</a></li><li><a href="#store">store</a></li></ul></li><li><a href="#abstraction">Abstraction</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#routing">Routing</a></li><li><a href="#middleware-1">Middleware</a></li><li><a href="#endpoints">Endpoints</a><ul class="toc-headings"><li><a href="#request-validation">Request Validation</a></li></ul></li><li><a href="#models">Models</a></li><li><a href="#testing-methodologies">Testing Methodologies</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/govueapp/" class="nav-home"></a><div><h5>Docs</h5><a href="/govueapp/docs/en/tutorial/run-locally.html">Getting Started</a><a href="/govueapp/docs/en/wip.html">Guides</a><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json">API Reference</a></div><div><h5>Community</h5><a href="https://github.com/josephspurrier/govueapp/issues" target="_blank" rel="noreferrer noopener">GitHub Issues/Requests</a></div><div><h5>More</h5><a href="/govueapp/blog">Blog</a><a href="https://github.com/josephspurrier/govueapp">GitHub</a><a class="github-button" href="https://github.com/josephspurrier/govueapp" data-icon="octicon-star" data-count-href="/josephspurrier/govueapp/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 Joseph Spurrier</section></footer></div></body></html>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/govueapp/docs/front-end"><span class="arrow-prev">← </span><span>Front-End</span></a><a class="docs-next button" href="/govueapp/docs/swagger"><span>Swagger</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#go">Go</a></li><li><a href="#dependency-management">Dependency Management</a><ul class="toc-headings"><li><a href="#download-gvt">Download gvt</a></li><li><a href="#fetch-dependencies">Fetch Dependencies</a></li><li><a href="#add-a-dependency">Add a Dependency</a></li></ul></li><li><a href="#folder-structure">Folder Structure</a><ul class="toc-headings"><li><a href="#cmd">cmd</a></li><li><a href="#config">config</a></li><li><a href="#endpoint">endpoint</a></li><li><a href="#internal">internal</a></li><li><a href="#middleware">middleware</a></li><li><a href="#model">model</a></li><li><a href="#pkg">pkg</a></li><li><a href="#static">static</a></li><li><a href="#store">store</a></li></ul></li><li><a href="#abstraction">Abstraction</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#middleware-1">Middleware</a></li><li><a href="#routing">Routing</a><ul class="toc-headings"><li><a href="#defining-the-route">Defining the Route</a></li><li><a href="#path-parameters">Path Parameters</a></li></ul></li><li><a href="#endpoints">Endpoints</a><ul class="toc-headings"><li><a href="#core">Core</a></li><li><a href="#setup">Setup</a></li><li><a href="#handler">Handler</a></li></ul></li><li><a href="#requests">Requests</a></li><li><a href="#models">Models</a></li><li><a href="#responses">Responses</a></li><li><a href="#testing-methodologies">Testing Methodologies</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/govueapp/" class="nav-home"></a><div><h5>Docs</h5><a href="/govueapp/docs/en/tutorial/run-locally.html">Getting Started</a><a href="/govueapp/docs/en/wip.html">Guides</a><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json">API Reference</a></div><div><h5>Community</h5><a href="https://github.com/josephspurrier/govueapp/issues" target="_blank" rel="noreferrer noopener">GitHub Issues/Requests</a></div><div><h5>More</h5><a href="/govueapp/blog">Blog</a><a href="https://github.com/josephspurrier/govueapp">GitHub</a><a class="github-button" href="https://github.com/josephspurrier/govueapp" data-icon="octicon-star" data-count-href="/josephspurrier/govueapp/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 Joseph Spurrier</section></footer></div></body></html>
