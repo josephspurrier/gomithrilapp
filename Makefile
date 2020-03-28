@@ -51,7 +51,7 @@ api-dep:
 .PHONY: api-dev
 api-dev:
 	# Start the API.	
-	go run ${GOPATH}/src/app/api/cmd/api/main.go
+	MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} go run ${GOPATH}/src/app/api/cmd/api/main.go
 
 .PHONY: api-test
 api-test:
