@@ -328,6 +328,20 @@ noteID := p.Router.Param(r, "note_id")
 
 Each of the endpoint files contain the functions that process requests and return responses. These are the API endpoints. For these examples, we'll reference the [note.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go) file.
 
+### Imports
+
+Notice there are only a few imports - the majority of the functionality we are using in the endpoint code is from the `endpoint.Core`. This makes it easier for us to write tests for our endpoints because we can control the dependencies that are injected into the functions.
+
+```go
+import (
+	"errors"
+	"net/http"
+
+	"app/api/model"
+	"app/api/pkg/structcopy"
+)
+```
+
 ### Core
 
 Each endpoint has an anonymous `Core` struct inside of it. This provides all the methods with the same core functionality and prevents naming collisions for methods that are in the same package.
