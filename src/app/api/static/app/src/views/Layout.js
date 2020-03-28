@@ -1,13 +1,14 @@
-// src/views/Layout.js
-var m = require("mithril")
+var m = require('mithril')
 
-module.exports = {
-    view: function(vnode) {
-        return m("main.layout", [
-            m("nav.menu", [
-                m(m.route.Link, {href: "/list"}, "Users")
-            ]),
-            m("section", vnode.children)
-        ])
-    }
+var View = {
+  view: function(vnode) {
+    return m('main.layout', [
+      m('nav.menu', [
+        m(m.route.Link, {href: '/list',}, 'Back to Users')
+      ]),
+      m('section', vnode.children)
+    ])
+  }
 }
+
+module.exports = View
