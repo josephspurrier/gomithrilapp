@@ -74,7 +74,6 @@ var Page = {
                             note.message = e.target.value;
                           }}
                           onkeyup={(e) => {
-                            //note.message = e.target.value;
                             console.log("keypress", e.target.value);
                             Note.update(note.id, e.target.value)
                               .then(() => {
