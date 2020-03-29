@@ -24,14 +24,13 @@ function onsubmit(e) {
 
         Cookie.set("auth", auth);
 
+        Submit.finish();
         m.route.set("/list");
       })
       .catch((err) => {
+        Submit.finish();
         console.log(err);
         alert(err.response.message);
-      })
-      .finally(function () {
-        Submit.finish();
       });
   });
 }

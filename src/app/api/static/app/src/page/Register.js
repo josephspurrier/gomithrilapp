@@ -15,13 +15,12 @@ function onsubmit(e) {
     User.register()
       .then(() => {
         User.clear();
+        Submit.finish();
         m.route.set("/login");
       })
       .catch((err) => {
-        alert(err.response.message);
-      })
-      .finally(function () {
         Submit.finish();
+        alert(err.response.message);
       });
   });
 }
