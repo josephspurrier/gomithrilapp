@@ -2,6 +2,7 @@ import m from "mithril";
 import Submit from "../module/Submit";
 import Sleep from "../module/Sleep";
 import User from "../store/User";
+import Cookie from "js-cookie";
 
 var data = {
   title: "Login",
@@ -13,11 +14,20 @@ function onsubmit(e) {
 
   Sleep(500).then(() => {
     User.login()
-      .then(() => {
+      .then((data) => {
         User.clear();
+
+        const auth = {
+          accessToken: data.token,
+          loggedIn: true,
+        };
+
+        Cookie.set("auth", auth);
+
         m.route.set("/list");
       })
       .catch((err) => {
+        console.log(err);
         alert(err.response.message);
       })
       .finally(function () {

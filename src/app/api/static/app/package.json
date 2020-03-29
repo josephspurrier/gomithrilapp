@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "bulma": "^0.8.1",
+    "js-cookie": "^2.2.1",
     "mithril": "^2.0.4"
   },
   "devDependencies": {

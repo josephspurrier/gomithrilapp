@@ -1,4 +1,12 @@
 import m from "mithril";
+import Cookie from "js-cookie";
+
+function logout() {
+  Cookie.remove("auth");
+  //this.$store.commit("setAuth", null);
+  //this.$router.push("/login");
+  m.route.set("/");
+}
 
 var View = {
   view: () => (
@@ -32,7 +40,12 @@ var View = {
                 About
               </m.route.Link>
               <hr class="navbar-divider" />
-              <a v-if="isAuthenticated" class="dropdown-item">
+              <a
+                class="dropdown-item"
+                onclick={() => {
+                  logout();
+                }}
+              >
                 Logout
               </a>
               <div class="navbar-item">v1.0.0</div>
