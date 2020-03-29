@@ -1,18 +1,20 @@
-module.exports = {
+var Submit = {
   disabled: false,
-  submitText: 'Submitting...',
-  start: function(event) {
-    event.preventDefault()
-    this.disabled = true
+  submitText: "Submitting...",
+  start: (event) => {
+    event.preventDefault();
+    this.disabled = true;
   },
-  finish: function() {
-    this.disabled = false
+  finish: () => {
+    this.disabled = false;
   },
-  text: function(s) {
+  text: (s) => {
     if (!this.disabled) {
-      return s
+      return s;
     } else {
-      return this.submitText
+      return this.submitText;
     }
-  }
-}
+  },
+};
+
+export default Submit;

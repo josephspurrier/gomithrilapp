@@ -1,23 +1,25 @@
-var m = require('mithril')
+import m from "mithril";
 
 var data = {
-  title: 'About'
-}
+  title: "About",
+};
 
-module.exports = {
+var Page = {
   view: () =>
-<main>
-  <div>
-    <section class="section">
-      <div class="container">
-        <h1 class="title">
-          { data.title }
-        </h1>
-        <h2 class="subtitle">
-          This shows you how to build a website using <strong>Mithril</strong> and <strong>Bulma</strong>.
-        </h2>
+    m(
+      "about",
+      <div>
+        <section class="section">
+          <div class="container">
+            <h1 class="title">{data.title}</h1>
+            <h2 class="subtitle">
+              This shows you how to build a website using{" "}
+              <strong>Mithril</strong> and <strong>Bulma</strong>.
+            </h2>
+          </div>
+        </section>
       </div>
-    </section>
-  </div>
-</main>
-}
+    ),
+};
+
+export default Page;

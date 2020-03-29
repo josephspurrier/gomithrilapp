@@ -4,19 +4,16 @@
     // 
     "editor.formatOnSave": true,
     //
+    // Go
+    //
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.inferGopath": true,
+    //
     // ESlint
     //
-    //"editor.formatOnSave": false,
-    //"vetur.validation.template": false,
     "eslint.alwaysShowStatus": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
-    },
-    "[javascript]": {
-        "editor.formatOnSave": false,
-    },
-    "[vue]": {
-        "editor.formatOnSave": false,
     },
     "eslint.workingDirectories": [
         {
@@ -24,8 +21,14 @@
         }
     ],
     //
-    // Go
-    //
-    "go.useCodeSnippetsOnFunctionSuggest": true,
-    "go.inferGopath": true,
+    // File specific settings
+    "[javascriptreact]": {
+        "editor.formatOnSave": false,
+    },
+    "[javascript]": {
+        "editor.formatOnSave": false,
+    },
+    "[vue]": {
+        "editor.formatOnSave": false,
+    }
 }

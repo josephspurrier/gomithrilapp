@@ -1,16 +1,23 @@
-var m = require('mithril')
-var User = require('../store/User')
+import m from "mithril";
+import User from "../store/SampleUser";
 
-var View = {
+var Page = {
   oninit: User.loadList,
-  view: function() {
-    return m('.user-list', User.list.map(function(user){
-      return m(m.route.Link,{
-        class: 'user-list-item',
-        href: '/edit/'+ user.id,
-      }, user.firstName + ' ' + user.lastName)
-    }))
-  }
-}
+  view: function () {
+    return m(
+      ".user-list",
+      User.list.map(function (user) {
+        return m(
+          m.route.Link,
+          {
+            class: "user-list-item",
+            href: "/edit/" + user.id,
+          },
+          user.firstName + " " + user.lastName
+        );
+      })
+    );
+  },
+};
 
-module.exports = View
+export default Page;

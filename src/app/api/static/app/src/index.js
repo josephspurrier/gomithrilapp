@@ -1,36 +1,35 @@
-var m = require('mithril')
+import m, { route } from "mithril";
+import UserList from "./page/UserList";
+import UserForm from "./page/UserForm";
+import AboutPage from "./page/About";
+import LoginPage from "./page/Login";
+import RegisterPage from "./page/Register";
+import LayoutMain from "./layout/Main";
 
-var UserList = require('./page/UserList')
-var UserForm = require('./page/UserForm')
-var AboutPage = require('./page/About')
-var LoginPage = require('./page/Login')
-var RegisterPage = require('./page/Register')
-var LayoutMain = require('./layout/Main')
-
-m.route(document.body, '/list', {
-  '/list': {
-    render: function() {
-      return m(LayoutMain, m(UserList))
-    }
+route(document.body, "/list", {
+  "/list": {
+    render: function () {
+      return m(LayoutMain, m(UserList));
+    },
   },
-  '/login': {
-    render: function() {
-      return m(LayoutMain, m(LoginPage))
-    }
+  "/login": {
+    render: function () {
+      return m(LayoutMain, m(LoginPage));
+    },
   },
-  '/register': {
-    render: function() {
-      return m(LayoutMain, m(RegisterPage))
-    }
+  "/register": {
+    render: function () {
+      return m(LayoutMain, m(RegisterPage));
+    },
   },
-  '/about': {
-    render: function() {
-      return m(LayoutMain, m(AboutPage))
-    }
+  "/about": {
+    render: function () {
+      return m(LayoutMain, m(AboutPage));
+    },
   },
-  '/edit/:id': {
-    render: function(vnode) {
-      return m(LayoutMain, m(UserForm, vnode.attrs))
-    }
+  "/edit/:id": {
+    render: function (vnode) {
+      return m(LayoutMain, m(UserForm, vnode.attrs));
+    },
   },
-})
+});

@@ -1,13 +1,10 @@
-var m = require('mithril')
-var Menu = require('../component/Menu')
+import m from "mithril";
+import Menu from "../component/Menu";
 
 var View = {
-  view: function(vnode) {
-    return m('main.layout', [
-      m(Menu),
-      m('section', vnode.children)
-    ])
-  }
-}
+  view: function (vnode) {
+    return m("main.layout", [m(Menu), m("section", vnode.children)]);
+  },
+};
 
-module.exports = View
+export default View;
