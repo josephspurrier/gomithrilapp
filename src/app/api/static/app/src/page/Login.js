@@ -1,6 +1,5 @@
 import m from "mithril";
 import Submit from "../module/Submit";
-import Sleep from "../module/Sleep";
 import User from "../store/User";
 import Cookie from "js-cookie";
 import Flash from "../module/Flash";
@@ -13,27 +12,25 @@ var data = {
 function onsubmit(e) {
   Submit.start(e);
 
-  Sleep(500).then(() => {
-    User.login()
-      .then((data) => {
-        User.clear();
-        Submit.finish();
+  User.login()
+    .then((data) => {
+      User.clear();
+      Submit.finish();
 
-        const auth = {
-          accessToken: data.token,
-          loggedIn: true,
-        };
+      const auth = {
+        accessToken: data.token,
+        loggedIn: true,
+      };
 
-        Cookie.set("auth", auth);
+      Cookie.set("auth", auth);
 
-        Flash.success("Login successful.");
-        m.route.set("/");
-      })
-      .catch((err) => {
-        Submit.finish();
-        Flash.warning(err.response.message);
-      });
-  });
+      Flash.success("Login successful.");
+      m.route.set("/");
+    })
+    .catch((err) => {
+      Submit.finish();
+      Flash.warning(err.response.message);
+    });
 }
 
 var Page = {

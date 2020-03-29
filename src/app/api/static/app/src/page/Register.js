@@ -1,6 +1,5 @@
 import m from "mithril";
 import Submit from "../module/Submit";
-import Sleep from "../module/Sleep";
 import User from "../store/User";
 import Flash from "../module/Flash";
 
@@ -12,20 +11,18 @@ var data = {
 function onsubmit(e) {
   Submit.start(e);
 
-  Sleep(500).then(() => {
-    User.register()
-      .then(() => {
-        User.clear();
-        Submit.finish();
+  User.register()
+    .then(() => {
+      User.clear();
+      Submit.finish();
 
-        Flash.success("User registered.");
-        m.route.set("/login");
-      })
-      .catch((err) => {
-        Submit.finish();
-        Flash.warning(err.response.message);
-      });
-  });
+      Flash.success("User registered.");
+      m.route.set("/login");
+    })
+    .catch((err) => {
+      Submit.finish();
+      Flash.warning(err.response.message);
+    });
 }
 
 var Page = {

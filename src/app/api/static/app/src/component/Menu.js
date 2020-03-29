@@ -19,34 +19,49 @@ var View = {
             <strong>govueapp</strong>
           </m.route.Link>
 
-          <button class="button navbar-burger">
-            <span />
-            <span />
-            <span />
-          </button>
+          <a
+            id="mobile-navbar-top"
+            role="button"
+            class="navbar-burger burger"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbar-top"
+            onclick={() => {
+              const mob = document.getElementById("mobile-navbar-top");
+              const nav = document.getElementById("navbar-top");
+              mob.classList.toggle("is-active");
+              nav.classList.toggle("is-active");
+            }}
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
 
-        <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">Menu</a>
+        <div id="navbar-top" class="navbar-menu">
+          <div class="navbar-end">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">Menu</a>
 
-            <div class="navbar-dropdown is-right">
-              <m.route.Link class="navbar-item" href="/login">
-                Login
-              </m.route.Link>
-              <m.route.Link class="navbar-item" href="/about">
-                About
-              </m.route.Link>
-              <hr class="navbar-divider" />
-              <a
-                class="dropdown-item"
-                onclick={() => {
-                  logout();
-                }}
-              >
-                Logout
-              </a>
-              <div class="navbar-item">v1.0.0</div>
+              <div class="navbar-dropdown is-right">
+                <m.route.Link class="navbar-item" href="/login">
+                  Login
+                </m.route.Link>
+                <m.route.Link class="navbar-item" href="/about">
+                  About
+                </m.route.Link>
+                <hr class="navbar-divider" />
+                <a
+                  class="dropdown-item"
+                  onclick={() => {
+                    logout();
+                  }}
+                >
+                  Logout
+                </a>
+                <div class="navbar-item">v1.0.0</div>
+              </div>
             </div>
           </div>
         </div>
