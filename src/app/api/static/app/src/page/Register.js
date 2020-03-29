@@ -17,6 +17,7 @@ function onsubmit(e) {
       .then(() => {
         User.clear();
         Submit.finish();
+
         Flash.success("User registered.");
         m.route.set("/login");
       })

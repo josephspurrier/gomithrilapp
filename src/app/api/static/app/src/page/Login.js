@@ -17,6 +17,7 @@ function onsubmit(e) {
     User.login()
       .then((data) => {
         User.clear();
+        Submit.finish();
 
         const auth = {
           accessToken: data.token,
@@ -25,9 +26,8 @@ function onsubmit(e) {
 
         Cookie.set("auth", auth);
 
-        Submit.finish();
         Flash.success("Login successful.");
-        m.route.set("/list");
+        m.route.set("/");
       })
       .catch((err) => {
         Submit.finish();

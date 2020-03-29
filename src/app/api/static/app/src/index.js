@@ -4,6 +4,8 @@ import UserForm from "./page/UserForm";
 import AboutPage from "./page/About";
 import LoginPage from "./page/Login";
 import RegisterPage from "./page/Register";
+import IndexPage from "./page/Index";
+import NotepadPage from "./page/Notepad";
 import LayoutMain from "./layout/Main";
 import Cookie from "js-cookie";
 
@@ -14,10 +16,10 @@ function isLoggedIn() {
       return false;
     }
 
-    console.log("Cookie:", auth);
-    let v = JSON.parse(auth);
+    //console.log("Cookie:", auth);
+    //let v = JSON.parse(auth);
 
-    console.log("Auth:", v);
+    //console.log("Auth:", v);
     return true;
   } catch (err) {
     console.log(err);
@@ -29,13 +31,19 @@ function isLoggedIn() {
 route(document.body, "/", {
   "/": {
     onmatch: function () {
-      if (isLoggedIn()) m.route.set("/list");
+      if (isLoggedIn()) return Index;
       else m.route.set("/login");
     },
   },
   "/list": {
     onmatch: function () {
       if (isLoggedIn()) return List;
+      else m.route.set("/login");
+    },
+  },
+  "/notepad": {
+    onmatch: function () {
+      if (isLoggedIn()) return Notepad;
       else m.route.set("/login");
     },
   },
@@ -47,13 +55,13 @@ route(document.body, "/", {
   },
   "/login": {
     onmatch: function () {
-      if (isLoggedIn()) m.route.set("/list");
+      if (isLoggedIn()) m.route.set("/");
       else return Login;
     },
   },
   "/register": {
     onmatch: function () {
-      if (isLoggedIn()) m.route.set("/list");
+      if (isLoggedIn()) m.route.set("/");
       else return Register;
     },
   },
@@ -63,6 +71,18 @@ route(document.body, "/", {
     },
   },
 });
+
+var Index = {
+  view: function () {
+    return m(LayoutMain, m(IndexPage));
+  },
+};
+
+var Notepad = {
+  view: function () {
+    return m(LayoutMain, m(NotepadPage));
+  },
+};
 
 var List = {
   view: function () {
