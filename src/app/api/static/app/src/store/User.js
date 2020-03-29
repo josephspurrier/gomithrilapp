@@ -1,6 +1,7 @@
 var m = require('mithril')
 
 var User = {
+  current: {},
   list: [],
   loadList: function() {
     return m.request({
@@ -12,7 +13,6 @@ var User = {
       User.list = result.data
     })
   },
-  current: {},
   load: function(id) {
     return m.request({
       method: 'GET',

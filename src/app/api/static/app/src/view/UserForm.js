@@ -1,10 +1,7 @@
 var m = require('mithril')
-var User = require('../models/User')
-var Submit = require('./helper/Submit')
-
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+var User = require('../store/User')
+var Submit = require('../module/Submit')
+var Sleep = require('../module/Sleep')
 
 var View = {
   oninit: function(vnode){
@@ -15,7 +12,7 @@ var View = {
       onsubmit: function(e){
         Submit.start(e)
 
-        sleep(500).then(() => {
+        Sleep(500).then(() => {
           User.save().then(() => {
             m.route.set('/list')
           }).catch(function (e){

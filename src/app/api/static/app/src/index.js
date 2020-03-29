@@ -1,19 +1,19 @@
 var m = require('mithril')
 
-var UserList = require('./views/UserList')
-var UserForm = require('./views/UserForm')
-var Layout = require('./views/Layout')
-var LayoutSub = require('./views/LayoutSub')
+var UserList = require('./view/UserList')
+var UserForm = require('./view/UserForm')
+var LayoutMain = require('./layout/Main')
+var LayoutList = require('./layout/List')
 
 m.route(document.body, '/list', {
   '/list': {
     render: function() {
-      return m(Layout, m(UserList))
+      return m(LayoutMain, m(UserList))
     }
   },
   '/edit/:id': {
     render: function(vnode) {
-      return m(LayoutSub, m(UserForm, vnode.attrs))
+      return m(LayoutList, m(UserForm, vnode.attrs))
     }
   },
 })

@@ -1,5 +1,5 @@
 var m = require('mithril')
-var User = require('../models/User')
+var User = require('../store/User')
 
 var View = {
   oninit: User.loadList,
