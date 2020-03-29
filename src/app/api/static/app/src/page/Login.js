@@ -1,8 +1,25 @@
 var m = require('mithril')
+var Submit = require('../module/Submit')
+var Sleep = require('../module/Sleep')
+var User = require('../store/User')
 
 var data = {
   title: 'Login',
   subtitle: 'Enter your login information below.'
+}
+
+function onSubmit(e) {
+      Submit.start(e)
+
+      Sleep(500).then(() => {
+        User.save().then(() => {
+          m.route.set('/list')
+        }).catch(function (e){
+          alert('Could not save content.',e)
+        }).finally(function() {
+          Submit.finish()
+        })
+    })
 }
 
 module.exports = {
@@ -16,7 +33,7 @@ module.exports = {
       </div>
 
       <div class="container" style="margin-top: 1em;">
-          <form name="login">
+          <form name="login" onsubmit={onSubmit}>
 
             <div class="field">
               <label class="label">Email</label>
