@@ -1,8 +1,8 @@
 import m from "mithril";
-import Cookie from "js-cookie";
+import Auth from "../../module/Auth";
 
 function logout() {
-  Cookie.remove("auth");
+  Auth.clear();
   m.route.set("/");
 }
 

@@ -1,8 +1,8 @@
 import m from "mithril";
 import Submit from "../module/Submit";
 import User from "../store/User";
-import Cookie from "js-cookie";
-import Flash from "../module/Flash";
+import Flash from "./component/Flash";
+import Auth from "../module/Auth";
 
 var data = {
   title: "Login",
@@ -22,7 +22,7 @@ function onsubmit(e) {
         loggedIn: true,
       };
 
-      Cookie.set("auth", auth);
+      Auth.save(auth);
 
       Flash.success("Login successful.");
       m.route.set("/");

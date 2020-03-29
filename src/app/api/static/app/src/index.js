@@ -5,44 +5,30 @@ import RegisterPage from "./page/Register";
 import IndexPage from "./page/Index";
 import NotepadPage from "./page/Notepad";
 import LayoutMain from "./layout/Main";
-import Cookie from "js-cookie";
-
-function isLoggedIn() {
-  try {
-    let auth = Cookie.get("auth");
-    if (auth === undefined) {
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.log(err);
-  }
-
-  return false;
-}
+import Auth from "./module/Auth";
 
 route(document.body, "/", {
   "/": {
     onmatch: function () {
-      if (isLoggedIn()) return Index;
+      if (Auth.isLoggedIn()) return Index;
       else m.route.set("/login");
     },
   },
   "/notepad": {
     onmatch: function () {
-      if (isLoggedIn()) return Notepad;
+      if (Auth.isLoggedIn()) return Notepad;
       else m.route.set("/login");
     },
   },
   "/login": {
     onmatch: function () {
-      if (isLoggedIn()) m.route.set("/");
+      if (Auth.isLoggedIn()) m.route.set("/");
       else return Login;
     },
   },
   "/register": {
     onmatch: function () {
-      if (isLoggedIn()) m.route.set("/");
+      if (Auth.isLoggedIn()) m.route.set("/");
       else return Register;
     },
   },

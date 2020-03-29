@@ -1,15 +1,5 @@
 import m from "mithril";
-import Cookie from "js-cookie";
-
-function getBearer() {
-  let auth = Cookie.get("auth");
-  if (auth === undefined) {
-    return false;
-  }
-
-  let v = JSON.parse(auth);
-  return "Bearer " + v.accessToken;
-}
+import Auth from "../module/Auth";
 
 var Note = {
   current: {},
@@ -22,7 +12,7 @@ var Note = {
       method: "POST",
       url: "/api/v1/note",
       headers: {
-        Authorization: getBearer(),
+        Authorization: Auth.bearerToken(),
       },
       body: Note.current,
     });
@@ -33,7 +23,7 @@ var Note = {
         method: "GET",
         url: "/api/v1/note",
         headers: {
-          Authorization: getBearer(),
+          Authorization: Auth.bearerToken(),
         },
       })
       .then((result) => {
@@ -46,7 +36,7 @@ var Note = {
       method: "PUT",
       url: "/api/v1/note/" + id,
       headers: {
-        Authorization: getBearer(),
+        Authorization: Auth.bearerToken(),
       },
       body: { message: text },
     });
@@ -56,7 +46,7 @@ var Note = {
       method: "DELETE",
       url: "/api/v1/note/" + id,
       headers: {
-        Authorization: getBearer(),
+        Authorization: Auth.bearerToken(),
       },
     });
   },
