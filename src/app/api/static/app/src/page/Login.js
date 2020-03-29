@@ -3,6 +3,7 @@ import Submit from "../module/Submit";
 import Sleep from "../module/Sleep";
 import User from "../store/User";
 import Cookie from "js-cookie";
+import Flash from "../module/Flash";
 
 var data = {
   title: "Login",
@@ -25,12 +26,12 @@ function onsubmit(e) {
         Cookie.set("auth", auth);
 
         Submit.finish();
+        Flash.success("Login successful.");
         m.route.set("/list");
       })
       .catch((err) => {
         Submit.finish();
-        console.log(err);
-        alert(err.response.message);
+        Flash.warning(err.response.message);
       });
   });
 }

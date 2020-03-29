@@ -3,8 +3,6 @@ import Cookie from "js-cookie";
 
 function logout() {
   Cookie.remove("auth");
-  //this.$store.commit("setAuth", null);
-  //this.$router.push("/login");
   m.route.set("/");
 }
 
