@@ -1,9 +1,11 @@
 var m = require('mithril')
 
-var UserList = require('./view/UserList')
-var UserForm = require('./view/UserForm')
+var UserList = require('./page/UserList')
+var UserForm = require('./page/UserForm')
+var AboutPage = require('./page/About')
+var LoginPage = require('./page/Login')
+var RegisterPage = require('./page/Register')
 var LayoutMain = require('./layout/Main')
-var LayoutList = require('./layout/List')
 
 m.route(document.body, '/list', {
   '/list': {
@@ -11,9 +13,24 @@ m.route(document.body, '/list', {
       return m(LayoutMain, m(UserList))
     }
   },
+  '/login': {
+    render: function() {
+      return m(LayoutMain, m(LoginPage))
+    }
+  },
+  '/register': {
+    render: function() {
+      return m(LayoutMain, m(RegisterPage))
+    }
+  },
+  '/about': {
+    render: function() {
+      return m(LayoutMain, m(AboutPage))
+    }
+  },
   '/edit/:id': {
     render: function(vnode) {
-      return m(LayoutList, m(UserForm, vnode.attrs))
+      return m(LayoutMain, m(UserForm, vnode.attrs))
     }
   },
 })

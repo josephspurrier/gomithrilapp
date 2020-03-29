@@ -1,4 +1,5 @@
 /* styles.css */
+/*
 body, .input, .button {
     font: normal 16px Verdana;
     margin: 0;
@@ -12,6 +13,7 @@ body, .input, .button {
 .menu {
     margin: 0 0 30px;
 }
+*/
 
 .user-list {
     list-style: none;
@@ -48,6 +50,7 @@ body, .input, .button {
     width: 100%;
 }
 
+/*
 .button {
     background: #eee;
     border: 1px solid #ddd;
@@ -61,4 +64,4 @@ body, .input, .button {
 
 .button:hover {
     background: #e8e8e8;
-}
+}*/

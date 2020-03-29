@@ -1,9 +1,10 @@
 var m = require('mithril')
+var Menu = require('../component/Menu')
 
 var View = {
   view: function(vnode) {
     return m('main.layout', [
-      m('nav.menu'),
+      m(Menu),
       m('section', vnode.children)
     ])
   }
