@@ -1,7 +1,7 @@
 import m from "mithril";
 import Submit from "../module/Submit";
 import Sleep from "../module/Sleep";
-import User from "../store/SampleUser";
+import User from "../store/User";
 
 var data = {
   title: "Login",
@@ -12,12 +12,12 @@ function onsubmit(e) {
   Submit.start(e);
 
   Sleep(500).then(() => {
-    User.save()
+    User.login()
       .then(() => {
         m.route.set("/list");
       })
-      .catch(function (e) {
-        alert("Could not save content.", e);
+      .catch((err) => {
+        alert(err.response.message);
       })
       .finally(function () {
         Submit.finish();
@@ -47,6 +47,10 @@ var Page = {
                     class="input"
                     data-cy="email"
                     required
+                    oninput={(e) => {
+                      User.current.email = e.target.value;
+                    }}
+                    value={User.current.email}
                   ></input>
                 </div>
               </div>
@@ -61,6 +65,10 @@ var Page = {
                     class="input"
                     data-cy="password"
                     required
+                    oninput={(e) => {
+                      User.current.password = e.target.value;
+                    }}
+                    value={User.current.password}
                   ></input>
                 </div>
               </div>
@@ -78,7 +86,13 @@ var Page = {
                 </p>
 
                 <p class="control">
-                  <button type="button" class="button is-light">
+                  <button
+                    type="button"
+                    class="button is-light"
+                    onclick={() => {
+                      User.clear();
+                    }}
+                  >
                     Clear
                   </button>
                 </p>

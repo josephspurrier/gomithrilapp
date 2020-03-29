@@ -3,16 +3,16 @@ var Submit = {
   submitText: "Submitting...",
   start: (event) => {
     event.preventDefault();
-    this.disabled = true;
+    Submit.disabled = true;
   },
   finish: () => {
-    this.disabled = false;
+    Submit.disabled = false;
   },
   text: (s) => {
-    if (!this.disabled) {
+    if (!Submit.disabled) {
       return s;
     } else {
-      return this.submitText;
+      return Submit.submitText;
     }
   },
 };

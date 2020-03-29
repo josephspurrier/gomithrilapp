@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"reflect"
+	"strings"
 
 	validator "gopkg.in/go-playground/validator.v9"
 )
@@ -56,8 +57,10 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 	m := make(map[string]interface{})
 
 	// Try to auto detect data type based on on the header.
-	switch r.Header.Get("Content-Type") {
-	case "", "application/x-www-form-urlencoded":
+	// Header can having multiple values separated by a semicolon.
+	ct := r.Header.Get("Content-Type")
+	switch true {
+	case ct == "", strings.Contains(ct, "application/x-www-form-urlencoded"):
 		// Parse the form.
 		err = r.ParseForm()
 		if err != nil {
@@ -67,7 +70,7 @@ func (b *Binder) Unmarshal(iface interface{}, r *http.Request) (err error) {
 		for k, vv := range r.Form {
 			m[k] = vv[0]
 		}
-	case "application/json":
+	case strings.Contains(ct, "application/json"):
 		// Decode to the interface.
 		err = json.NewDecoder(r.Body).Decode(&m)
 		r.Body.Close()

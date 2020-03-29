@@ -1,7 +1,7 @@
 import m from "mithril";
 import Submit from "../module/Submit";
 import Sleep from "../module/Sleep";
-import User from "../store/SampleUser";
+import User from "../store/User";
 
 var data = {
   title: "Register",
@@ -12,12 +12,12 @@ function onsubmit(e) {
   Submit.start(e);
 
   Sleep(500).then(() => {
-    User.save()
+    User.register()
       .then(() => {
-        m.route.set("/list");
+        m.route.set("/login");
       })
-      .catch(function (e) {
-        alert("Could not save content.", e);
+      .catch((err) => {
+        alert(err.response.message);
       })
       .finally(function () {
         Submit.finish();
@@ -47,6 +47,9 @@ var Page = {
                     class="input"
                     data-cy="first_name"
                     required
+                    oninput={(e) => {
+                      User.current.first_name = e.target.value;
+                    }}
                   ></input>
                 </div>
               </div>
@@ -61,6 +64,9 @@ var Page = {
                     class="input"
                     data-cy="last_name"
                     required
+                    oninput={(e) => {
+                      User.current.last_name = e.target.value;
+                    }}
                   ></input>
                 </div>
               </div>
@@ -75,6 +81,9 @@ var Page = {
                     class="input"
                     data-cy="email"
                     required
+                    oninput={(e) => {
+                      User.current.email = e.target.value;
+                    }}
                   ></input>
                 </div>
               </div>
@@ -89,6 +98,9 @@ var Page = {
                     class="input"
                     data-cy="password"
                     required
+                    oninput={(e) => {
+                      User.current.password = e.target.value;
+                    }}
                   ></input>
                 </div>
               </div>
