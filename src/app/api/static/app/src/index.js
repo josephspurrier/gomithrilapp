@@ -3,6 +3,7 @@ var m = require('mithril')
 var UserList = require('./views/UserList')
 var UserForm = require('./views/UserForm')
 var Layout = require('./views/Layout')
+var LayoutSub = require('./views/LayoutSub')
 
 m.route(document.body, '/list', {
   '/list': {
@@ -12,7 +13,7 @@ m.route(document.body, '/list', {
   },
   '/edit/:id': {
     render: function(vnode) {
-      return m(Layout, m(UserForm, vnode.attrs))
+      return m(LayoutSub, m(UserForm, vnode.attrs))
     }
   },
 })

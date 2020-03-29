@@ -1,5 +1,10 @@
 var m = require('mithril')
 var User = require('../models/User')
+var Submit = require('./helper/Submit')
+
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
 
 var View = {
   oninit: function(vnode){
@@ -8,8 +13,17 @@ var View = {
   view: function() {
     return m('form', {
       onsubmit: function(e){
-        e.preventDefault()
-        User.save()
+        Submit.start(e)
+
+        sleep(500).then(() => {
+          User.save().then(() => {
+            m.route.set('/list')
+          }).catch(function (e){
+            alert('Could not save content.',e)
+          }).finally(function() {
+            Submit.finish()
+          })
+      })
       }
     }, [
       m('label.label', 'First Name'),
@@ -26,7 +40,9 @@ var View = {
         },
         value: User.current.lastName,
       }),
-      m('button.button[type=submit]','Save')
+      m('button.button[type=submit]',{
+        disabled: Submit.disabled,
+      },Submit.text('Save'))
     ])
   }
 }
