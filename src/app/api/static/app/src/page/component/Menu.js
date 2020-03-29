@@ -45,21 +45,25 @@ var View = {
               <a class="navbar-link">Menu</a>
 
               <div class="navbar-dropdown is-right">
-                <m.route.Link class="navbar-item" href="/login">
-                  Login
-                </m.route.Link>
+                {!Auth.isLoggedIn() && (
+                  <m.route.Link class="navbar-item" href="/login">
+                    Login
+                  </m.route.Link>
+                )}
                 <m.route.Link class="navbar-item" href="/about">
                   About
                 </m.route.Link>
                 <hr class="navbar-divider" />
-                <a
-                  class="dropdown-item"
-                  onclick={() => {
-                    logout();
-                  }}
-                >
-                  Logout
-                </a>
+                {Auth.isLoggedIn() && (
+                  <a
+                    class="dropdown-item"
+                    onclick={() => {
+                      logout();
+                    }}
+                  >
+                    Logout
+                  </a>
+                )}
                 <div class="navbar-item">v1.0.0</div>
               </div>
             </div>
