@@ -14,6 +14,7 @@ function onsubmit(e) {
   Sleep(500).then(() => {
     User.register()
       .then(() => {
+        User.clear();
         m.route.set("/login");
       })
       .catch((err) => {
@@ -50,6 +51,7 @@ var Page = {
                     oninput={(e) => {
                       User.current.first_name = e.target.value;
                     }}
+                    value={User.current.first_name}
                   ></input>
                 </div>
               </div>
@@ -67,6 +69,7 @@ var Page = {
                     oninput={(e) => {
                       User.current.last_name = e.target.value;
                     }}
+                    value={User.current.last_name}
                   ></input>
                 </div>
               </div>
@@ -84,6 +87,7 @@ var Page = {
                     oninput={(e) => {
                       User.current.email = e.target.value;
                     }}
+                    value={User.current.email}
                   ></input>
                 </div>
               </div>
@@ -101,6 +105,7 @@ var Page = {
                     oninput={(e) => {
                       User.current.password = e.target.value;
                     }}
+                    value={User.current.password}
                   ></input>
                 </div>
               </div>
@@ -118,7 +123,13 @@ var Page = {
                 </p>
 
                 <p class="control">
-                  <button type="button" class="button is-light">
+                  <button
+                    type="button"
+                    class="button is-light"
+                    onclick={() => {
+                      User.clear();
+                    }}
+                  >
                     Clear
                   </button>
                 </p>

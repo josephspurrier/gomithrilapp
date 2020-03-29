@@ -14,6 +14,7 @@ function onsubmit(e) {
   Sleep(500).then(() => {
     User.login()
       .then(() => {
+        User.clear();
         m.route.set("/list");
       })
       .catch((err) => {
