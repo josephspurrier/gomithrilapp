@@ -1,7 +1,12 @@
 /* eslint-disable no-undef */
 
 describe("test the basic functionality", function () {
+  beforeEach(function () {
+    Cypress.Cookies.preserveOnce("auth");
+  });
+
   it("loads the home page", function () {
+    cy.clearCookie("auth");
     cy.visit("http://localhost:8080");
     cy.contains("Login");
   });
@@ -39,8 +44,7 @@ describe("test the basic functionality", function () {
   it("navigate to note page", function () {
     cy.contains("Welcome");
     cy.url().should("include", "/");
-    //cy.get("[data-cy=notepad-link]").click();
-    cy.visit("/notepad");
+    cy.get("[data-cy=notepad-link]").click();
     cy.url().should("include", "/notepad");
     cy.contains("To Do");
   });
@@ -69,12 +73,12 @@ describe("test the basic functionality", function () {
     cy.get("#listTodo>li")
       .eq(0)
       .find("input")
-      .should("have.value", "hello world");
+      .should("have.value", "hello universe");
 
     cy.get("#listTodo>li")
       .eq(1)
       .find("input")
-      .should("have.value", "hello universe");
+      .should("have.value", "hello world");
   });
 
   it("edit the 2nd note", function () {
@@ -82,7 +86,7 @@ describe("test the basic functionality", function () {
       .eq(1)
       .find("input")
       .type(" foo")
-      .should("have.value", "hello universe foo");
+      .should("have.value", "hello world foo");
   });
 
   it("delete the 1st note", function () {
