@@ -4,7 +4,7 @@ import LoginPage from "./page/Login";
 import RegisterPage from "./page/Register";
 import IndexPage from "./page/Index";
 import NotepadPage from "./page/Notepad";
-import LayoutMain from "./layout/Main";
+import LayoutMain from "./page/layout/Main";
 import Auth from "./module/Auth";
 
 route(document.body, "/", {
