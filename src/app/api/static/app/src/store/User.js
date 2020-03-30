@@ -9,7 +9,6 @@ var User = {
     return m.request({
       method: "POST",
       url: "/api/v1/register",
-      withCredentials: true,
       body: User.current,
     });
   },
@@ -17,7 +16,6 @@ var User = {
     return m.request({
       method: "POST",
       url: "/api/v1/login",
-      withCredentials: true,
       body: User.current,
     });
   },

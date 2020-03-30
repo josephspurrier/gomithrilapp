@@ -9,7 +9,7 @@ var Auth = {
     Cookie.remove(Auth.cookieName);
   },
   bearerToken: () => {
-    let auth = Cookie.get("auth");
+    let auth = Cookie.get(Auth.cookieName);
     if (auth === undefined) {
       return false;
     }

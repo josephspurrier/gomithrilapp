@@ -1,13 +1,16 @@
-import m, { route } from "mithril";
+import m from "mithril";
 import AboutPage from "./page/About";
 import LoginPage from "./page/Login";
 import RegisterPage from "./page/Register";
 import IndexPage from "./page/Index";
 import NotepadPage from "./page/Notepad";
+import ErrorPage from "./page/Error";
 import LayoutMain from "./page/layout/Main";
 import Auth from "./module/Auth";
 
-route(document.body, "/", {
+m.route.prefix = "";
+
+m.route(document.body, "/", {
   "/": {
     onmatch: function () {
       if (Auth.isLoggedIn()) return Index;
@@ -35,6 +38,11 @@ route(document.body, "/", {
   "/about": {
     render: function () {
       return m(LayoutMain, m(AboutPage));
+    },
+  },
+  "/:404...": {
+    view: function () {
+      return m(LayoutMain, m(ErrorPage));
     },
   },
 });
