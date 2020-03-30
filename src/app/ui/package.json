@@ -1,10 +1,12 @@
 {
-  "name": "app",
+  "name": "gomithrilapp",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "webpack src/index.js --output static/app.js -d --watch",
+    "build": "webpack src/index.js --output static/app.js -p",
+    "help": "webpack --help",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
     "test": "cypress run",
     "test-debug": "DEBUG=cypress:* cypress run",

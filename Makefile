@@ -34,7 +34,7 @@ ui-dep:
 .PHONY: ui-dev
 ui-dev:
 	# Start the UI.
-	cd ${GOPATH}/src/app/ui && npm run dev
+	cd ${GOPATH}/src/app/ui && npm start
 
 .PHONY: ui-test
 ui-test:
@@ -78,12 +78,6 @@ swagger-gen:
 	# Generate the swagger spec.
 	cd ${GOPATH}/src/app/api/cmd/api && \
 	swagger generate spec -o ${GOPATH}/src/app/api/static/swagger/swagger.json
-
-	# Replace 'example' with 'x-example' in the swagger spec.
-	## MacOS
-	sed -i '' -e 's/example/x\-example/' ${GOPATH}/src/app/api/static/swagger/swagger.json
-	## Linux
-	#sed -i'' -e 's/example/x\-example/' ${GOPATH}/src/app/api/static/swagger/swagger.json
 
 	# Validate the swagger spec.
 	swagger validate ${GOPATH}/src/app/api/static/swagger/swagger.json
