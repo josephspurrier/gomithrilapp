@@ -114,6 +114,7 @@ func (x *NoteStore) FindAllByUser(dest *NoteGroup, userID string) (total int, er
 		SELECT *
 		FROM note
 		WHERE user_id = ?
+		ORDER BY message ASC
 		`,
 		userID)
 	return len(*dest), x.db.SuppressNoRowsError(err)

@@ -18,6 +18,7 @@ func SetupStatic(core Core) {
 	p.Core = core
 
 	p.Router.Get("/api/v1", p.Index)
+	p.Router.Get("/static...", p.StaticUI)
 	p.Router.Get("/api/static...", p.Static)
 }
 
@@ -30,6 +31,33 @@ func SetupStatic(core Core) {
 //   200: OKResponse
 func (p StaticEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, error) {
 	return p.Response.OK(w, "ready")
+}
+
+// StaticUI .
+func (p StaticEndpoint) StaticUI(w http.ResponseWriter, r *http.Request) (int, error) {
+	if r.URL.Path == "/static/" {
+		return http.StatusNotFound, nil
+	}
+
+	// Get the location of the executable.
+	basepath, err := os.Executable()
+	if err != nil {
+		return http.StatusInternalServerError, nil
+	}
+
+	// If static folder is found to the executable, serve the file.
+	staticPath := filepath.Join(basepath, "static")
+	if stat, err := os.Stat(staticPath); err == nil && stat.IsDir() {
+		// The static directory is found.
+	} else if len(os.Getenv("GOPATH")) > 0 {
+		// Else get the GOPATH.
+		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/ui")
+	}
+
+	// Serve the file to the user.
+	http.ServeFile(w, r, filepath.Join(basepath, strings.TrimPrefix(r.URL.Path, "/")))
+
+	return http.StatusOK, nil
 }
 
 // Static .

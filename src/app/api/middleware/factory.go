@@ -7,6 +7,7 @@ import (
 	"app/api/middleware/cors"
 	"app/api/middleware/jwt"
 	"app/api/middleware/logrequest"
+	"app/api/middleware/ui"
 )
 
 // Factory will return the http.Handler wrapped in middleware.
@@ -18,6 +19,9 @@ func Factory(h http.Handler, l logrequest.ILog, whitelist []string,
 
 	// CORS for the endpoints.
 	h = cors.Handler(h)
+
+	// UI handler.
+	h = ui.Handler(h)
 
 	// Log every request.
 	lr := logrequest.New()
