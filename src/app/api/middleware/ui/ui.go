@@ -33,9 +33,9 @@ func UI(w http.ResponseWriter, r *http.Request) {
 		// The static directory is found.
 	} else if len(os.Getenv("GOPATH")) > 0 {
 		// Else get the GOPATH.
-		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/api")
+		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/ui")
 	}
 
 	// Serve the index file.
-	http.ServeFile(w, r, filepath.Join(basepath, "static/app", "index.html"))
+	http.ServeFile(w, r, filepath.Join(basepath, "index.html"))
 }

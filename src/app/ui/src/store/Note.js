@@ -28,7 +28,6 @@ var Note = {
       })
       .then((result) => {
         Note.list = result.notes;
-        console.log(Note.list);
       });
   },
   update: (id, text) => {

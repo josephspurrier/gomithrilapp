@@ -51,7 +51,7 @@ func (p StaticEndpoint) StaticUI(w http.ResponseWriter, r *http.Request) (int, e
 		// The static directory is found.
 	} else if len(os.Getenv("GOPATH")) > 0 {
 		// Else get the GOPATH.
-		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/api/static/app")
+		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/ui")
 	}
 
 	// Serve the file to the user.

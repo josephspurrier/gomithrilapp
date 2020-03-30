@@ -1,6 +1,0 @@
-# Dependency directories
-node_modules/
-static/app.js
-
-# Screenshots from Cypress
-screenshots
