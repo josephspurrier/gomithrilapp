@@ -5,7 +5,7 @@ title: Front-End
 
 ## npm Dependency Management
 
-Yuu can use these commands to interact with npm and nuxt.
+Yuu can use these commands to interact with npm.
 
 ```bash
 # CD to the UI folder.
@@ -49,19 +49,11 @@ npm uninstall eslint-config-standard
 # required when the app is built).
 # Use --save-dev (-D) to add a package to the package.json devDependencies
 # (packages used during dev to build, bundle, lint).
-
-# Check the version of nuxt.
-make nuxt-version
-
-# Upgrade nuxt to the new version.
-# When doing an update to nuxt, you should upgrade, remove node_modules dir,
-# delete the package-lock.json, and then run 'npm install' again.
-make nuxt-upgrade
 ```
 
 ## Cypress for UI Testing
 
-[Cypress](https://docs.cypress.io/guides/overview/why-cypress.html) is used to run tests on Vue. You can use the steps below to run the tests.
+[Cypress](https://docs.cypress.io/guides/overview/why-cypress.html) is used to run tests on the UI. You can use the steps below to run the tests.
 
 ```bash
 # CD to the UI folder.

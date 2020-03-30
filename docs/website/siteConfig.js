@@ -14,17 +14,17 @@ const users = [
     caption: 'User1',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/image.jpg'.
-    // image: '/govueapp/img/undraw_open_source.svg',
+    // image: '/gomithrilapp/img/undraw_open_source.svg',
     // infoLink: 'https://www.facebook.com',
     // pinned: true,
   },
 ];
 
 const siteConfig = {
-  title: 'govueapp', // Title for your website.
-  tagline: 'Sample Notepad Application in Go and Vue',
+  title: 'gomithrilapp', // Title for your website.
+  tagline: 'Sample Notepad Application in Go and Mithril',
   url: 'https://josephspurrier.github.io', // Your website URL
-  baseUrl: '/govueapp/', // Base URL for your project */
+  baseUrl: '/gomithrilapp/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
@@ -33,7 +33,7 @@ const siteConfig = {
   gaTrackingId: 'UA-161449546-1',
 
   // Used for publishing and more
-  projectName: 'govueapp',
+  projectName: 'gomithrilapp',
   organizationName: 'josephspurrier',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
@@ -43,9 +43,9 @@ const siteConfig = {
   headerLinks: [
     {doc: 'tutorial/run-locally', label: 'Docs'},
     {blog: true, label: 'Blog'},
-    {href: 'https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json', label: 'API'},
+    {href: 'https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json', label: 'API'},
     {page: 'help', label: 'Help'},
-    {href: "http://github.com/josephspurrier/govueapp", label: 'GitHub'},
+    {href: "http://github.com/josephspurrier/gomithrilapp", label: 'GitHub'},
   ],
 
   // If you have users set above, you add it here:
@@ -114,7 +114,7 @@ const siteConfig = {
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
-  repoUrl: 'https://github.com/josephspurrier/govueapp',
+  repoUrl: 'https://github.com/josephspurrier/gomithrilapp',
 };
 
 module.exports = siteConfig;

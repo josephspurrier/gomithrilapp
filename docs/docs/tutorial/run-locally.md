@@ -9,10 +9,10 @@ To run the application locally, you can run these commands. You don't need any o
 
 ```bash
 # Clone the repo.
-git clone git@github.com:josephspurrier/govueapp.git
+git clone git@github.com:josephspurrier/gomithrilapp.git
 
 # CD to the project directory.
-cd govueapp
+cd gomithrilapp
 
 # Build the docker containers.
 make docker-build

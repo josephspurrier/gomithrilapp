@@ -57,7 +57,7 @@ docker-compose rm -f
 
 ## docker-compose.yml
 
-The configuration is defined in the [**docker-compose.yml**](https://github.com/josephspurrier/govueapp/blob/master/docker-compose.yml) file.
+The configuration is defined in the [**docker-compose.yml**](https://github.com/josephspurrier/gomithrilapp/blob/master/docker-compose.yml) file.
 
 ### Version
 
@@ -71,7 +71,7 @@ This configuration fragment is essentially a template that we'll use for all of 
 - `env_file` - this tells docker that we want to load the `.env` for all the containers and set them as environment variables
 - `networks` - this defines the network `dnet` that all the services will connect to so they can communicate
 
-We are using the [.env](https://github.com/josephspurrier/govueapp/blob/master/.env) file for two purposes:
+We are using the [.env](https://github.com/josephspurrier/gomithrilapp/blob/master/.env) file for two purposes:
 - [declaring default environment variables](https://docs.docker.com/compose/env-file/) for the docker-compose.yml file
 - [declaring environment variables](https://docs.docker.com/compose/environment-variables/) for each of the services (containers)
 
@@ -79,7 +79,7 @@ By default, Compose will pull the variables from the **.env** file if it's in th
 
 #### Makefile
 
-As an added benefit, at the top of the [Makefile](https://github.com/josephspurrier/govueapp/blob/master/Makefile), we also load in the same environment variables from the **.env** file so we can share them across our local environment and our container environments. Now we only have to define our variables in a single place and we can use the variables across all of our files. Here is what is at the top of the **Makefile**:
+As an added benefit, at the top of the [Makefile](https://github.com/josephspurrier/gomithrilapp/blob/master/Makefile), we also load in the same environment variables from the **.env** file so we can share them across our local environment and our container environments. Now we only have to define our variables in a single place and we can use the variables across all of our files. Here is what is at the top of the **Makefile**:
 
 ```bash
 # Load the shared environment variables (shared with docker-compose.yml).
@@ -92,14 +92,14 @@ By default, a network is created for all the containers so they can communicate.
 
 ### Services
 
-The services define which images are used to spin up containers for them. The images are all built using the [build-images.sh](https://github.com/josephspurrier/govueapp/blob/master/bash/build-images.sh) bash file. Again - notice the **.env** file is sourced before building the docker images.
+The services define which images are used to spin up containers for them. The images are all built using the [build-images.sh](https://github.com/josephspurrier/gomithrilapp/blob/master/bash/build-images.sh) bash file. Again - notice the **.env** file is sourced before building the docker images.
 
 We have four services defined:
 
-- `ingress` - this is a Go proxy that routes traffic that requests any URL to `/api` to the `api` container and any other requests to the `ui` container. The code for the ingress is [here](https://github.com/josephspurrier/govueapp/blob/master/src/app/ingress/main.go) with the respective [Dockerfile](https://github.com/josephspurrier/govueapp/blob/master/src/app/ingress/Dockerfile).
+- `ingress` - this is a Go proxy that routes traffic that requests any URL to `/api` to the `api` container and any other requests to the `ui` container. The code for the ingress is [here](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/ingress/main.go) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/ingress/Dockerfile).
 - `db` - this is the MySQL database. It's using the standard [mysql:5.7](https://hub.docker.com/_/mysql) Dockerfile.
-- `ui` - this is the UI written in Vue.js and Nuxt.js. The code for the UI is [here](https://github.com/josephspurrier/govueapp/tree/master/src/app/ui) with the respective [Dockerfile](https://github.com/josephspurrier/govueapp/tree/master/src/app/ui/Dockerfile).
-- `api` - this is the Go API. The code for the API is [here](https://github.com/josephspurrier/govueapp/tree/master/src/app/api) with the respective [Dockerfile](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/Dockerfile).
+- `ui` - this is the UI written in Mithril. The code for the UI is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/ui) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/ui/Dockerfile).
+- `api` - this is the Go API. The code for the API is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/Dockerfile).
 
 Notice only the `ports` for the ingress and db containers are exposed - this is because the requests for the api and ui are proxied through the ingress so there is no reason to expose them. The benefit of the ingress (reverse-proxy) is to allow you to use a single URL, a single port, and a single SSL certification for the application in the future even though the ui and api are listening on different ports internally.
 

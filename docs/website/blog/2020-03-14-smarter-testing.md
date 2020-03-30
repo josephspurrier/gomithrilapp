@@ -9,7 +9,7 @@ When I first wrote the code and tests in note.go and note_test.go, I wanted to
 see if I could get to 100% code coverage. It's a good exercise if you've never
 done it before to see what you have to do to get there. It requires a lot more
 effort than it's worth for most applications, but still a good exercise.
-[View commit](https://github.com/josephspurrier/govueapp/commit/5204659c7ab7a19c24b2d3c29f2fb03b7760f119).
+[View commit](https://github.com/josephspurrier/gomithrilapp/commit/5204659c7ab7a19c24b2d3c29f2fb03b7760f119).
 
 In Go, table driven tests is very common. You can read able them
 [here](https://github.com/golang/go/wiki/TableDrivenTests). It helps cut down
@@ -18,7 +18,7 @@ on all the boilerplate code you have to repeat everywhere.
 It's also helpful if you have a setup and teardown process that is run with
 each of your tests. Since that code was copy and pasted in many different places,
 considated they to easy to use functions.
-[View commit](https://github.com/josephspurrier/govueapp/commit/89020eaea7cd7922d5936c566513c30602e2e701).
+[View commit](https://github.com/josephspurrier/gomithrilapp/commit/89020eaea7cd7922d5936c566513c30602e2e701).
 
 Code samples below.
 

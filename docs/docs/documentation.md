@@ -5,21 +5,21 @@ title: Documentation
 
 ## Docusaurus
 
-The documentation for the project is generated through [Docusaurus](https://docusaurus.io/) and then published through [GitHub Pages](https://pages.github.com/). All the documentation is located in the [/docs](https://github.com/josephspurrier/govueapp/tree/master/docs) folder.
+The documentation for the project is generated through [Docusaurus](https://docusaurus.io/) and then published through [GitHub Pages](https://pages.github.com/). All the documentation is located in the [/docs](https://github.com/josephspurrier/gomithrilapp/tree/master/docs) folder.
 
 The documentation is split into three different types of content:
 
-- [blog](https://josephspurrier.github.io/govueapp/blog/) - these are blog articles that are generated from markdown files [here](https://github.com/josephspurrier/govueapp/tree/master/docs/website/blog).
-- [docs](https://josephspurrier.github.io/govueapp/docs/tutorial/run-locally) - these are guides and tutorials that are generated from markdown files [here](https://github.com/josephspurrier/govueapp/tree/master/docs/docs).
-- [pages](https://josephspurrier.github.io/govueapp/help) - these are single pages like the homepage and help page that generated from [React](https://docusaurus.io/docs/en/api-pages) components [here](https://github.com/josephspurrier/govueapp/tree/master/docs/website/pages/en).
+- [blog](https://josephspurrier.github.io/gomithrilapp/blog/) - these are blog articles that are generated from markdown files [here](https://github.com/josephspurrier/gomithrilapp/tree/master/docs/website/blog).
+- [docs](https://josephspurrier.github.io/gomithrilapp/docs/tutorial/run-locally) - these are guides and tutorials that are generated from markdown files [here](https://github.com/josephspurrier/gomithrilapp/tree/master/docs/docs).
+- [pages](https://josephspurrier.github.io/gomithrilapp/help) - these are single pages like the homepage and help page that generated from [React](https://docusaurus.io/docs/en/api-pages) components [here](https://github.com/josephspurrier/gomithrilapp/tree/master/docs/website/pages/en).
 
-The [siteConfig.js](https://github.com/josephspurrier/govueapp/blob/master/docs/website/siteConfig.js) file contains all of the site configurations like the baseURL, site title, Google Analytics code, etc. You can also customize the top navigation bar via the `headerLinks` field.
+The [siteConfig.js](https://github.com/josephspurrier/gomithrilapp/blob/master/docs/website/siteConfig.js) file contains all of the site configurations like the baseURL, site title, Google Analytics code, etc. You can also customize the top navigation bar via the `headerLinks` field.
 
-The [sidebars.js](https://github.com/josephspurrier/govueapp/blob/master/docs/website/sidebars.json) file contains the [Sidebar](https://docusaurus.io/docs/en/navigation) configurations. It will create the left sidebar with relative pages when a page loads.
+The [sidebars.js](https://github.com/josephspurrier/gomithrilapp/blob/master/docs/website/sidebars.json) file contains the [Sidebar](https://docusaurus.io/docs/en/navigation) configurations. It will create the left sidebar with relative pages when a page loads.
 
-The [Footer.js](https://github.com/josephspurrier/govueapp/blob/master/docs/website/core/Footer.js) file contains the React component for the footer that is visible on every page.
+The [Footer.js](https://github.com/josephspurrier/gomithrilapp/blob/master/docs/website/core/Footer.js) file contains the React component for the footer that is visible on every page.
 
-The [static](https://github.com/josephspurrier/govueapp/tree/master/docs/website/static) folder contains the static assets like CSS and images used throughout the documentation.
+The [static](https://github.com/josephspurrier/gomithrilapp/tree/master/docs/website/static) folder contains the static assets like CSS and images used throughout the documentation.
 
 ### Install the npm Dependencies
 

@@ -10,7 +10,7 @@ engineer's life easier. I originally wrote tests for [Jest](https://jestjs.io/),
 but after seeing a bunch of vulnerabilities pop up in the packages that it's
 using, I decided it was a good time to switch to Cypress so I could access the
 wonderful GUI that's available.
-[View commit](https://github.com/josephspurrier/govueapp/commit/53201272a91e90b555ad296f1db128d1f95a8153).
+[View commit](https://github.com/josephspurrier/gomithrilapp/commit/53201272a91e90b555ad296f1db128d1f95a8153).
 
 I'll admit, I'm not a JavaScript developer, but Cypress does make it more fun
 to write tests because you can see your progress live. A video is below.

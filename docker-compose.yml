@@ -15,19 +15,13 @@ networks:
 
 # Services.
 services:
-  ingress:
-    <<: *service-template
-    image: "govueapp-ingress:${APP_VERSION}"
-    ports:
-      - "80:80"
   db:
     <<: *service-template
     image: "${MYSQL_CONTAINER}"
     ports:
       - "3306:3306"
-  ui:
+  app:
     <<: *service-template
-    image: "govueapp-ui:${APP_VERSION}"
-  api:
-    <<: *service-template
-    image: "govueapp-api:${APP_VERSION}"
+    image: "gomithrilapp:${APP_VERSION}"
+    ports:
+      - "80:80"

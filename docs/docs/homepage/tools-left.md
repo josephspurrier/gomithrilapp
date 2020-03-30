@@ -1,4 +1,4 @@
-- [Vue.js](https://vuejs.org/), a progressive JavaScript framework for the front-end GUI
+- [Mithril](https://mithril.js.org/), a modern client-side JavaScript framework for the front-end GUI
 - [Go](https://golang.org/), a high-performance language for the back-end API
 - [MySQL](https://www.mysql.com/), a relational database for storage of data
 - [Bulma](https://bulma.io/documentation/), a CSS framework for the front-end

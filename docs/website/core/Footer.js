@@ -43,14 +43,14 @@ class Footer extends React.Component {
             <a href={this.docUrl('wip.html', this.props.language)}>
               Guides
             </a>
-            <a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/govueapp/master/src/app/api/static/swagger/swagger.json">
+            <a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json">
               API Reference
             </a>
           </div>
           <div>
             <h5>Community</h5>
             <a
-              href="https://github.com/josephspurrier/govueapp/issues"
+              href="https://github.com/josephspurrier/gomithrilapp/issues"
               target="_blank"
               rel="noreferrer noopener">
               GitHub Issues/Requests
@@ -64,7 +64,7 @@ class Footer extends React.Component {
               className="github-button"
               href={this.props.config.repoUrl}
               data-icon="octicon-star"
-              data-count-href="/josephspurrier/govueapp/stargazers"
+              data-count-href="/josephspurrier/gomithrilapp/stargazers"
               data-show-count="true"
               data-count-aria-label="# stargazers on GitHub"
               aria-label="Star this project on GitHub">

@@ -58,7 +58,7 @@ There are many design patterns available for web applications like [Model-View-C
 
 ### cmd
 
-The [cmd](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/cmd) folder is where the code containing the `func main()` should go. Since a project may contain multiple compilable applications, you should create a folder with the name of the application and then place the file containing the `main` function in that directory. These application folders should typically only contain a single file. It's also a good practice to name the file `main.go` so others know it contains the `main` function.
+The [cmd](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/cmd) folder is where the code containing the `func main()` should go. Since a project may contain multiple compilable applications, you should create a folder with the name of the application and then place the file containing the `main` function in that directory. These application folders should typically only contain a single file. It's also a good practice to name the file `main.go` so others know it contains the `main` function.
 
 In this example, assume there are two applications:
 - Hello World
@@ -77,7 +77,7 @@ Syntax suggestions:
 
 ### config
 
-The [config](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/config) folder is where the code that set up the application should go. This includes the code that connects to the database, loads the environment variables, and generally sets up the services needed in the application. You should try to remove as much of the logic from the **main.go** file so your application is more testable. This folder doesn't contain any tests because all of the functions are tested by other parts of the project.
+The [config](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/config) folder is where the code that set up the application should go. This includes the code that connects to the database, loads the environment variables, and generally sets up the services needed in the application. You should try to remove as much of the logic from the **main.go** file so your application is more testable. This folder doesn't contain any tests because all of the functions are tested by other parts of the project.
 
 Example folder structure:
 
@@ -92,7 +92,7 @@ config/service.go     - set up the remainder of the services
 
 ### endpoint
 
-The [endpoint](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/endpoint) folder is where code that sets up the each of the HTTP handlers and route definition should go. Each of the handlers should also have a respective test file.
+The [endpoint](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/endpoint) folder is where code that sets up the each of the HTTP handlers and route definition should go. Each of the handlers should also have a respective test file.
 
 Example folder structure:
 
@@ -110,7 +110,7 @@ endpoint/static_test.go   - tests for serving static code
 
 ### internal
 
-The [internal](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/internal) folder is where packages that are imported by the project should go. Any folder named **internal** is only allowed to be imported by packages at the same level or deeper. This prevents other libraries from referencing the packages. You'll notice that all of these packages are very specific to this project and can't be easily moved to another project. A good rule of thumb is if the package imports other packages in your project, it should go in **internal** if there is no other place for it.
+The [internal](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/internal) folder is where packages that are imported by the project should go. Any folder named **internal** is only allowed to be imported by packages at the same level or deeper. This prevents other libraries from referencing the packages. You'll notice that all of these packages are very specific to this project and can't be easily moved to another project. A good rule of thumb is if the package imports other packages in your project, it should go in **internal** if there is no other place for it.
 
 Example folder structure:
 
@@ -127,7 +127,7 @@ internal/testutil/       - provides all the test utilities for the project
 
 ### middleware
 
-The [middleware](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/middleware) folder is where packages that "wrap" around the router or routes should go. In Go, examples of middleware are packages that log incoming requests, deny/grant access using access control lists (ACLs), and append headers to permit/restrict web resources through cross-origin resource sharing (CORS). These packages are typically called before or after the HTTP handlers.
+The [middleware](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/middleware) folder is where packages that "wrap" around the router or routes should go. In Go, examples of middleware are packages that log incoming requests, deny/grant access using access control lists (ACLs), and append headers to permit/restrict web resources through cross-origin resource sharing (CORS). These packages are typically called before or after the HTTP handlers.
 
 Example folder structure:
 
@@ -141,7 +141,7 @@ middleware/factory.go  - returns a http.Handler wrapped in all of the
 
 ### model
 
-The [model](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/model) folder is where all the response structs should go.
+The [model](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/model) folder is where all the response structs should go.
 
 Example folder structure:
 
@@ -153,7 +153,7 @@ model/note.go    - contains the note responses
 
 ### pkg
 
-The [pkg](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/pkg) folder is where the packages that can be easily be moved to a new project should go. The imports in these packages should only reference the Go standard library and other third-party packages. If any of the packages reference other packages in the project, they should be moved to the **internal** folder instead.
+The [pkg](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/pkg) folder is where the packages that can be easily be moved to a new project should go. The imports in these packages should only reference the Go standard library and other third-party packages. If any of the packages reference other packages in the project, they should be moved to the **internal** folder instead.
 
 Example folder structure:
 
@@ -171,11 +171,11 @@ pkg/webtoken/  - JWT generation and validation
 
 ### static
 
-The [static](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/static) folder contains static assets like HTML, CSS, JavaScript, and images.
+The [static](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/static) folder contains static assets like HTML, CSS, JavaScript, and images.
 
 ### store
 
-The [store](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/store) folder contains the files that interact with the MySQL datbase.
+The [store](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/store) folder contains the files that interact with the MySQL datbase.
 
 Example folder structure:
 
@@ -200,7 +200,7 @@ Even with these advantages, you may be [overengineering](https://solidstudio.io/
 
 ## Interfaces
 
-We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the **api** folder in the [interface.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/interface.go) file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). Circular dependencies are not allowed in Go and will throw an error at build time.
+We use interfaces in this project primarily to increase testability. Most of the interfaces are in the root of the **api** folder in the [interface.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/interface.go) file. By placing the interfaces at the top, you can use them by all packages below without the worry of circular dependencies (when one package imports another package that imports the first package). Circular dependencies are not allowed in Go and will throw an error at build time.
 
 Here are a few of the interfaces:
 
@@ -243,7 +243,7 @@ Go has a [built-in router](https://golang.org/pkg/net/http/#ServeMux), but it do
 
 In addtion to using a third-party router, we are also using a custom `http.Handler` inspired by [Caddy](https://github.com/caddyserver/caddy/wiki/Writing-a-Plugin:-HTTP-Middleware#writing-a-handler). The [h](https://github.com/josephspurrier/h) project is an example of how to extend the HTTP handler. This convention forces you to return both the HTTP status and an optional error so it's easily to see what the response will be for each request.
 
-The router logic is configured in the [router.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/router.go) file. You can see the type of response is based on the status code. Any status code below 400 leaves it up to the calling function to output a response. Any status code 400 and above will return an error and then any status code of 500 and above will log an error since it's probably a bug or system error. This greatly simplifies logic that is otherwise scattered throughout codebases.
+The router logic is configured in the [router.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/config/router.go) file. You can see the type of response is based on the status code. Any status code below 400 leaves it up to the calling function to output a response. Any status code 400 and above will return an error and then any status code of 500 and above will log an error since it's probably a bug or system error. This greatly simplifies logic that is otherwise scattered throughout codebases.
 
 ```go
 // Set the handling of all responses.
@@ -279,7 +279,7 @@ mux.CustomServeHTTP = func(w http.ResponseWriter, r *http.Request, status int, e
 
 ### Defining the Route
 
-You'll find the routes at the top of every file in the [endpoints](https://github.com/josephspurrier/govueapp/tree/master/src/app/api/endpoint) folder. Below is an example of the routes in the [note.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go) endpoint file.
+You'll find the routes at the top of every file in the [endpoints](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/endpoint) folder. Below is an example of the routes in the [note.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/endpoint/note.go) endpoint file.
 
 ```go
 // NoteEndpoint .
@@ -326,7 +326,7 @@ noteID := p.Router.Param(r, "note_id")
 
 ## Endpoints
 
-Each of the endpoint files contain the functions that process requests and return responses. These are the API endpoints. For these examples, we'll reference the [note.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/endpoint/note.go) file.
+Each of the endpoint files contain the functions that process requests and return responses. These are the API endpoints. For these examples, we'll reference the [note.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/endpoint/note.go) file.
 
 ### Imports
 
@@ -355,7 +355,7 @@ type NoteEndpoint struct {
 
 ### Setup
 
-You should also have a setup function at the top of the endpoint file as well. Each of these setup functions should be called by the [route.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/route.go) file that is in the **config** directory. The setup function should always take in `endpoint.Core`, assign it, and then register each fo the routes on the `Router`. The router is a pointer so there is nothing the needs to be returned.
+You should also have a setup function at the top of the endpoint file as well. Each of these setup functions should be called by the [route.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/config/route.go) file that is in the **config** directory. The setup function should always take in `endpoint.Core`, assign it, and then register each fo the routes on the `Router`. The router is a pointer so there is nothing the needs to be returned.
 
 ```go
 // SetupNotepad .

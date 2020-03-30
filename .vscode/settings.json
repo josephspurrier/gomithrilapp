@@ -27,8 +27,5 @@
     },
     "[javascript]": {
         "editor.formatOnSave": false,
-    },
-    "[vue]": {
-        "editor.formatOnSave": false,
     }
 }

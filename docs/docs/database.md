@@ -20,7 +20,7 @@ Create a new MySQL 5.7 database container. The username will be **root** and the
 make db-init
 
 # Manual
-docker run -d --name=govueapp_db_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.7
+docker run -d --name=gomithrilapp_db_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.7
 ```
 
 ### Stop Container
@@ -32,7 +32,7 @@ Stop a running MySQL database container. This will preserve the database data.
 make db-stop
 
 # Manual
-docker stop govueapp_db_1
+docker stop gomithrilapp_db_1
 ```
 
 ### Start a Stopped Container
@@ -44,7 +44,7 @@ Start a stopped MySQL database container.
 make db-start
 
 # Manual
-docker start govueapp_db_1
+docker start gomithrilapp_db_1
 ```
 
 ### Reset Container
@@ -56,8 +56,8 @@ Drop the database table and then re-run migrations.
 make db-reset
 
 # Manual
-docker exec govueapp_db_1 sh -c "exec mysql -h 127.0.0.1 -uroot -ppassword -e 'DROP DATABASE IF EXISTS main;'"
-docker exec govueapp_db_1 sh -c "exec mysql -h 127.0.0.1 -uroot -ppassword -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'"
+docker exec gomithrilapp_db_1 sh -c "exec mysql -h 127.0.0.1 -uroot -ppassword -e 'DROP DATABASE IF EXISTS main;'"
+docker exec gomithrilapp_db_1 sh -c "exec mysql -h 127.0.0.1 -uroot -ppassword -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'"
 go run ${GOPATH}/src/app/api/cmd/dbmigrate/main.go
 ```
 
@@ -70,12 +70,12 @@ Stop and then remove the container - all database data will be deleted as well.
 make db-rm
 
 # Manual
-docker rm -f govueapp_db_1
+docker rm -f gomithrilapp_db_1
 ```
 
 ## Migrations
 
-MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove), a tool very similiar to Liquibase. The migrations are run when API starts up - they are located [here](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go).
+MySQL migrations are performed at boot by [Rove](https://github.com/josephspurrier/rove), a tool very similiar to Liquibase. The migrations are run when API starts up - they are located [here](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/migration/changeset.go).
 
 Database migrations are a great way to manage incremental database changes. The migration state is stored in the same database and recorded in the **rovechangelog** table.
 
@@ -136,7 +136,7 @@ You can read more about [Rove on GitHub](https://github.com/josephspurrier/rove)
 
 A changeset is one or more SQL queries that Rove will apply to the database. Each changeset should have the SQL queries to run during the migration and then rollback SQL queries.
 
-The current changesets are here: [src/app/api/migration/changeset.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go)
+The current changesets are here: [src/app/api/migration/changeset.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/migration/changeset.go)
 
 ### When do migrations apply?
 
@@ -163,7 +163,7 @@ func main() {
 }
 ```
 
-View [src/app/api/cmd/api/main.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/cmd/api/main.go).
+View [src/app/api/cmd/api/main.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/cmd/api/main.go).
 
 The database is setup and migrations are called here: `config.Database(l)`.
 
@@ -205,7 +205,7 @@ func Database(l logger.ILog) *database.DBW {
 }
 ```
 
-View [src/app/api/config/database.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/config/database.go).
+View [src/app/api/config/database.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/config/database.go).
 
 Below is the code that references the changets and applies them - if there is an error applying them, then the application will shutdown to prevent the database from being in an invalid state.
 
@@ -219,7 +219,7 @@ if err != nil {
 
 ### Add a Changeset
 
-To add a new changeset, open up the [src/app/api/migration/changeset.go](https://github.com/josephspurrier/govueapp/blob/master/src/app/api/migration/changeset.go) file and add a new changeset to the bottom.
+To add a new changeset, open up the [src/app/api/migration/changeset.go](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/api/migration/changeset.go) file and add a new changeset to the bottom.
 
 Notice `--changeset josephspurrier:2` - each changeset must be unique so you should increment the number at the end by one when you add your changeset.
 

@@ -16,7 +16,7 @@ var View = {
       >
         <div class="navbar-brand">
           <m.route.Link class="navbar-item" href="/" data-cy="home-link">
-            <strong>govueapp</strong>
+            <strong>gomithrilapp</strong>
           </m.route.Link>
 
           <a

@@ -106,7 +106,7 @@ class Index extends React.Component {
               'way to kick-start your work so you don\'t need to spend time on your framework - the piece we really enjoy. ' +
               '<br><br>'+
               'We chose a sample notepad application because it\'s a concept that is easy to understand and uses many '+
-              'of the pieces you will use in any web application you build. This project uses Vue on the front-end (UI) '+
+              'of the pieces you will use in any web application you build. This project uses Mithril on the front-end (UI) '+
               ' and Go on the back-end (API). This project is designed to show good development and CI/CD practices as '+
               'well as integrations between '+
               'modern development tools.'+

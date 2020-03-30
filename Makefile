@@ -3,7 +3,6 @@
 # * make db-init
 # * make api-dep
 # * make api-dev
-# * make nuxt-version
 #
 # Tip: Each command is run on its own line so you can't CD unless you
 # connect commands together using operators. See examples:
@@ -19,7 +18,7 @@
 include ${GOPATH}/.env
 
 # Set local environment variables.
-MYSQL_NAME=govueapp_db_1
+MYSQL_NAME=gomithrilapp_db_1
 GITHUB_USERNAME=josephspurrier
 
 .PHONY: docker-build
@@ -118,16 +117,6 @@ db-reset:
 db-rm:
 	# Stop and remove the database container.
 	docker rm -f ${MYSQL_NAME}
-
-.PHONY: nuxt-upgrade
-nuxt-upgrade:
-	# Upgrade nuxt to the latest version.
-	cd ${GOPATH}/src/app/ui && npm upgrade nuxt
-
-.PHONY: nuxt-version
-nuxt-version:
-	# Output the version of nuxt.
-	${GOPATH}/src/app/ui/node_modules/.bin/nuxt --version
 
 .PHONY: doc-dep
 doc-dep:

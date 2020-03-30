@@ -1,6 +1,6 @@
-# govueapp
+# gomithrilapp
 
-> Sample notepad application in Vue and Go.
+> Sample notepad application in Mithril and Go.
 
 ## Build Setup
 

@@ -45,5 +45,5 @@ You may also see two different ways to execute the same command - one through pr
 make db-init
 
 # Manual
-docker run -d --name=govueapp_db_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.7
+docker run -d --name=gomithrilapp_db_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.7
 ```

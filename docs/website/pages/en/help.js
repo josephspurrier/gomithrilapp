@@ -29,13 +29,13 @@ function Help(props) {
     {
       //content: 'Ask questions about the documentation and project',
       content: `Ask questions about the 
-      [project or open a support issue](https://github.com/josephspurrier/govueapp/issues).`,
+      [project or open a support issue](https://github.com/josephspurrier/gomithrilapp/issues).`,
       title: 'Join the community',
     },
     {
       content: `Find out what's new with this project - you can follow the 
-      [RSS feed](https://josephspurrier.github.io/govueapp/blog/feed.xml) for 
-      new blog posts or [Watch/Star](https://github.com/josephspurrier/govueapp) the GitHub repo.`,
+      [RSS feed](https://josephspurrier.github.io/gomithrilapp/blog/feed.xml) for 
+      new blog posts or [Watch/Star](https://github.com/josephspurrier/gomithrilapp) the GitHub repo.`,
       title: 'Stay up to date',
     },
   ];
