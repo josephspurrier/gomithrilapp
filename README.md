@@ -14,7 +14,7 @@ This is a sample notepad application that uses Mithril on the front-end (UI) and
 
 ## Quick Start with Docker Compose
 
-To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The ingress container is a reverse proxy that allows you to use a single URL to access multiple different docker containers depending on the URL.
+To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The Go application serves both the UI and the API depending on the request URL.
 
 ```bash
 # Clone the repo.
@@ -26,11 +26,11 @@ cd gomithrilapp
 # Build the docker containers.
 make docker-build
 
-# Run the docker containers: ingress, DB, API, and UI.
+# Run the docker containers: DB and app.
 docker-compose up -d
 
-# Open your browser to the UI (via ingress): http://localhost
-# Open your browser to the API (via ingress): http://localhost/api
+# Open your browser to the UI: http://localhost
+# Open your browser to the API: http://localhost/api
 # Open your MySQL tool to the DB: localhost:3306 (root:password)
 
 # Stop and remove the docker containers.
