@@ -14,7 +14,7 @@
     "title": "gomithrilapp API",
     "version": "1.0"
   },
-  "host": "localhost:8081",
+  "host": "localhost:8080",
   "basePath": "/",
   "paths": {
     "/api/v1": {

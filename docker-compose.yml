@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 # Template.
 x-template: &service-template
@@ -24,4 +24,4 @@ services:
     <<: *service-template
     image: "gomithrilapp:${APP_VERSION}"
     ports:
-      - "80:80"
+      - "80:8080"

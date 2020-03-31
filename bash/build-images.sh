@@ -6,7 +6,7 @@ CURDIR=`pwd`
 source .env
 
 # Build the API image.
-cd $CURDIR/src/app/api
+cd $CURDIR/src/app
 docker build -t gomithrilapp:$APP_VERSION .
 
 cd $CURDIR
