@@ -48,7 +48,7 @@ func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, err
 			return http.StatusInternalServerError, errors.New("could not find $API_STATIC or $GOPATH environment variables")
 		}
 
-		basepath = filepath.Join(gopath, "src/app/ui")
+		basepath = filepath.Join(gopath, "src/app/ui/dist")
 	}
 
 	// If the file doesn't exist, serve the UI error message.

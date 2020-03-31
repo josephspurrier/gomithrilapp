@@ -1,6 +1,7 @@
 # Dependency directories
 node_modules/
 static/app.js
+dist/
 
 # Screenshots from Cypress
 screenshots
