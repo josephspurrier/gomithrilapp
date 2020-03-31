@@ -59,7 +59,7 @@ const siteConfig = {
   /* Colors for website */
   colors: {
     primaryColor: '#3A445D',
-    secondaryColor: '#20232a',
+    secondaryColor: '#B8336A',
   },
 
   blogSidebarTitle:{
@@ -87,7 +87,7 @@ const siteConfig = {
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: 'agate',
+    theme: 'hybrid',
   },
 
   // Add custom scripts here that would be placed in <script> tags.

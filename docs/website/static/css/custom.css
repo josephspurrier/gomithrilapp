@@ -11,6 +11,10 @@
 strong, b {
     font-weight: 700;
 }
+a {
+    color: #B8336A;
+    /*text-decoration: underline;*/
+}
 
 /* Emphasize the code between ticks more. */
 code {
