@@ -43,11 +43,11 @@ script:
   - go run cmd/api/main.go &
   - cd $GOPATH/src/app/ui
   - npm run build
-  - npm install -g wait-on
+  - npm install -g wait-on coveralls
   - wait-on http://localhost:8080
   - npm test
 after_success:
   - cd $GOPATH/src/app
-  - cat api/lcov.info | $GOPATH/src/app/ui/node_modules/.bin/coveralls
+  - cat api/lcov.info | coveralls
 notifications:
   webhooks: https://coveralls.io/webhook
