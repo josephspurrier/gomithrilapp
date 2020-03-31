@@ -30,7 +30,7 @@ const siteConfig = {
   //   baseUrl: '/test-site/',
 
   // Google Analytics tracking code
-  gaTrackingId: 'UA-161449546-1',
+  gaTrackingId: 'UA-162306385-1',
 
   // Used for publishing and more
   projectName: 'gomithrilapp',
