@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://josephspurrier.github.io/govueapp/blog</id>
-    <title>govueapp Blog</title>
+    <id>https://josephspurrier.github.io/gomithrilapp/blog</id>
+    <title>gomithrilapp Blog</title>
     <updated>2020-03-23T06:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://josephspurrier.github.io/govueapp/blog"/>
-    <subtitle>The best place to stay up-to-date with the latest govueapp news and events.</subtitle>
-    <logo>https://josephspurrier.github.io/govueapp/undefined</logo>
+    <link rel="alternate" href="https://josephspurrier.github.io/gomithrilapp/blog"/>
+    <subtitle>The best place to stay up-to-date with the latest gomithrilapp news and events.</subtitle>
+    <logo>https://josephspurrier.github.io/gomithrilapp/undefined</logo>
     <rights>Copyright © 2020 Joseph Spurrier</rights>
     <entry>
         <title type="html"><![CDATA[Guides for Docker Compose and Documentation]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/23/compose-and-docs.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/23/compose-and-docs.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/23/compose-and-docs.html"/>
         <updated>2020-03-23T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>I added a few new pages to the Guides section:</p>
 <ul>
-<li><a href="https://josephspurrier.github.io/govueapp/docs/docker-compose">Docker Compose</a></li>
-<li><a href="https://josephspurrier.github.io/govueapp/docs/documentation">Documentation</a></li>
+<li><a href="https://josephspurrier.github.io/gomithrilapp/docs/docker-compose">Docker Compose</a></li>
+<li><a href="https://josephspurrier.github.io/gomithrilapp/docs/documentation">Documentation</a></li>
 </ul>
 <p>The Docker Compose guide goes over how to use the <code>docker-compose</code> commands and explains the configuration in the <code>docker-compose.yml</code> file.</p>
 <p>On the documentation front, it feels like inception - I'm using documentation to write documentation around how to generate documentation!</p>
@@ -29,8 +29,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[Docs through Docusaurus]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/15/docusaurus.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/15/docusaurus.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/15/docusaurus.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/15/docusaurus.html"/>
         <updated>2020-03-15T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>I've used <a href="https://gohugo.io/">Hugo</a> in the past, but I decided to give
 <a href="https://docusaurus.io/">Docusaurus</a> a shot and it's been a pretty good process so far. I'm haven't spent much time with React but the project is pretty easy to use. It's great you can build sidebars referencing pages and when you load that page, it will load the sidebar with it. Their documentation is a little limited but I easily
@@ -44,21 +44,21 @@ fall back to plain HTML to get the layouts working the way I want.</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[Smarter Testing]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/14/smarter-testing.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/14/smarter-testing.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/14/smarter-testing.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/14/smarter-testing.html"/>
         <updated>2020-03-14T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>When I first wrote the code and tests in note.go and note_test.go, I wanted to
 see if I could get to 100% code coverage. It's a good exercise if you've never
 done it before to see what you have to do to get there. It requires a lot more
 effort than it's worth for most applications, but still a good exercise.
-<a href="https://github.com/josephspurrier/govueapp/commit/5204659c7ab7a19c24b2d3c29f2fb03b7760f119">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/5204659c7ab7a19c24b2d3c29f2fb03b7760f119">View commit</a>.</p>
 <p>In Go, table driven tests is very common. You can read able them
 <a href="https://github.com/golang/go/wiki/TableDrivenTests">here</a>. It helps cut down
 on all the boilerplate code you have to repeat everywhere.</p>
 <p>It's also helpful if you have a setup and teardown process that is run with
 each of your tests. Since that code was copy and pasted in many different places,
 considated they to easy to use functions.
-<a href="https://github.com/josephspurrier/govueapp/commit/89020eaea7cd7922d5936c566513c30602e2e701">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/89020eaea7cd7922d5936c566513c30602e2e701">View commit</a>.</p>
 <p>Code samples below.</p>
 ]]></summary>
         <author>
@@ -69,15 +69,15 @@ considated they to easy to use functions.
     </entry>
     <entry>
         <title type="html"><![CDATA[From Jest to Cypress]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/08/jest-to-cypress.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/08/jest-to-cypress.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/08/jest-to-cypress.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/08/jest-to-cypress.html"/>
         <updated>2020-03-08T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>It's hard to argue that <a href="https://www.cypress.io/">Cypress</a> doesn't make an
 engineer's life easier. I originally wrote tests for <a href="https://jestjs.io/">Jest</a>,
 but after seeing a bunch of vulnerabilities pop up in the packages that it's
 using, I decided it was a good time to switch to Cypress so I could access the
 wonderful GUI that's available.
-<a href="https://github.com/josephspurrier/govueapp/commit/53201272a91e90b555ad296f1db128d1f95a8153">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/53201272a91e90b555ad296f1db128d1f95a8153">View commit</a>.</p>
 <p>I'll admit, I'm not a JavaScript developer, but Cypress does make it more fun
 to write tests because you can see your progress live. A video is below.</p>
 ]]></summary>
@@ -89,12 +89,12 @@ to write tests because you can see your progress live. A video is below.</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[Finally, ESLint Working with VSCode]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/08/eslint.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/08/eslint.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/08/eslint.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/08/eslint.html"/>
         <updated>2020-03-08T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>I finally figured out how to get <a href="https://eslint.org/">ESLint</a> to work properly
 with Visual Studio Code (VSCode).
-<a href="https://github.com/josephspurrier/govueapp/commit/f85d046355c8088749e0efadcce491f430b59191">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/f85d046355c8088749e0efadcce491f430b59191">View commit</a>.</p>
 <p>It was quite a challenge getting ESLint to work properly when the .eslintrc.js file is not in the root of the project - the trick was the &quot;eslint.workingDirectories&quot; setting. All the settings are included in the .vscode/settings.json file. I use VSCode open only to the root of the project with no other projects. I also recommend the following VSCode extensions:</p>
 <ul>
 <li><a href="https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint">ESLint</a></li>
@@ -110,13 +110,12 @@ with Visual Studio Code (VSCode).
     </entry>
     <entry>
         <title type="html"><![CDATA[Cleaning up npm]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/07/npm.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/07/npm.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/07/npm.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/07/npm.html"/>
         <updated>2020-03-07T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>I did a little deep dive learning today on npm modules. There were some vulnerabilities
-and dependencies that were in the wrong places in the package.json file. <a href="https://github.com/josephspurrier/govueapp/commit/5400404e64af1cb40586035b2f1f0b949ded5f2f">View commit</a>.</p>
-<p>I added some notes to the README.md file on how to interact with the package manager
-and Nuxt.js. The code is also below:</p>
+and dependencies that were in the wrong places in the package.json file. <a href="https://github.com/josephspurrier/gomithrilapp/commit/5400404e64af1cb40586035b2f1f0b949ded5f2f">View commit</a>.</p>
+<p>I added some notes to the README.md file on how to interact with the package manager. The code is also below:</p>
 ]]></summary>
         <author>
             <name>Joseph Spurrier</name>
@@ -126,8 +125,8 @@ and Nuxt.js. The code is also below:</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[Bye Go Modules - Hello Makefile]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2020/03/07/bye-mod.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2020/03/07/bye-mod.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2020/03/07/bye-mod.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/07/bye-mod.html"/>
         <updated>2020-03-07T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>I really want to use Go modules but it seems the
 <a href="https://github.com/Microsoft/vscode-go/wiki/Go-modules-support-in-Visual-Studio-Code">community (&quot;⚠️ These tools do not provide a good support for Go modules yet.&quot;)</a>
@@ -142,14 +141,14 @@ as possible so I'm switching back to vendoring depdendencies using
 <a href="https://github.com/FiloSottile/gvt/blob/master/README.old.md">gvt</a> until modules
 is better supported by popular tools. We've used gvt on large teams for years so
 even though it's deprecated, it still works extremely well for our purposes.
-<a href="https://github.com/josephspurrier/govueapp/commit/a679b5a7bfaf5ab97485d302d115cebaf9a7d1ad">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/a679b5a7bfaf5ab97485d302d115cebaf9a7d1ad">View commit</a>.</p>
 <h2><a class="anchor" aria-hidden="true" id="makefile"></a><a href="#makefile" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Makefile</h2>
 <p>Instead of keeping all the frequently used commands in a text file that team
 members have to copy and paste, I added a Makefile to simply a lot of the work.
 This should help streamline the process for all the engineers on your team
 so each person can run the same commands quickly instead of hunting for that
 text file they created a while ago.
-<a href="https://github.com/josephspurrier/govueapp/commit/f3d59c768daf9848cb3a856b6f816c24e8e1934e">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/f3d59c768daf9848cb3a856b6f816c24e8e1934e">View commit</a>.</p>
 ]]></summary>
         <author>
             <name>Joseph Spurrier</name>
@@ -159,11 +158,11 @@ text file they created a while ago.
     </entry>
     <entry>
         <title type="html"><![CDATA[CI/CD with Travis-CI]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2019/05/12/travis.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2019/05/12/travis.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2019/05/12/travis.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2019/05/12/travis.html"/>
         <updated>2019-05-12T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>Every project needs a good CI/CD solution - now we've got a
-<a href="https://travis-ci.org/">Travis-CI</a> integration. <a href="https://github.com/josephspurrier/govueapp/commit/5839a9046f438d2683857c97a7ad3fb5c23abc4f">View commit</a>.
+<a href="https://travis-ci.org/">Travis-CI</a> integration. <a href="https://github.com/josephspurrier/gomithrilapp/commit/5839a9046f438d2683857c97a7ad3fb5c23abc4f">View commit</a>.
 Travis will help us check our code when we commit it to ensure all of our unit tests
 and end to end tests are still passing. It will also generate Swagger spec to
 make sure it's valid from our annotations.</p>
@@ -178,14 +177,14 @@ shares a lot of great concepts and methodologies on development and testing. A g
     </entry>
     <entry>
         <title type="html"><![CDATA[Happy Handlers and Swagger Codegen]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2019/05/07/happy-handlers.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2019/05/07/happy-handlers.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2019/05/07/happy-handlers.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2019/05/07/happy-handlers.html"/>
         <updated>2019-05-07T06:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>Let's improve those HTTP handlers! In 2018, I <a href="https://github.com/josephspurrier/h">released code</a> that forces an HTTP status code and an error to be returned
 by all of the handlers so it's very clear what happens in each of the code paths.
-<a href="https://github.com/josephspurrier/govueapp/commit/4f77cb041d71ae06b07d93bb22a8aba40441503f">View commit</a>.</p>
+<a href="https://github.com/josephspurrier/gomithrilapp/commit/4f77cb041d71ae06b07d93bb22a8aba40441503f">View commit</a>.</p>
 <p>There is a new bind package (thanks to the <a href="https://github.com/go-playground/validator">go-playground</a>) that handles mapping data from a request to a struct
-and also validates it. <a href="https://github.com/josephspurrier/govueapp/commit/06457c34511871d720e1aa84da8fba88a725c79d">View commit</a>.</p>
+and also validates it. <a href="https://github.com/josephspurrier/gomithrilapp/commit/06457c34511871d720e1aa84da8fba88a725c79d">View commit</a>.</p>
 <h3><a class="anchor" aria-hidden="true" id="swagger-code-generation"></a><a href="#swagger-code-generation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Swagger Code Generation</h3>
 <p>No one likes to write an API spec by hand so I added in Swagger annotations which
 allows us to use <a href="https://swagger.io/tools/swagger-codegen/">Swagger Codegen</a> tool
@@ -199,11 +198,11 @@ to generate a Swagger spec from it!</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[Initial Commit]]></title>
-        <id>https://josephspurrier.github.io/govueapp/blog/2019/04/28/initial-commit.html</id>
-        <link href="https://josephspurrier.github.io/govueapp/blog/2019/04/28/initial-commit.html"/>
+        <id>https://josephspurrier.github.io/gomithrilapp/blog/2019/04/28/initial-commit.html</id>
+        <link href="https://josephspurrier.github.io/gomithrilapp/blog/2019/04/28/initial-commit.html"/>
         <updated>2019-04-28T06:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>The GitHub repo is now available: <a href="https://github.com/josephspurrier/govueapp">govueapp</a>. The UI and API are now available in a very early state. You can use docker-compose to get the application running on your own computer.</p>
-<p>You can view the repo at this early point-in-time <a href="https://github.com/josephspurrier/govueapp/tree/8003de72bc96f37c4cf8f7188c0c73fc849f8540">here</a>.</p>
+        <summary type="html"><![CDATA[<p>The GitHub repo is now available: <a href="https://github.com/josephspurrier/gomithrilapp">gomithrilapp</a>. The UI and API are now available in a very early state. You can use docker-compose to get the application running on your own computer.</p>
+<p>You can view the repo at this early point-in-time <a href="https://github.com/josephspurrier/gomithrilapp/tree/8003de72bc96f37c4cf8f7188c0c73fc849f8540">here</a>.</p>
 ]]></summary>
         <author>
             <name>Joseph Spurrier</name>
