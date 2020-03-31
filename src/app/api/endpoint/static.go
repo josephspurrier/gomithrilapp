@@ -1,10 +1,12 @@
 package endpoint
 
 import (
+	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // StaticEndpoint .
@@ -18,8 +20,7 @@ func SetupStatic(core Core) {
 	p.Core = core
 
 	p.Router.Get("/api/v1", p.Index)
-	p.Router.Get("/static...", p.StaticUI)
-	p.Router.Get("/api/static...", p.Static)
+	p.Router.Get("/static...", p.Static)
 }
 
 // Index .
@@ -33,56 +34,44 @@ func (p StaticEndpoint) Index(w http.ResponseWriter, r *http.Request) (int, erro
 	return p.Response.OK(w, "ready")
 }
 
-// StaticUI .
-func (p StaticEndpoint) StaticUI(w http.ResponseWriter, r *http.Request) (int, error) {
+// Static .
+func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, error) {
 	if r.URL.Path == "/static/" {
 		return http.StatusNotFound, nil
 	}
 
-	// Get the location of the executable.
-	basepath, err := os.Executable()
-	if err != nil {
-		return http.StatusInternalServerError, nil
+	// Get the environment variable in production.
+	basepath := os.Getenv("API_STATIC")
+	if len(basepath) == 0 {
+		gopath := os.Getenv("GOPATH")
+		if len(gopath) == 0 {
+			return http.StatusInternalServerError, errors.New("could not find $API_STATIC or $GOPATH environment variables")
+		}
+
+		basepath = filepath.Join(gopath, "src/app/ui")
 	}
 
-	// If static folder is found to the executable, serve the file.
-	staticPath := filepath.Join(basepath, "static")
-	if stat, err := os.Stat(staticPath); err == nil && stat.IsDir() {
-		// The static directory is found.
-	} else if len(os.Getenv("GOPATH")) > 0 {
-		// Else get the GOPATH.
-		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/ui")
+	// If the file doesn't exist, serve the UI error message.
+	fullPath := basepath + r.URL.Path
+	if _, err := os.Stat(fullPath); err != nil {
+		b, err := ioutil.ReadFile(basepath + "/index.html")
+		if err != nil {
+			return http.StatusInternalServerError, errors.New("could not find index.html")
+		}
+
+		// Return a 404 and serve the index.html file.
+		w.WriteHeader(404)
+		_, err = fmt.Fprint(w, string(b))
+		if err != nil {
+			return http.StatusInternalServerError, err
+		}
+
+		return 0, nil
 	}
 
-	// Serve the file to the user.
-	http.ServeFile(w, r, filepath.Join(basepath, strings.TrimPrefix(r.URL.Path, "/")))
+	// Serve the file to the user. Don't use filepath.join to protect against
+	// "../" in the URL path.
+	http.ServeFile(w, r, fullPath)
 
-	return http.StatusOK, nil
-}
-
-// Static .
-func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, error) {
-	if r.URL.Path == "/api/static/" {
-		return http.StatusNotFound, nil
-	}
-
-	// Get the location of the executable.
-	basepath, err := os.Executable()
-	if err != nil {
-		return http.StatusInternalServerError, nil
-	}
-
-	// If static folder is found to the executable, serve the file.
-	staticPath := filepath.Join(basepath, "static")
-	if stat, err := os.Stat(staticPath); err == nil && stat.IsDir() {
-		// The static directory is found.
-	} else if len(os.Getenv("GOPATH")) > 0 {
-		// Else get the GOPATH.
-		basepath = filepath.Join(os.Getenv("GOPATH"), "src/app/api")
-	}
-
-	// Serve the file to the user.
-	http.ServeFile(w, r, filepath.Join(basepath, strings.TrimPrefix(r.URL.Path, "/api/")))
-
-	return http.StatusOK, nil
+	return 0, nil
 }
