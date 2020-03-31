@@ -60,7 +60,7 @@ func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, err
 		}
 
 		// Return a 404 and serve the index.html file.
-		w.WriteHeader(404)
+		w.WriteHeader(http.StatusNotFound)
 		_, err = fmt.Fprint(w, string(b))
 		if err != nil {
 			return http.StatusInternalServerError, err
