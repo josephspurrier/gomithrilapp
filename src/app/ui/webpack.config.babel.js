@@ -24,6 +24,14 @@ var Webpack = {
     path: resolve(__dirname, "./dist"),
     filename: "static/[name].[contenthash].js",
   },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
+  },
+  performance: {
+    hints: false,
+  },
   module: {
     rules: [
       {
