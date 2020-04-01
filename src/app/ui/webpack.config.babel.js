@@ -16,7 +16,6 @@ var Webpack = {
       filename: "static/[name].[contenthash].css",
     }),
     new CopyPlugin([
-      { from: "./static/swagger", to: "static/swagger" },
       { from: "./static/healthcheck.html", to: "static/healthcheck.html" },
     ]),
   ],

@@ -50,7 +50,10 @@ var View = {
                     Login
                   </m.route.Link>
                 )}
-                <a class="navbar-item" href="/static/swagger/">
+                <a
+                  class="navbar-item"
+                  href="https://petstore.swagger.io/?url=http://localhost/static/swagger.json"
+                >
                   Swagger
                 </a>
                 <m.route.Link class="navbar-item" href="/about">
