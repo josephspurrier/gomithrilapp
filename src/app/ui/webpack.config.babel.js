@@ -1,6 +1,7 @@
 import { resolve } from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 var Webpack = {
   entry: "./src/index.js",
@@ -9,6 +10,9 @@ var Webpack = {
     new HtmlWebpackPlugin({
       filename: "./index.html",
       title: "gomithrilapp",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "static/[name].[contenthash].css",
     }),
   ],
   output: {
@@ -27,6 +31,21 @@ var Webpack = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader",
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
       },
     ],
   },
