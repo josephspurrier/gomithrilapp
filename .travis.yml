@@ -35,6 +35,8 @@ install:
   - cd $GOPATH/src/app/api
   - go install -v ./...
 script:
+  - cd $GOPATH/src/app/ui
+  - npm run build
   - cd $GOPATH/src/app/api
   - swagger generate spec -o ./swagger.json
   - swagger validate ./swagger.json
@@ -42,7 +44,6 @@ script:
   - cat cover.out | covfmt $GOPATH/src > lcov.info
   - go run cmd/api/main.go &
   - cd $GOPATH/src/app/ui
-  - npm run build
   - npm install -g wait-on coveralls
   - wait-on http://localhost:8080
   - npm test
