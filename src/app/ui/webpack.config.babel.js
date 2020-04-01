@@ -4,6 +4,9 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 
+// Try the environment variable, otherwise use root.
+const ASSET_PATH = process.env.ASSET_PATH || "/";
+
 var Webpack = {
   entry: "./src/index.js",
   plugins: [
@@ -17,11 +20,13 @@ var Webpack = {
     }),
     new CopyPlugin([
       { from: "./static/healthcheck.html", to: "static/healthcheck.html" },
+      { from: "./static/swagger.json", to: "static/swagger.json" },
     ]),
   ],
   output: {
     path: resolve(__dirname, "./dist"),
     filename: "static/[name].[contenthash].js",
+    publicPath: ASSET_PATH,
   },
   optimization: {
     splitChunks: {
