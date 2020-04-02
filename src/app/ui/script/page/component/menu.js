@@ -1,5 +1,5 @@
 import m from "mithril";
-import Auth from "../../module/Auth";
+import Auth from "../../module/auth";
 
 function logout() {
   Auth.clear();

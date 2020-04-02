@@ -1,6 +1,6 @@
 import m from "mithril";
 import Note from "../store/Note";
-import Flash from "./component/Flash";
+import Flash from "./component/flash";
 
 function onSubmit() {
   Note.create()

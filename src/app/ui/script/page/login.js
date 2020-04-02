@@ -1,8 +1,8 @@
 import m from "mithril";
-import Submit from "../module/Submit";
+import Submit from "../module/submit";
 import User from "../store/user";
-import Flash from "./component/Flash";
-import Auth from "../module/Auth";
+import Flash from "./component/flash";
+import Auth from "../module/auth";
 
 var data = {
   title: "Login",

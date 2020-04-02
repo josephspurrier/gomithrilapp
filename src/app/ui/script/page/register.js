@@ -1,7 +1,7 @@
 import m from "mithril";
-import Submit from "../module/Submit";
+import Submit from "../module/submit";
 import User from "../store/user";
-import Flash from "./component/Flash";
+import Flash from "./component/flash";
 
 var data = {
   title: "Register",
