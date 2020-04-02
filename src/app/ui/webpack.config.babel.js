@@ -18,10 +18,13 @@ var Webpack = {
     new MiniCssExtractPlugin({
       filename: "static/[name].[contenthash].css",
     }),
-    new CopyPlugin([
-      { from: "./static/healthcheck.html", to: "static/healthcheck.html" },
-      { from: "./static/swagger.json", to: "static/swagger.json" },
-    ]),
+    new CopyPlugin(
+      [
+        { from: "./static/healthcheck.html", to: "static/" },
+        { from: "./static/swagger.json", to: "static/" },
+      ],
+      { copyUnmodified: true }
+    ),
   ],
   output: {
     path: resolve(__dirname, "./dist"),

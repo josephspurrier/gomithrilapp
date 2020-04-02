@@ -52,7 +52,7 @@ var View = {
                 )}
                 <a
                   class="navbar-item"
-                  href="https://petstore.swagger.io/?url=http://localhost/static/swagger.json"
+                  href={`https://petstore.swagger.io/?url=${location.origin}/static/swagger.json`}
                 >
                   Swagger
                 </a>
