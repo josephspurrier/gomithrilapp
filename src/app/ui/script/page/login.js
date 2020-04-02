@@ -1,23 +1,31 @@
 import m from "mithril";
 import Submit from "../module/Submit";
-import User from "../store/User";
+import User from "../store/user";
 import Flash from "./component/Flash";
+import Auth from "../module/Auth";
 
 var data = {
-  title: "Register",
-  subtitle: "Enter your information below.",
+  title: "Login",
+  subtitle: "Enter your login information below.",
 };
 
 function onsubmit(e) {
   Submit.start(e);
 
-  User.register()
-    .then(() => {
+  User.login()
+    .then((data) => {
       User.clear();
       Submit.finish();
 
-      Flash.success("User registered.");
-      m.route.set("/login");
+      const auth = {
+        accessToken: data.token,
+        loggedIn: true,
+      };
+
+      Auth.save(auth);
+
+      Flash.success("Login successful.");
+      m.route.set("/");
     })
     .catch((err) => {
       Submit.finish();
@@ -37,42 +45,6 @@ var Page = {
 
           <div class="container" style="margin-top: 1em;">
             <form name="login" onsubmit={onsubmit}>
-              <div class="field">
-                <label class="label">First Name</label>
-                <div class="control">
-                  <input
-                    label="first_name"
-                    name="first_name"
-                    type="text"
-                    class="input"
-                    data-cy="first_name"
-                    required
-                    oninput={(e) => {
-                      User.current.first_name = e.target.value;
-                    }}
-                    value={User.current.first_name}
-                  ></input>
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Last Name</label>
-                <div class="control">
-                  <input
-                    label="last_name"
-                    name="last_name"
-                    type="text"
-                    class="input"
-                    data-cy="last_name"
-                    required
-                    oninput={(e) => {
-                      User.current.last_name = e.target.value;
-                    }}
-                    value={User.current.last_name}
-                  ></input>
-                </div>
-              </div>
-
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control">
@@ -117,7 +89,7 @@ var Page = {
                     data-cy="submit"
                     class="button is-primary"
                   >
-                    Create Account
+                    Submit
                   </button>
                 </p>
 
@@ -131,6 +103,12 @@ var Page = {
                   >
                     Clear
                   </button>
+                </p>
+
+                <p class="control">
+                  <m.route.Link href="/register" class="button is-light">
+                    Register
+                  </m.route.Link>
                 </p>
               </div>
             </form>

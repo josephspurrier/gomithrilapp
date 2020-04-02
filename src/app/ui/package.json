@@ -4,8 +4,8 @@
   "description": "A sample notepad application in Mithril and Go.",
   "main": "gomithrilapp",
   "scripts": {
-    "start": "webpack src/index.js -d --watch",
-    "build": "webpack src/index.js -p",
+    "start": "webpack script/index.js -d --watch",
+    "build": "webpack script/index.js -p",
     "help": "webpack --help",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
     "test": "cypress run",
