@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This file is called by: src/app/ui/test/setup.js
+# This file is called by Cypress in: src/app/ui/test/support/commands.js
 
 # If TRAVIS is not set, load from the environment variables.
 if [ -z "$TRAVIS" ]; then

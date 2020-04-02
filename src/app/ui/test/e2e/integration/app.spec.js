@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
 
 describe("test the basic functionality", function () {
+  before(function () {
+    cy.resetDB();
+  });
+
   beforeEach(function () {
     Cypress.Cookies.preserveOnce("auth");
   });

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -23,3 +24,10 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("resetDB", function () {
+  return cy
+    .exec("MYSQL_ROOT_PASSWORD=password bash ./bash/reset-db.sh")
+    .its("code")
+    .should("eq", 0);
+});

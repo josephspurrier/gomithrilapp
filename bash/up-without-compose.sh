@@ -6,7 +6,7 @@
 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password --rm --name mysql57 mysql:5.7
 
 # CD to the API folder.
-cd $GOPATH/src/app/api
+cd $GOPATH/src/app
 
 # Build the docker container.
 docker build -t gomithrilapp:1.0 .
