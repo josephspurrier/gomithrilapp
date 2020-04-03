@@ -24,4 +24,4 @@ services:
     <<: *service-template
     image: "gomithrilapp:${APP_VERSION}"
     ports:
-      - "80:8080"
+      - "80:80"

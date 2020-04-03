@@ -77,13 +77,13 @@ swagger-get:
 swagger-gen:
 	# Generate the swagger spec.
 	cd ${GOPATH}/src/app/api/cmd/api && \
-	swagger generate spec -o ${GOPATH}/src/app/api/static/swagger/swagger.json
+	swagger generate spec -o ${GOPATH}/src/app/ui/static/swagger.json
 
 	# Validate the swagger spec.
-	swagger validate ${GOPATH}/src/app/api/static/swagger/swagger.json
+	swagger validate ${GOPATH}/src/app/ui/static/swagger.json
 
 	# Serve the spec for the browser.
-	swagger serve -F=swagger ${GOPATH}/src/app/api/static/swagger/swagger.json
+	swagger serve -F=swagger ${GOPATH}/src/app/ui/static/swagger.json
 
 .PHONY: db-init
 db-init:
