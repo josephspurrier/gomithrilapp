@@ -5,10 +5,10 @@ WORKDIR /usr/src/ui
 COPY ./ui/package*.json ./
 # Reliable DNS.
 RUN echo nameserver 8.8.8.8 > /etc/resolv.conf
-# Copy over all files.
-COPY ./ui .
 # Get dependencies.
 RUN npm install
+# Copy over all files.
+COPY ./ui .
 # Build the dist.
 RUN npm run build
 
