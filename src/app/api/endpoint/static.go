@@ -41,11 +41,11 @@ func (p StaticEndpoint) Static(w http.ResponseWriter, r *http.Request) (int, err
 	}
 
 	// Get the environment variable in production.
-	basepath := os.Getenv("API_STATIC")
+	basepath := os.Getenv("APP_ROOT")
 	if len(basepath) == 0 {
 		gopath := os.Getenv("GOPATH")
 		if len(gopath) == 0 {
-			return http.StatusInternalServerError, errors.New("could not find $API_STATIC or $GOPATH environment variables")
+			return http.StatusInternalServerError, errors.New("could not find $APP_ROOT or $GOPATH environment variables")
 		}
 
 		basepath = filepath.Join(gopath, "src/app/ui/dist")

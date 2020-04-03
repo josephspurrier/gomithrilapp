@@ -21,7 +21,7 @@ func Handler(next http.Handler) http.Handler {
 // UI will serve the UI files.
 func UI(w http.ResponseWriter, r *http.Request) {
 	// Get the environment variable in production.
-	basepath := os.Getenv("API_STATIC")
+	basepath := os.Getenv("APP_ROOT")
 	if len(basepath) == 0 {
 		// Get the location of the executable.
 		var err error
