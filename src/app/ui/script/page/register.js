@@ -26,6 +26,9 @@ function onsubmit(e) {
 }
 
 var Page = {
+  onremove: () => {
+    User.clear();
+  },
   view: () => (
     <main>
       <div>

@@ -19,6 +19,9 @@ var Page = {
   oninit: () => {
     Note.load();
   },
+  onremove: () => {
+    Note.clear();
+  },
   view: () =>
     m(
       "notepad",
