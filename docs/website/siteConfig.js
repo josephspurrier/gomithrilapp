@@ -43,7 +43,7 @@ const siteConfig = {
   headerLinks: [
     {doc: 'tutorial/run-locally', label: 'Docs'},
     {blog: true, label: 'Blog'},
-    {href: 'https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json', label: 'API'},
+    {href: 'https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/ui/static/swagger.json', label: 'API'},
     {page: 'help', label: 'Help'},
     {href: "http://github.com/josephspurrier/gomithrilapp", label: 'GitHub'},
   ],
