@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>From Vue to Mithril · gomithrilapp</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="I subscribe to the Golang Weekly newsletter. Last week, [they](https://golangweekly.com/issues/305) had a link to a repo for an application called [duit](https://github.com/RadhiFadlillah/duit) which is built with Go and [Mithril](https://mithril.js.org/). I did a quick search comparing Vue to Mithril and found this [article](https://mithril.js.org/framework-comparison.html) by the Mithril folks."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="From Vue to Mithril · gomithrilapp"/><meta property="og:type" content="website"/><meta property="og:url" content="https://josephspurrier.github.io/gomithrilapp/blog/2020/03/30/mithril"/><meta property="og:description" content="I subscribe to the Golang Weekly newsletter. Last week, [they](https://golangweekly.com/issues/305) had a link to a repo for an application called [duit](https://github.com/RadhiFadlillah/duit) which is built with Go and [Mithril](https://mithril.js.org/). I did a quick search comparing Vue to Mithril and found this [article](https://mithril.js.org/framework-comparison.html) by the Mithril folks."/><meta property="og:image" content="https://josephspurrier.github.io/gomithrilapp/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://josephspurrier.github.io/gomithrilapp/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/gomithrilapp/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/hybrid.min.css"/><link rel="alternate" type="application/atom+xml" href="https://josephspurrier.github.io/gomithrilapp/blog/atom.xml" title="gomithrilapp Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://josephspurrier.github.io/gomithrilapp/blog/feed.xml" title="gomithrilapp Blog RSS Feed"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-162306385-1', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/gomithrilapp/js/scrollSpy.js"></script><link rel="stylesheet" href="/gomithrilapp/css/main.css"/><script src="/gomithrilapp/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/gomithrilapp/"><h2 class="headerTitle">gomithrilapp</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/gomithrilapp/docs/tutorial/run-locally" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/gomithrilapp/blog/" target="_self">Blog</a></li><li class=""><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json" target="_self">API</a></li><li class=""><a href="/gomithrilapp/help" target="_self">Help</a></li><li class=""><a href="http://github.com/josephspurrier/gomithrilapp" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Blog Posts</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Blog Posts</h3><ul class=""><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/04/02/webpack">Learning Webpack</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/gomithrilapp/blog/2020/03/30/mithril">From Vue to Mithril</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/23/compose-and-docs">Guides for Docker Compose and Documentation</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/15/docusaurus">Docs through Docusaurus</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/14/smarter-testing">Smarter Testing</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/08/jest-to-cypress">From Jest to Cypress</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/08/eslint">Finally, ESLint Working with VSCode</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/07/npm">Cleaning up npm</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2020/03/07/bye-mod">Bye Go Modules - Hello Makefile</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2019/05/12/travis">CI/CD with Travis-CI</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2019/05/07/happy-handlers">Happy Handlers and Swagger Codegen</a></li><li class="navListItem"><a class="navItem" href="/gomithrilapp/blog/2019/04/28/initial-commit">Initial Commit</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer postContainer blogContainer"><div class="wrapper"><div class="lonePost"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle"><a href="/gomithrilapp/blog/2020/03/30/mithril">From Vue to Mithril</a></h1><p class="post-meta">March 30, 2020</p><div class="authorBlock"><p class="post-authorName"><a href="http://github.com/josephspurrier" target="_blank" rel="noreferrer noopener">Joseph Spurrier</a></p><div class="authorPhoto"><a href="http://github.com/josephspurrier" target="_blank" rel="noreferrer noopener"><img src="https://graph.facebook.com/1225770017/picture/?height=200&amp;width=200" alt="Joseph Spurrier"/></a></div></div></header><div><span><p>I subscribe to the Golang Weekly newsletter. Last week, <a href="https://golangweekly.com/issues/305">they</a> had a link to a repo for an application called <a href="https://github.com/RadhiFadlillah/duit">duit</a> which is built with Go and <a href="https://mithril.js.org/">Mithril</a>. I did a quick search comparing Vue to Mithril and found this <a href="https://mithril.js.org/framework-comparison.html">article</a> by the Mithril folks.</p>
+<p>Go has always been close to my heart because <a href="https://golang.org/doc/">&quot;Go is expressive, concise, clean, and efficient.&quot;</a>. I've been looking for a JavaScript framework that is built with the same values:</p>
+<pre><code class="hljs">Why use Mithril?
+
+In one sentence: because Mithril is pragmatic. This 10 minute guide is a good example: that's how long it takes to learn components, XHR and routing - and that's just about the right amount of knowledge needed to build useful applications.
+</code></pre>
+<p>The pragmatic characteristics also come out in their documentation:</p>
+<pre><code class="hljs">As a rule of thumb, if your team is already heavily invested in another framework/library/stack, it makes more sense to stick with it, unless your team agrees that there's a very strong reason to justify a costly rewrite.
+
+However, if you're starting something new, do consider giving Mithril a try, if nothing else, to see how much value Mithril adopters have been getting out of under 10kb (gzipped) of code. Mithril is used by many well-known companies (e.g. Vimeo, Nike, Fitbit), and it powers large open-sourced platforms too (e.g. Lichess, Flarum).
+</code></pre>
+<p>I also really liked hearing Mithril has more documentation than it needs - this saves me from having to search around for the right information and I learn a little more at the same time:</p>
+<pre><code class="hljs">Mithril documentation typically errs on the side of being overly thorough if a topic involves things outside of the scope of Mithril. For example, when a topic involves a 3rd party library, Mithril documentation walks through the installation process for the 3rd party library. Mithril documentation also often demonstrates simple, close-to-the-metal solutions to common use cases in real-life applications where it's appropriate to inform a developer that web standards may be now on par with larger established libraries.
+</code></pre>
+<p>I tried it out for an afternoon and then decided to convert the project over to use Mithril. Have no fear - I left the old <a href="https://github.com/josephspurrier/govueapp">govueapp</a> repo intact and then created a new repo called <a href="https://github.com/josephspurrier/gomithrilapp">gomithrilapp</a> and then copied the code and commit history over. You'll also notice there are a lot of the same blog posts. Enjoy the new language!</p>
+<!--truncate--></span></div></div><div class="blogSocialSection"></div></div><div class="blog-recent"><a class="button" href="/gomithrilapp/blog/">Blog Posts</a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/gomithrilapp/" class="nav-home"></a><div><h5>Docs</h5><a href="/gomithrilapp/docs/en/tutorial/run-locally.html">Getting Started</a><a href="/gomithrilapp/docs/en/wip.html">Guides</a><a href="https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json">API Reference</a></div><div><h5>Community</h5><a href="https://github.com/josephspurrier/gomithrilapp/issues" target="_blank" rel="noreferrer noopener">GitHub Issues/Requests</a></div><div><h5>More</h5><a href="/gomithrilapp/blog">Blog</a><a href="https://github.com/josephspurrier/gomithrilapp">GitHub</a><a class="github-button" href="https://github.com/josephspurrier/gomithrilapp" data-icon="octicon-star" data-count-href="/josephspurrier/gomithrilapp/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 Joseph Spurrier</section></footer></div></body></html>
