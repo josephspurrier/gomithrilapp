@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/josephspurrier/gomithrilapp.svg)](https://travis-ci.org/josephspurrier/gomithrilapp)
 [![Coverage Status](https://coveralls.io/repos/github/josephspurrier/gomithrilapp/badge.svg?branch=master&timestamp=20200313-01)](https://coveralls.io/github/josephspurrier/gomithrilapp?branch=master)
 
-[![Swagger Validator](https://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json)](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/api/static/swagger/swagger.json)
+[![Swagger Validator](https://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/ui/static/swagger.json)](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/ui/static/swagger.json)
 
 This is a sample notepad application that uses Mithril on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools.
 
