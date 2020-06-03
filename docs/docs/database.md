@@ -5,7 +5,7 @@ title: Database
 
 ## Docker
 
-To get a MySQL running on your computer, we recommend you use [Docker](https://www.docker.com/). You need to make sure it's installed. Docker makes it easy to run software on your computer without having to install to. Docker also makes it easy reset or clear your environment so you can bring up new services like MySQL quickly and easily. This makes testing or working on multiple projects very easy.
+To get a MySQL running on your computer, we recommend you use [Docker](https://www.docker.com/). You need to make sure it's installed. Docker makes it easy to run software on your computer without having to install it. Docker also makes it easy reset or clear your environment so you can bring up new services like MySQL quickly and easily. This makes testing or working on multiple projects very easy.
 
 You can also install MySQL using `brew install mysql@5.7` on MacOS or install from their [website](https://dev.mysql.com/downloads/installer/), but many of the commands below don't apply.
 
