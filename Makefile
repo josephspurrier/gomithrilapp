@@ -41,6 +41,23 @@ ui-test:
 	# Run the Jest UI tests.
 	cd ${GOPATH}/src/app/ui && npm test
 
+.PHONY: eslint
+eslint:
+	# Run ESLint on the UI script folder.
+	cd ${GOPATH}/src/app/ui && eslint script
+
+# Save the ARGS.
+# https://stackoverflow.com/a/14061796
+ifeq (npm,$(firstword $(MAKECMDGOALS)))
+  ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(ARGS):;@:)
+endif
+
+.PHONY: npm
+npm:
+	# Run the NPM commands from the UI folder.
+	cd ${GOPATH}/src/app/ui && npm run $(ARGS)
+
 .PHONY: api-dep
 api-dep:
 	# Restore the dependencies. Get gvt if it's not found in $PATH.

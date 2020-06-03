@@ -2,7 +2,7 @@ import { resolve } from "path";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import CopyPlugin from "copy-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 
 // Try the environment variable, otherwise use root.
 const ASSET_PATH = process.env.ASSET_PATH || "/";
@@ -18,7 +18,7 @@ var Webpack = {
     new MiniCssExtractPlugin({
       filename: "static/[name].[contenthash].css",
     }),
-    new CopyPlugin(
+    new CopyWebpackPlugin(
       [
         { from: "./static/healthcheck.html", to: "static/" },
         { from: "./static/swagger.json", to: "static/" },
