@@ -38,7 +38,7 @@ ui-dev:
 
 .PHONY: ui-test
 ui-test:
-	# Run the Jest UI tests.
+	# Run the Cypress UI tests.
 	cd ${GOPATH}/src/app/ui && npm test
 
 .PHONY: eslint
