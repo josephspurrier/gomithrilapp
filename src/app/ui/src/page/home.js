@@ -8,7 +8,7 @@ var data = {
 var Page = {
   view: () =>
     m(
-      "index",
+      "home",
       <div>
         <section class="hero is-primary">
           <div class="hero-body">

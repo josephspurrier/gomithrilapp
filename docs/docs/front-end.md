@@ -26,7 +26,7 @@ npm audit fix
 
 # Get a verion number and a list of all packages that rely on another package.
 # https://docs.npmjs.com/cli/ls
-npm ls typescript
+npm ls babel-loader
 
 # View all top level packages.
 npm ls --depth=0

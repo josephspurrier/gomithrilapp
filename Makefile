@@ -38,13 +38,13 @@ ui-dev:
 
 .PHONY: ui-test
 ui-test:
-	# Run the Jest UI tests.
+	# Run the Cypress UI tests.
 	cd ${GOPATH}/src/app/ui && npm test
 
 .PHONY: eslint
 eslint:
-	# Run ESLint on the UI script folder.
-	cd ${GOPATH}/src/app/ui && eslint script
+	# Run ESLint on the UI src folder.
+	cd ${GOPATH}/src/app/ui && eslint src
 
 # Save the ARGS.
 # https://stackoverflow.com/a/14061796
@@ -122,7 +122,7 @@ db-reset:
 	# Drop the database, create the database, and perform the migrations.
 	docker exec ${MYSQL_NAME} sh -c "exec mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e 'DROP DATABASE IF EXISTS main;'"
 	docker exec ${MYSQL_NAME} sh -c "exec mysql -h 127.0.0.1 -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS main DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;'"
-	go run ${GOPATH}/src/app/api/cmd/dbmigrate/main.go
+	MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} go run ${GOPATH}/src/app/api/cmd/dbmigrate/main.go
 
 .PHONY: db-rm
 db-rm:

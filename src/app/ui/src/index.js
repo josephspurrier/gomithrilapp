@@ -2,7 +2,7 @@ import m from "mithril";
 import AboutPage from "./page/about";
 import LoginPage from "./page/login";
 import RegisterPage from "./page/register";
-import IndexPage from "./page/index";
+import HomePage from "./page/home";
 import NotepadPage from "./page/notepad";
 import ErrorPage from "./page/error";
 import LayoutMain from "./page/layout/main";
@@ -51,7 +51,7 @@ m.route(document.body, "/", {
 
 var Index = {
   view: function () {
-    return m(LayoutMain, m(IndexPage));
+    return m(LayoutMain, m(HomePage));
   },
 };
 

@@ -94,13 +94,11 @@ By default, a network is created for all the containers so they can communicate.
 
 The services define which images are used to spin up containers for them. The images are all built using the [build-images.sh](https://github.com/josephspurrier/gomithrilapp/blob/master/bash/build-images.sh) bash file. Again - notice the **.env** file is sourced before building the docker images.
 
-We have four services defined:
+We have two services defined:
 
-- `ingress` - this is a Go proxy that routes traffic that requests any URL to `/api` to the `api` container and any other requests to the `ui` container. The code for the ingress is [here](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/ingress/main.go) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/blob/master/src/app/ingress/Dockerfile).
 - `db` - this is the MySQL database. It's using the standard [mysql:5.7](https://hub.docker.com/_/mysql) Dockerfile.
-- `ui` - this is the UI written in Mithril. The code for the UI is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/ui) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/ui/Dockerfile).
-- `api` - this is the Go API. The code for the API is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api) with the respective [Dockerfile](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api/Dockerfile).
+- `app` - this is the Go API and the UI written in Mithril. The code for the API is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/api) and the code for the UI is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/ui). The Dockerfile is [here](https://github.com/josephspurrier/gomithrilapp/tree/master/src/app/Dockerfile).
 
-Notice only the `ports` for the ingress and db containers are exposed - this is because the requests for the api and ui are proxied through the ingress so there is no reason to expose them. The benefit of the ingress (reverse-proxy) is to allow you to use a single URL, a single port, and a single SSL certification for the application in the future even though the ui and api are listening on different ports internally.
+Notice the `ports` for the app and db containers are exposed - you can access the web application through port 80 and you can access the database through port 3306.
 
 Also notice the `service-template` is set at the top of each service - this uses the template defined at the top of the file to set defaults. Any of the values in the template can be overwritten if needed below it in the service.
