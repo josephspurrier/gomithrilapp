@@ -8,7 +8,7 @@ import CopyWebpackPlugin from "copy-webpack-plugin";
 const ASSET_PATH = process.env.ASSET_PATH || "/";
 
 var Webpack = {
-  entry: "./script/index.js",
+  entry: "./src/index.js",
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

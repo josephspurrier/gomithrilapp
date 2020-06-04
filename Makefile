@@ -43,8 +43,8 @@ ui-test:
 
 .PHONY: eslint
 eslint:
-	# Run ESLint on the UI script folder.
-	cd ${GOPATH}/src/app/ui && eslint script
+	# Run ESLint on the UI src folder.
+	cd ${GOPATH}/src/app/ui && eslint src
 
 # Save the ARGS.
 # https://stackoverflow.com/a/14061796
