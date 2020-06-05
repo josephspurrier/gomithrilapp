@@ -18,8 +18,7 @@ You should install [NodeJS and npm](https://nodejs.org/).
 These are the current versions on the front-end components:
 
 - Mithril [v2.0.4](https://github.com/MithrilJS/mithril.js/releases/tag/v2.0.4) - [docs](https://mithril.js.org/)
-- Bulma [v1.2.7](https://www.npmjs.com/package/bulma/v/0.8.1) - [docs](https://bulma.io/documentation/)
-- Swagger UI [v3.25.0](https://github.com/swagger-api/swagger-ui/releases/tag/v3.25.0) - [docs](https://swagger.io/tools/swagger-ui/)
+- Bulma [v0.8.1](https://www.npmjs.com/package/bulma/v/0.8.1) - [docs](https://bulma.io/documentation/)
 
 ## Visual Studio Code (VSCode) Setup
 
@@ -27,7 +26,6 @@ You can use any IDE, but here is what you need for VSCode. It was quite a challe
 
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Go](https://marketplace.visualstudio.com/items?itemName=ms-vscode.Go)
-- [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
 
 ## Environment Variables
 
@@ -36,10 +34,8 @@ You can also use [direnv](https://direnv.net/) which sets your environment varia
 ```bash
 # Set $GOPATH for Go.
 export GOPATH=`pwd`
-# Add the bin directory to $PATH.
-export PATH=$PATH:`pwd`/bin
-# Add the npm bin directory to $PATH to allow running NPM apps.
-export PATH=$PATH:$(npm bin)
+# Add the local Go bin directory and the npm bin directory to $PATH.
+export PATH=$PATH:`pwd`/bin:`pwd`/src/app/ui/node_modules/.bin
 ```
 
 Save the file and type `direnv allow`. That will automatically set environment variables when you `CD` into the project root and child folders.
