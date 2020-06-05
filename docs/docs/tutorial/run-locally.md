@@ -5,7 +5,7 @@ title: Run Locally
 
 ## Quick Start with Docker Compose
 
-To run the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The Go application serves both the UI and the API depending on the request URL.
+To test the application locally, you can run these commands. You don't need any of the the dev tools (Go/npm) installed, you only need Docker (and Docker Compose). The Go application serves both the UI and the API depending on the request URL.
 
 ```bash
 # Clone the repo.
