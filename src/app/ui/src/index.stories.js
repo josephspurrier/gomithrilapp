@@ -2,19 +2,23 @@
 import m from "mithril";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
+import { withA11y } from "@storybook/addon-a11y";
 import Block from "./module/block";
 
 export default {
   title: "Structure/Block",
   component: Block,
-  decorators: [withKnobs],
+  decorators: [withKnobs, withA11y],
 };
 
 export const button = () => ({
   view: () => (
     <button
       disabled={boolean("Disabled", false)}
-      onclick={action("button-click")}
+      onclick={() => {
+        action("button-click");
+        console.log("Clicked!");
+      }}
     >
       {text("Label", "Hello Storybook")}
     </button>
