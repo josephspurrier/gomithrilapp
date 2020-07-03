@@ -1,26 +1,12 @@
 import m from "mithril";
-import Note from "@/store/note";
-import Flash from "@/page/component/flash";
-
-function onSubmit() {
-  Note.create()
-    .then(() => {
-      Flash.success("Note created.");
-      // This could be optimized instead of reloading.
-      Note.load();
-      Note.clear();
-    })
-    .catch((err) => {
-      Flash.warning(err.response.message);
-    });
-}
+import NoteStore from "@/store/notestore";
 
 var Page = {
   oninit: () => {
-    Note.load();
+    NoteStore.load();
   },
   onremove: () => {
-    Note.clear();
+    NoteStore.clear();
   },
   view: () =>
     m(
@@ -42,18 +28,22 @@ var Page = {
                     if (e.key !== "Enter") {
                       return;
                     }
-                    onSubmit();
+                    NoteStore.submit();
                   }}
                   oninput={(e) => {
-                    Note.current.message = e.target.value;
+                    NoteStore.current.message = e.target.value;
                   }}
-                  value={Note.current.message}
+                  value={NoteStore.current.message}
                 />
               </div>
             </div>
             <nav class="level is-mobile">
               <div class="level-left">
-                <a title="Add note" class="level-item" onclick={onSubmit}>
+                <a
+                  title="Add note"
+                  class="level-item"
+                  onclick={NoteStore.submit}
+                >
                   <span class="icon is-small has-text-success">
                     <i class="far fa-plus-square" data-cy="add-note-link"></i>
                   </span>
@@ -63,7 +53,7 @@ var Page = {
           </div>
           <div>
             <ul id="listTodo">
-              {Note.list.map((note) => (
+              {NoteStore.list.map((note) => (
                 <li key={note.id}>
                   <div class="box">
                     <div class="content">
@@ -77,15 +67,7 @@ var Page = {
                             note.message = e.target.value;
                           }}
                           onkeyup={(e) => {
-                            Note.update(note.id, e.target.value)
-                              .then(() => {
-                                Flash.success("Note updated.");
-                              })
-                              .catch((e) => {
-                                Flash.warning(
-                                  "Could not update note: " + e.response.message
-                                );
-                              });
+                            NoteStore.runUpdate(note.id, e.target.value);
                           }}
                         />
                       </div>
@@ -96,19 +78,7 @@ var Page = {
                           title="Delete note"
                           class="level-item"
                           onclick={() => {
-                            Note.delete(note.id)
-                              .then(() => {
-                                Flash.success("Note deleted.");
-                                Note.list = Note.list.filter(function (i) {
-                                  return i.id !== note.id;
-                                });
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                                Flash.warning(
-                                  "Could not delete: " + err.response.message
-                                );
-                              });
+                            NoteStore.runDelete(note.id);
                           }}
                         >
                           <span class="icon is-small has-text-danger">

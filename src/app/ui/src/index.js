@@ -1,11 +1,11 @@
 import m from "mithril";
-import AboutPage from "@/page/about";
+import AboutPage from "@/view/about";
 import LoginPage from "@/view/login";
 import RegisterPage from "@/view/register";
-import HomePage from "@/page/home";
-import NotepadPage from "@/page/notepad";
-import ErrorPage from "@/page/error";
-import LayoutMain from "@/page/layout/main";
+import HomePage from "@/view/home";
+import NotepadPage from "@/view/notepad";
+import ErrorPage from "@/view/error";
+import LayoutMain from "@/layout/main";
 import CookieStore from "@/module/cookiestore";
 import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
 import "~/style/main.scss";

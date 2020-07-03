@@ -3,7 +3,7 @@ import m from "mithril";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
-import Block from "@/page/component/block";
+import Block from "@/component/block";
 
 export default {
   title: "Structure/Block",

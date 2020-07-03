@@ -1,5 +1,5 @@
 import m from "mithril";
-import UserLogin from "~/src/store/userlogin";
+import UserLogin from "@/store/userlogin";
 
 var data = {
   title: "Login",
@@ -20,7 +20,7 @@ var Page = {
           </div>
 
           <div class="container" style="margin-top: 1em;">
-            <form name="login" onsubmit={UserLogin.onSubmit}>
+            <form name="login" onsubmit={UserLogin.submit}>
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control">

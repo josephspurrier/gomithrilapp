@@ -12,7 +12,7 @@ var Page = {
         <section class="section">
           <div class="container">
             <h1 class="title">{data.title}</h1>
-            <h2 class="subtitle">This is a an error page.</h2>
+            <h2 class="subtitle">The page is not found.</h2>
           </div>
         </section>
       </div>

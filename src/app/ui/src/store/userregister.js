@@ -1,6 +1,6 @@
 import m from "mithril";
 import Submit from "@/module/submit";
-import Flash from "@/page/component/flash";
+import Flash from "@/component/flash";
 
 var UserRegister = {
   user: {
@@ -19,7 +19,7 @@ var UserRegister = {
       body: UserRegister.user,
     });
   },
-  onSubmit: function (e) {
+  submit: function (e) {
     Submit.start(e);
 
     UserRegister.register()

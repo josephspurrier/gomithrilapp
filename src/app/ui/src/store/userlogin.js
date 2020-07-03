@@ -1,7 +1,7 @@
 import m from "mithril";
 import Submit from "@/module/submit";
-import Flash from "@/page/component/flash";
-import CookieStore from "~/src/module/cookiestore";
+import Flash from "@/component/flash";
+import CookieStore from "@/module/cookiestore";
 
 var UserLogin = {
   user: {
@@ -18,7 +18,7 @@ var UserLogin = {
       body: UserLogin.user,
     });
   },
-  onSubmit: function (e) {
+  submit: function (e) {
     Submit.start(e);
 
     UserLogin.login()

@@ -21,7 +21,7 @@ var Page = {
           </div>
 
           <div class="container" style="margin-top: 1em;">
-            <form name="login" onsubmit={UserRegister.onSubmit}>
+            <form name="login" onsubmit={UserRegister.submit}>
               <div class="field">
                 <label class="label">First Name</label>
                 <div class="control">

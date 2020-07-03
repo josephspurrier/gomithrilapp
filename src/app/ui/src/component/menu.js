@@ -1,5 +1,5 @@
 import m from "mithril";
-import CookieStore from "~/src/module/cookiestore";
+import CookieStore from "@/module/cookiestore";
 
 function logout() {
   CookieStore.clear();
