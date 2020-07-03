@@ -8,7 +8,7 @@ import ErrorPage from "./page/error";
 import LayoutMain from "./page/layout/main";
 import Auth from "./module/auth";
 import "../node_modules/@fortawesome/fontawesome-free/js/all.js";
-import "../style/main.scss";
+//import "../style/main.scss";
 
 m.route.prefix = "";
 

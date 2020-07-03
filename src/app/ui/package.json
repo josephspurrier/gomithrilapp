@@ -10,7 +10,7 @@
     "test": "cypress run",
     "test-debug": "DEBUG=cypress:* cypress run",
     "cypress": "cypress open",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook -p 9090"
   },
   "repository": {
     "type": "git",
