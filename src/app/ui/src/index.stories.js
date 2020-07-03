@@ -3,7 +3,7 @@ import m from "mithril";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
-import Block from "./module/block";
+import Block from "@/page/component/block";
 
 export default {
   title: "Structure/Block",
@@ -37,7 +37,7 @@ export const DynamicText = () => ({
 
 export const long = () => {
   return {
-    view: () => <Block>Long</Block>,
+    view: () => <Block>{text("Text", "Long")}</Block>,
   };
 };
 long.story = {
@@ -45,7 +45,7 @@ long.story = {
 };
 
 export const short = () => ({
-  view: () => <Block>Short</Block>,
+  view: () => <Block>{text("Text", "Short")}</Block>,
 });
 
 export const emoji = () => ({
