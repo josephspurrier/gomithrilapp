@@ -4,7 +4,7 @@ import m from "mithril";
 import { withKnobs } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import Menu from "./menu";
-import "../../../style/main.scss";
+import "~/style/main.scss";
 
 export default {
   title: "Structure/Menu",

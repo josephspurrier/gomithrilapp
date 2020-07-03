@@ -1,14 +1,14 @@
 import m from "mithril";
-import AboutPage from "./page/about";
-import LoginPage from "./page/login";
-import RegisterPage from "./page/register";
-import HomePage from "./page/home";
-import NotepadPage from "./page/notepad";
-import ErrorPage from "./page/error";
-import LayoutMain from "./page/layout/main";
-import Auth from "./module/auth";
-import "../node_modules/@fortawesome/fontawesome-free/js/all.js";
-//import "../style/main.scss";
+import AboutPage from "@/page/about";
+import LoginPage from "@/page/login";
+import RegisterPage from "@/page/register";
+import HomePage from "@/page/home";
+import NotepadPage from "@/page/notepad";
+import ErrorPage from "@/page/error";
+import LayoutMain from "@/page/layout/main";
+import Auth from "@/module/auth";
+import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
+import "~/style/main.scss";
 
 m.route.prefix = "";
 

@@ -16,6 +16,12 @@ module.exports = {
                 ...config.plugins,
                 ...rootWebpack.plugins,
             ],
+            resolve: {
+                alias: {
+                    ...config.resolve.alias,
+                    ...rootWebpack.resolve.alias,
+                },
+            },
             module: {
                 ...config.module,
                 rules: [

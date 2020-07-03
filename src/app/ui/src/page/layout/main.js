@@ -1,5 +1,5 @@
 import m from "mithril";
-import Menu from "../component/menu";
+import Menu from "@/page/component/menu";
 
 var View = {
   view: function (vnode) {

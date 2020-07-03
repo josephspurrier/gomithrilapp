@@ -1,6 +1,5 @@
 import m from "mithril";
-import Auth from "../../module/auth";
-import "../../../style/main.scss";
+import Auth from "@/module/auth";
 
 function logout() {
   Auth.clear();

@@ -1,5 +1,5 @@
 import m from "mithril";
-import Auth from "../module/auth";
+import Auth from "@/module/auth";
 
 var Note = {
   current: {},

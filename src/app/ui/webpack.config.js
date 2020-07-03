@@ -26,6 +26,12 @@ module.exports = {
       { copyUnmodified: true }
     ),
   ],
+  resolve: {
+    alias: {
+      "~": resolve(__dirname),
+      "@": resolve(__dirname, "./src"),
+    },
+  },
   output: {
     path: resolve(__dirname, "./dist"),
     filename: "static/[name].[contenthash].js",
