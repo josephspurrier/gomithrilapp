@@ -1,41 +1,14 @@
 import m from "mithril";
-import Submit from "@/module/submit";
-import User from "@/store/user";
-import Flash from "@/page/component/flash";
-import Auth from "@/module/auth";
+import UserLogin from "~/src/store/userlogin";
 
 var data = {
   title: "Login",
   subtitle: "Enter your login information below.",
 };
 
-function onsubmit(e) {
-  Submit.start(e);
-
-  User.login()
-    .then((data) => {
-      User.clear();
-      Submit.finish();
-
-      const auth = {
-        accessToken: data.token,
-        loggedIn: true,
-      };
-
-      Auth.save(auth);
-
-      Flash.success("Login successful.");
-      m.route.set("/");
-    })
-    .catch((err) => {
-      Submit.finish();
-      Flash.warning(err.response.message);
-    });
-}
-
 var Page = {
   onremove: () => {
-    User.clear();
+    UserLogin.clear();
   },
   view: () => (
     <main>
@@ -47,7 +20,7 @@ var Page = {
           </div>
 
           <div class="container" style="margin-top: 1em;">
-            <form name="login" onsubmit={onsubmit}>
+            <form name="login" onsubmit={UserLogin.onSubmit}>
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control">
@@ -59,9 +32,9 @@ var Page = {
                     data-cy="email"
                     required
                     oninput={(e) => {
-                      User.current.email = e.target.value;
+                      UserLogin.user.email = e.target.value;
                     }}
-                    value={User.current.email}
+                    value={UserLogin.user.email}
                   ></input>
                 </div>
               </div>
@@ -77,9 +50,9 @@ var Page = {
                     data-cy="password"
                     required
                     oninput={(e) => {
-                      User.current.password = e.target.value;
+                      UserLogin.user.password = e.target.value;
                     }}
-                    value={User.current.password}
+                    value={UserLogin.user.password}
                   ></input>
                 </div>
               </div>
@@ -101,7 +74,7 @@ var Page = {
                     type="button"
                     class="button is-light"
                     onclick={() => {
-                      User.clear();
+                      UserLogin.clear();
                     }}
                   >
                     Clear

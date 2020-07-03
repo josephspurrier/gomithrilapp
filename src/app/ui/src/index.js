@@ -1,12 +1,12 @@
 import m from "mithril";
 import AboutPage from "@/page/about";
-import LoginPage from "@/page/login";
-import RegisterPage from "@/page/register";
+import LoginPage from "@/view/login";
+import RegisterPage from "@/view/register";
 import HomePage from "@/page/home";
 import NotepadPage from "@/page/notepad";
 import ErrorPage from "@/page/error";
 import LayoutMain from "@/page/layout/main";
-import Auth from "@/module/auth";
+import CookieStore from "@/module/cookiestore";
 import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
 import "~/style/main.scss";
 
@@ -15,25 +15,25 @@ m.route.prefix = "";
 m.route(document.body, "/", {
   "/": {
     onmatch: function () {
-      if (Auth.isLoggedIn()) return Index;
+      if (CookieStore.isLoggedIn()) return Index;
       else m.route.set("/login");
     },
   },
   "/notepad": {
     onmatch: function () {
-      if (Auth.isLoggedIn()) return Notepad;
+      if (CookieStore.isLoggedIn()) return Notepad;
       else m.route.set("/login");
     },
   },
   "/login": {
     onmatch: function () {
-      if (Auth.isLoggedIn()) m.route.set("/");
+      if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Login;
     },
   },
   "/register": {
     onmatch: function () {
-      if (Auth.isLoggedIn()) m.route.set("/");
+      if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Register;
     },
   },

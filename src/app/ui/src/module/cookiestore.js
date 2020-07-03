@@ -1,15 +1,15 @@
 import Cookie from "js-cookie";
 
-var Auth = {
+var CookieStore = {
   cookieName: "auth",
   save: (auth) => {
-    Cookie.set(Auth.cookieName, auth);
+    Cookie.set(CookieStore.cookieName, auth);
   },
   clear: () => {
-    Cookie.remove(Auth.cookieName);
+    Cookie.remove(CookieStore.cookieName);
   },
   bearerToken: () => {
-    let auth = Cookie.get(Auth.cookieName);
+    let auth = Cookie.get(CookieStore.cookieName);
     if (auth === undefined) {
       return false;
     }
@@ -19,7 +19,7 @@ var Auth = {
   },
   isLoggedIn: () => {
     try {
-      let auth = Cookie.get(Auth.cookieName);
+      let auth = Cookie.get(CookieStore.cookieName);
       if (auth === undefined) {
         return false;
       }
@@ -32,4 +32,4 @@ var Auth = {
   },
 };
 
-export default Auth;
+export default CookieStore;

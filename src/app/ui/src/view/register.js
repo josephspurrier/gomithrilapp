@@ -1,33 +1,15 @@
+// eslint-disable-next-line no-unused-vars
 import m from "mithril";
-import Submit from "@/module/submit";
-import User from "@/store/user";
-import Flash from "@/page/component/flash";
+import UserRegister from "@/store/userregister";
 
 var data = {
   title: "Register",
   subtitle: "Enter your information below.",
 };
 
-function onsubmit(e) {
-  Submit.start(e);
-
-  User.register()
-    .then(() => {
-      User.clear();
-      Submit.finish();
-
-      Flash.success("User registered.");
-      m.route.set("/login");
-    })
-    .catch((err) => {
-      Submit.finish();
-      Flash.warning(err.response.message);
-    });
-}
-
 var Page = {
   onremove: () => {
-    User.clear();
+    UserRegister.clear();
   },
   view: () => (
     <main>
@@ -39,7 +21,7 @@ var Page = {
           </div>
 
           <div class="container" style="margin-top: 1em;">
-            <form name="login" onsubmit={onsubmit}>
+            <form name="login" onsubmit={UserRegister.onSubmit}>
               <div class="field">
                 <label class="label">First Name</label>
                 <div class="control">
@@ -51,9 +33,9 @@ var Page = {
                     data-cy="first_name"
                     required
                     oninput={(e) => {
-                      User.current.first_name = e.target.value;
+                      UserRegister.user.first_name = e.target.value;
                     }}
-                    value={User.current.first_name}
+                    value={UserRegister.user.first_name}
                   ></input>
                 </div>
               </div>
@@ -69,9 +51,9 @@ var Page = {
                     data-cy="last_name"
                     required
                     oninput={(e) => {
-                      User.current.last_name = e.target.value;
+                      UserRegister.user.last_name = e.target.value;
                     }}
-                    value={User.current.last_name}
+                    value={UserRegister.user.last_name}
                   ></input>
                 </div>
               </div>
@@ -87,9 +69,9 @@ var Page = {
                     data-cy="email"
                     required
                     oninput={(e) => {
-                      User.current.email = e.target.value;
+                      UserRegister.user.email = e.target.value;
                     }}
-                    value={User.current.email}
+                    value={UserRegister.user.email}
                   ></input>
                 </div>
               </div>
@@ -105,9 +87,9 @@ var Page = {
                     data-cy="password"
                     required
                     oninput={(e) => {
-                      User.current.password = e.target.value;
+                      UserRegister.user.password = e.target.value;
                     }}
-                    value={User.current.password}
+                    value={UserRegister.user.password}
                   ></input>
                 </div>
               </div>
@@ -129,7 +111,7 @@ var Page = {
                     type="button"
                     class="button is-light"
                     onclick={() => {
-                      User.clear();
+                      UserRegister.clear();
                     }}
                   >
                     Clear

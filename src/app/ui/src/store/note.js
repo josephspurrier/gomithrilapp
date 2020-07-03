@@ -1,5 +1,5 @@
 import m from "mithril";
-import Auth from "@/module/auth";
+import CookieStore from "~/src/module/cookiestore";
 
 var Note = {
   current: {},
@@ -12,7 +12,7 @@ var Note = {
       method: "POST",
       url: "/api/v1/note",
       headers: {
-        Authorization: Auth.bearerToken(),
+        Authorization: CookieStore.bearerToken(),
       },
       body: Note.current,
     });
@@ -23,7 +23,7 @@ var Note = {
         method: "GET",
         url: "/api/v1/note",
         headers: {
-          Authorization: Auth.bearerToken(),
+          Authorization: CookieStore.bearerToken(),
         },
       })
       .then((result) => {
@@ -35,7 +35,7 @@ var Note = {
       method: "PUT",
       url: "/api/v1/note/" + id,
       headers: {
-        Authorization: Auth.bearerToken(),
+        Authorization: CookieStore.bearerToken(),
       },
       body: { message: text },
     });
@@ -45,7 +45,7 @@ var Note = {
       method: "DELETE",
       url: "/api/v1/note/" + id,
       headers: {
-        Authorization: Auth.bearerToken(),
+        Authorization: CookieStore.bearerToken(),
       },
     });
   },

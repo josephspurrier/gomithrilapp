@@ -1,8 +1,8 @@
 import m from "mithril";
-import Auth from "@/module/auth";
+import CookieStore from "~/src/module/cookiestore";
 
 function logout() {
-  Auth.clear();
+  CookieStore.clear();
   m.route.set("/");
 }
 
@@ -45,7 +45,7 @@ var View = {
               <a class="navbar-link">Menu</a>
 
               <div class="navbar-dropdown is-right">
-                {!Auth.isLoggedIn() && (
+                {!CookieStore.isLoggedIn() && (
                   <m.route.Link class="navbar-item" href="/login">
                     Login
                   </m.route.Link>
@@ -60,7 +60,7 @@ var View = {
                   About
                 </m.route.Link>
                 <hr class="navbar-divider" />
-                {Auth.isLoggedIn() && (
+                {CookieStore.isLoggedIn() && (
                   <a
                     class="dropdown-item"
                     onclick={() => {
