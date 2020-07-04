@@ -3,10 +3,10 @@ import m from "mithril";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
-import Block from "@/component/block";
+import Block from "@/example/block";
 
 export default {
-  title: "Structure/Block",
+  title: "Example/Block",
   component: Block,
   decorators: [withKnobs, withA11y],
 };

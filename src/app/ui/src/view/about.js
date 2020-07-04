@@ -1,26 +1,24 @@
 import m from "mithril";
+import SimplePage from "@/component/simple-page";
 
 var data = {
   title: "About",
+  description: {
+    view: () =>
+      m(
+        "description",
+        <main>
+          This shows you how to build a website using <strong>Mithril</strong>,{" "}
+          <strong>Go</strong>, and <strong>Bulma </strong>
+        </main>
+      ),
+  },
 };
 
 var Page = {
-  view: () =>
-    m(
-      "about",
-      <div>
-        <section class="section">
-          <div class="container">
-            <h1 class="title">{data.title}</h1>
-            <h2 class="subtitle">
-              This shows you how to build a website using{" "}
-              <strong>Mithril</strong>, <strong>Go</strong>, and{" "}
-              <strong>Bulma</strong>.
-            </h2>
-          </div>
-        </section>
-      </div>
-    ),
+  view: () => (
+    <SimplePage title={data.title} description={m(data.description)} />
+  ),
 };
 
 export default Page;

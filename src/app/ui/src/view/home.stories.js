@@ -2,18 +2,15 @@
 import m from "mithril";
 import { withKnobs } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
-import Menu from "./menu";
+import HomePage from "@/view/home";
 import "~/style/main.scss";
 
 export default {
-  title: "Component/Menu",
-  component: Menu,
+  title: "View/Home",
+  component: HomePage,
   decorators: [withKnobs, withA11y],
 };
 
-export const menu = () => ({
-  view: () => <Menu />,
+export const home = () => ({
+  view: () => <HomePage />,
 });
-menu.story = {
-  name: "Menu",
-};

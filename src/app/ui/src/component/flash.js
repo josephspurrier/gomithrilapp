@@ -36,22 +36,15 @@ var Flash = {
 
   // showMessage will show the flash message.
   showMessage(text, style) {
-    let container = document.getElementById(Flash.identifier);
+    // Don't show a message if zero.
+    if (Flash.timeout === 0) {
+      return;
+    }
 
-    if (container === null) {
-      container = document.createElement("div");
-      container.id = Flash.identifier;
-      container.setAttribute(
-        "style",
-        `
-        position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
-        z-index: 100;
-        margin: 0;
-        `
-      );
-      document.body.appendChild(container);
+    let container = document.getElementById(Flash.identifier);
+    if (!container) {
+      console.log("Could not find flash container.");
+      return;
     }
 
     const el = document.createElement("div");
@@ -74,10 +67,12 @@ var Flash = {
       container.appendChild(el);
     }
 
-    // Remove the message after a specific period of time.
-    window.setTimeout(() => {
-      el.remove();
-    }, Flash.timeout);
+    // Show forever if -1.
+    if (Flash.timeout > 0) {
+      window.setTimeout(() => {
+        el.remove();
+      }, Flash.timeout);
+    }
   },
 };
 
