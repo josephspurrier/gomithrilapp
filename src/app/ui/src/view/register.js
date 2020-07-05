@@ -11,7 +11,7 @@ var Page = {
   onremove: () => {
     UserRegister.clear();
   },
-  oncreate: (vnode) => {
+  oninit: (vnode) => {
     // Prefill the fields.
     if (vnode.attrs.firstName) {
       UserRegister.user.first_name = vnode.attrs.firstName;
@@ -25,8 +25,6 @@ var Page = {
     if (vnode.attrs.password) {
       UserRegister.user.password = vnode.attrs.password;
     }
-
-    m.redraw();
   },
   view: () => {
     return m(

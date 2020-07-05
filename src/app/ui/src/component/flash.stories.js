@@ -19,7 +19,7 @@ export default {
 };
 
 export const success = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.success(text("Text", "This is a success message."));
   },
@@ -30,7 +30,7 @@ export const success = () => ({
 });
 
 export const failed = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.failed(text("Text", "This is a failed message."));
   },
@@ -41,7 +41,7 @@ export const failed = () => ({
 });
 
 export const warning = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.warning(text("Text", "This is a warning message."));
   },
@@ -52,7 +52,7 @@ export const warning = () => ({
 });
 
 export const primary = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.primary(text("Text", "This is a primary message."));
   },
@@ -63,7 +63,7 @@ export const primary = () => ({
 });
 
 export const link = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.link(text("Text", "This is a link message."));
   },
@@ -74,7 +74,7 @@ export const link = () => ({
 });
 
 export const info = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.info(text("Text", "This is a info message."));
   },
@@ -85,7 +85,7 @@ export const info = () => ({
 });
 
 export const dark = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = -1;
     Flash.dark(text("Text", "This is a dark message."));
   },
@@ -96,7 +96,7 @@ export const dark = () => ({
 });
 
 export const Action = () => ({
-  oncreate: function () {
+  oninit: function () {
     Flash.timeout = number("Timeout (milliseconds)", "2000");
     Flash.prepend = boolean("Prepend", false);
     let s = select(
@@ -114,6 +114,9 @@ export const Action = () => ({
     );
     Flash[s](text("Text", "This is a test message."));
     button("Show Message", function () {});
+  },
+  onremove: function () {
+    Flash.clear();
   },
   view: () => <Flash />,
 });

@@ -3,7 +3,6 @@ import m from "mithril";
 import { withKnobs, select, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import RegisterPage from "@/view/register";
-//import UserRegister from "@/store/userregister";
 import Flash from "@/component/flash";
 import MockRequest from "@/component/mockrequest";
 import "~/style/main.scss";
@@ -15,7 +14,7 @@ export default {
 };
 
 export const register = () => ({
-  oncreate: () => {
+  oninit: () => {
     let s = select(
       "Operation",
       {
