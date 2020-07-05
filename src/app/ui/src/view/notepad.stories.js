@@ -3,7 +3,9 @@ import m from "mithril";
 import { withKnobs } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import NotepadPage from "@/view/notepad";
+import FlashContainer from "@/component/flashcontainer";
 import Mock from "@/component/mock";
+import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
 import "~/style/main.scss";
 
 export default {
@@ -27,5 +29,10 @@ export const notepad = () => ({
       ],
     });
   },
-  view: () => <NotepadPage />,
+  view: () => (
+    <main>
+      <NotepadPage />
+      <FlashContainer />
+    </main>
+  ),
 });
