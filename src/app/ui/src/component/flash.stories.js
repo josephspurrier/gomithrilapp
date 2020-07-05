@@ -6,10 +6,10 @@ import {
   select,
   button,
   number,
+  boolean,
 } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import Flash from "@/component/flash";
-import FlashContainer from "@/component/flashcontainer";
 import "~/style/main.scss";
 
 export default {
@@ -23,7 +23,10 @@ export const success = () => ({
     Flash.timeout = -1;
     Flash.success(text("Text", "This is a success message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const failed = () => ({
@@ -31,7 +34,10 @@ export const failed = () => ({
     Flash.timeout = -1;
     Flash.failed(text("Text", "This is a failed message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const warning = () => ({
@@ -39,7 +45,10 @@ export const warning = () => ({
     Flash.timeout = -1;
     Flash.warning(text("Text", "This is a warning message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const primary = () => ({
@@ -47,7 +56,10 @@ export const primary = () => ({
     Flash.timeout = -1;
     Flash.primary(text("Text", "This is a primary message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const link = () => ({
@@ -55,7 +67,10 @@ export const link = () => ({
     Flash.timeout = -1;
     Flash.link(text("Text", "This is a link message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const info = () => ({
@@ -63,7 +78,10 @@ export const info = () => ({
     Flash.timeout = -1;
     Flash.info(text("Text", "This is a info message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const dark = () => ({
@@ -71,12 +89,16 @@ export const dark = () => ({
     Flash.timeout = -1;
     Flash.dark(text("Text", "This is a dark message."));
   },
-  view: () => <FlashContainer />,
+  onremove: function () {
+    Flash.clear();
+  },
+  view: () => <Flash />,
 });
 
 export const Action = () => ({
   oncreate: function () {
     Flash.timeout = number("Timeout (milliseconds)", "2000");
+    Flash.prepend = boolean("Prepend", false);
     let s = select(
       "Type",
       {
@@ -93,5 +115,5 @@ export const Action = () => ({
     Flash[s](text("Text", "This is a test message."));
     button("Show Message", function () {});
   },
-  view: () => <FlashContainer />,
+  view: () => <Flash />,
 });

@@ -1,79 +1,85 @@
+// eslint-disable-next-line no-unused-vars
+import m from "mithril";
+
 // Create a flash message class with Bulma.
 // http://bulma.io/documentation/components/message/
 
-var Flash = {
-  timeout: 4000,
-  identifier: "flash-container",
+var View = {
+  list: [],
+  timeout: 4000, // milliseconds
   prepend: false,
-
-  success(text) {
-    Flash.showMessage(text, "is-success");
+  success: (message) => {
+    View.addFlash(message, "is-success");
   },
-
-  failed(text) {
-    Flash.showMessage(text, "is-danger");
+  failed: (message) => {
+    View.addFlash(message, "is-danger");
   },
-
-  warning(text) {
-    Flash.showMessage(text, "is-warning");
+  warning: (message) => {
+    View.addFlash(message, "is-warning");
   },
-
-  primary(text) {
-    Flash.showMessage(text, "is-primary");
+  primary: (message) => {
+    View.addFlash(message, "is-primary");
   },
-
-  link(text) {
-    Flash.showMessage(text, "is-link");
+  link: (message) => {
+    View.addFlash(message, "is-link");
   },
-
-  info(text) {
-    Flash.showMessage(text, "is-info");
+  info: (message) => {
+    View.addFlash(message, "is-info");
   },
-
-  dark(text) {
-    Flash.showMessage(text, "is-dark");
+  dark: (message) => {
+    View.addFlash(message, "is-dark");
   },
-
-  // showMessage will show the flash message.
-  showMessage(text, style) {
+  addFlash: (message, style) => {
     // Don't show a message if zero.
-    if (Flash.timeout === 0) {
+    if (View.timeout === 0) {
       return;
     }
 
-    let container = document.getElementById(Flash.identifier);
-    if (!container) {
-      console.log("Could not find flash container.");
-      return;
-    }
-
-    const el = document.createElement("div");
-    el.classList.add("notification", style);
-
-    const btn = document.createElement("button");
-    btn.classList.add("delete");
-    btn.onclick = () => {
-      el.remove();
+    const msg = {
+      message: message,
+      style: style,
     };
 
-    el.innerText = text;
-
-    el.appendChild(btn);
-
-    // Check if the messages should stack in reverse order.
-    if (Flash.prepend === true) {
-      container.insertBefore(el, container.firstChild);
+    //Check if the messages should stack in reverse order.
+    if (View.prepend === true) {
+      View.list.unshift(msg);
     } else {
-      container.appendChild(el);
+      View.list.push(msg);
     }
+
+    m.redraw();
 
     // Show forever if -1.
-    if (Flash.timeout > 0) {
-      window.setTimeout(() => {
-        el.remove();
-      }, Flash.timeout);
+    if (View.timeout > 0) {
+      setTimeout(() => {
+        View.removeFlash(msg);
+        m.redraw();
+      }, View.timeout);
     }
   },
+  removeFlash: (i) => {
+    View.list = View.list.filter(function (v) {
+      return v !== i;
+    });
+  },
+  clear: () => {
+    View.list = [];
+  },
+  view: () => (
+    <div style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; margin: 0;">
+      {View.list.map((i) => (
+        <div key={i} class={`notification ${i.style}`}>
+          {i.message}
+          <button
+            class="delete"
+            onclick={() => {
+              View.removeFlash(i);
+            }}
+          ></button>
+        </div>
+      ))}
+    </div>
+  ),
 };
 
-export default Flash;
+export default View;
