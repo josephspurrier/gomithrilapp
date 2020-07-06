@@ -1,5 +1,6 @@
 import m from "mithril";
 import NoteStore from "@/store/notestore";
+import Note from "@/component/note";
 
 var Page = {
   oninit: () => {
@@ -54,44 +55,7 @@ var Page = {
           <div>
             <ul id="listTodo">
               {NoteStore.list.map((note) => (
-                <li key={note.id}>
-                  <div class="box">
-                    <div class="content">
-                      <div class="editable">
-                        <input
-                          id={note.id}
-                          type="text"
-                          class="input individual-note"
-                          value={note.message}
-                          oninput={(e) => {
-                            note.message = e.target.value;
-                          }}
-                          onkeyup={(e) => {
-                            NoteStore.runUpdate(note.id, e.target.value);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <nav class="level is-mobile">
-                      <div class="level-left">
-                        <a
-                          title="Delete note"
-                          class="level-item"
-                          onclick={() => {
-                            NoteStore.runDelete(note.id);
-                          }}
-                        >
-                          <span class="icon is-small has-text-danger">
-                            <i
-                              class="fas fa-trash"
-                              data-cy="delete-note-link"
-                            ></i>
-                          </span>
-                        </a>
-                      </div>
-                    </nav>
-                  </div>
-                </li>
+                <Note key={note.id} id={note.id} message={note.message} />
               ))}
             </ul>
           </div>

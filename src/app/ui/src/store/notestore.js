@@ -44,13 +44,9 @@ var NoteStore = {
       });
   },
   runUpdate: (id, value) => {
-    NoteStore.update(id, value)
-      .then(() => {
-        Flash.success("Note updated.");
-      })
-      .catch((e) => {
-        Flash.warning("Could not update note: " + e.response.message);
-      });
+    NoteStore.update(id, value).catch((e) => {
+      Flash.warning("Could not update note: " + e.response.message);
+    });
   },
   update: (id, text) => {
     return m.request({
