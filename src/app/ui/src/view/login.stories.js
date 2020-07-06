@@ -3,6 +3,7 @@ import m from "mithril";
 import { withKnobs } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import LoginPage from "@/view/login";
+import MockRequest from "@/component/mockrequest";
 import "~/style/main.scss";
 
 export default {
@@ -12,5 +13,8 @@ export default {
 };
 
 export const login = () => ({
+  oninit: () => {
+    MockRequest.ok({}, true);
+  },
   view: () => <LoginPage />,
 });
