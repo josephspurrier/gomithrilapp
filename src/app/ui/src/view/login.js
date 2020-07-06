@@ -1,16 +1,32 @@
 import m from "mithril";
 import UserLogin from "@/store/userlogin";
+import Input from "@/component/input";
 
 var data = {
   title: "Login",
   subtitle: "Enter your login information below.",
 };
 
+var clear = (vnode) => {
+  vnode.state.user = {};
+};
+
 var Page = {
-  onremove: () => {
-    UserLogin.clear();
+  oninit: (vnode) => {
+    clear(vnode);
+
+    // Prefill the fields.
+    if (vnode.attrs.email) {
+      vnode.state.user.email = vnode.attrs.email;
+    }
+    if (vnode.attrs.password) {
+      vnode.state.user.password = vnode.attrs.password;
+    }
   },
-  view: () => (
+  onremove: (vnode) => {
+    clear(vnode);
+  },
+  view: (vnode) => (
     <main>
       <div>
         <section class="section">
@@ -20,42 +36,36 @@ var Page = {
           </div>
 
           <div class="container" style="margin-top: 1em;">
-            <form name="login" onsubmit={UserLogin.submit}>
-              <div class="field">
-                <label class="label">Email</label>
-                <div class="control">
-                  <input
-                    label="Email"
-                    name="email"
-                    type="text"
-                    class="input"
-                    data-cy="email"
-                    required
-                    oninput={(e) => {
-                      UserLogin.user.email = e.target.value;
-                    }}
-                    value={UserLogin.user.email}
-                  ></input>
-                </div>
-              </div>
+            <form
+              name="login"
+              onsubmit={(e) => {
+                UserLogin(e, vnode.state.user)
+                  .then(() => {
+                    clear(vnode);
+                  })
+                  .catch(() => {});
+              }}
+            >
+              <Input
+                label="Email"
+                name="email"
+                required="true"
+                oninput={(e) => {
+                  vnode.state.user.email = e.target.value;
+                }}
+                value={vnode.state.user.email}
+              />
 
-              <div class="field">
-                <label class="label">Password</label>
-                <div class="control">
-                  <input
-                    label="Password"
-                    name="password"
-                    type="password"
-                    class="input"
-                    data-cy="password"
-                    required
-                    oninput={(e) => {
-                      UserLogin.user.password = e.target.value;
-                    }}
-                    value={UserLogin.user.password}
-                  ></input>
-                </div>
-              </div>
+              <Input
+                label="Password"
+                name="password"
+                required="true"
+                oninput={(e) => {
+                  vnode.state.user.password = e.target.value;
+                }}
+                value={vnode.state.user.password}
+                type="password"
+              />
 
               <div class="field is-grouped">
                 <p class="control">
@@ -74,7 +84,7 @@ var Page = {
                     type="button"
                     class="button is-light"
                     onclick={() => {
-                      UserLogin.clear();
+                      clear(vnode);
                     }}
                   >
                     Clear

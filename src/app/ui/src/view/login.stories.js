@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import m from "mithril";
-import { withKnobs } from "@storybook/addon-knobs";
+import { withKnobs, select, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import LoginPage from "@/view/login";
+import Flash from "@/component/flash";
 import MockRequest from "@/component/mockrequest";
 import "~/style/main.scss";
 
@@ -14,7 +15,32 @@ export default {
 
 export const login = () => ({
   oninit: () => {
-    MockRequest.ok({}, true);
+    let s = select(
+      "Operation",
+      {
+        LoginSuccessful: "opt1",
+        LoginIncorrect: "opt2",
+      },
+      "opt1"
+    );
+    switch (s) {
+      case "opt1":
+        MockRequest.ok({});
+        break;
+      case "opt2":
+        MockRequest.badRequest("Login information does not match.");
+        break;
+      default:
+        MockRequest.badRequest("There is a problem with the storybook.");
+    }
   },
-  view: () => <LoginPage />,
+  view: () => (
+    <main>
+      <LoginPage
+        email={text("Email", "jsmith@example.com")}
+        password={text("Password", "password")}
+      />
+      <Flash />
+    </main>
+  ),
 });

@@ -25,7 +25,7 @@ export const register = () => ({
     );
     switch (s) {
       case "opt1":
-        MockRequest.success({});
+        MockRequest.ok({});
         break;
       case "opt2":
         MockRequest.badRequest("The user already exists.");
@@ -34,7 +34,6 @@ export const register = () => ({
         MockRequest.badRequest("There is a problem with the storybook.");
     }
   },
-
   view: () => (
     <main>
       <RegisterPage
