@@ -1,4 +1,4 @@
-import m from "mithril";
+import m from "mithril"; // eslint-disable-line no-unused-vars
 import AboutPage from "@/view/about";
 import LoginPage from "@/view/login";
 import RegisterPage from "@/view/register";

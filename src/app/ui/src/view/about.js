@@ -1,4 +1,4 @@
-import m from "mithril";
+import m from "mithril"; // eslint-disable-line no-unused-vars
 import SimplePage from "@/component/simple-page";
 
 var data = {

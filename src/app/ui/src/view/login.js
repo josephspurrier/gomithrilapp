@@ -1,4 +1,4 @@
-import m from "mithril";
+import m from "mithril"; // eslint-disable-line no-unused-vars
 import UserLogin from "@/store/userlogin";
 import Input from "@/component/input";
 

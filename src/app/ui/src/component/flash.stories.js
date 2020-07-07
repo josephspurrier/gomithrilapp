@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import m from "mithril";
+import m from "mithril"; // eslint-disable-line no-unused-vars
 import {
   withKnobs,
   text,

@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import m from "mithril";
+import m from "mithril"; // eslint-disable-line no-unused-vars
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
