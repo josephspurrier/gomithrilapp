@@ -4,17 +4,14 @@ import Flash from "@/component/flash";
 import CookieStore from "@/module/cookiestore";
 
 var UserLogin = (e, user) => {
-  let login = () => {
-    return m.request({
+  Submit.start(e);
+
+  return m
+    .request({
       method: "POST",
       url: "/api/v1/login",
       body: user,
-    });
-  };
-
-  Submit.start(e);
-
-  return login()
+    })
     .then((data) => {
       Submit.finish();
 
