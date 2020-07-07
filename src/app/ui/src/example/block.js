@@ -1,7 +1,9 @@
 import m from "mithril"; // eslint-disable-line no-unused-vars
 
-var Block = {
-  view: (vnode) => m("", <div>{vnode.children}</div>),
+var Block = () => {
+  return {
+    view: (vnode) => m("", <div>{vnode.children}</div>),
+  };
 };
 
 export default Block;
