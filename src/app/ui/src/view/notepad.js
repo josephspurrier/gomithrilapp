@@ -14,7 +14,6 @@ var Page = () => {
               <label class="label">To Do</label>
               <div class="control">
                 <input
-                  v-model="inputTodo"
                   type="text"
                   placeholder="What would you like to do?"
                   class="input"
