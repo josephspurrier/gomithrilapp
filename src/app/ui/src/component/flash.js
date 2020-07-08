@@ -57,7 +57,7 @@ var View = {
     }
   },
   removeFlash: (i) => {
-    View.list = View.list.filter(function (v) {
+    View.list = View.list.filter((v) => {
       return v !== i;
     });
   },

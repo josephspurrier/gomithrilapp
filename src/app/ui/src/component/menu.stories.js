@@ -13,6 +13,3 @@ export default {
 export const menu = () => ({
   view: () => <Menu />,
 });
-menu.story = {
-  name: "Menu",
-};

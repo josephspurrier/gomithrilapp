@@ -22,7 +22,7 @@ var View = () => {
                       NoteStore.runUpdate(vnode.attrs.id, e.target.value);
                       vnode.state.saving = "Saving...";
                       m.redraw();
-                      setTimeout(function () {
+                      setTimeout(() => {
                         vnode.state.saving = "";
                         m.redraw();
                       }, 1000);

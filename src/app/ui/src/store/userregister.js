@@ -19,7 +19,7 @@ var UserRegister = {
       body: UserRegister.user,
     });
   },
-  submit: function (e) {
+  submit: (e) => {
     Submit.start(e);
 
     UserRegister.register()

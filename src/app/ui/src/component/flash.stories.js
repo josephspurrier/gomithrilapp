@@ -18,84 +18,84 @@ export default {
 };
 
 export const success = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.success(text("Text", "This is a success message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const failed = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.failed(text("Text", "This is a failed message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const warning = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.warning(text("Text", "This is a warning message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const primary = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.primary(text("Text", "This is a primary message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const link = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.link(text("Text", "This is a link message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const info = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.info(text("Text", "This is a info message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const dark = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = -1;
     Flash.dark(text("Text", "This is a dark message."));
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,
 });
 
 export const Action = () => ({
-  oninit: function () {
+  oninit: () => {
     Flash.timeout = number("Timeout (milliseconds)", "2000");
     Flash.prepend = boolean("Prepend", false);
     let s = select(
@@ -112,9 +112,9 @@ export const Action = () => ({
       "success"
     );
     Flash[s](text("Text", "This is a test message."));
-    button("Show Message", function () {});
+    button("Show Message", () => {});
   },
-  onremove: function () {
+  onremove: () => {
     Flash.clear();
   },
   view: () => <Flash />,

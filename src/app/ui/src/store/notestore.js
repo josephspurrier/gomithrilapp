@@ -62,7 +62,7 @@ var NoteStore = {
     NoteStore.delete(id)
       .then(() => {
         Flash.success("Note deleted.");
-        NoteStore.list = NoteStore.list.filter(function (i) {
+        NoteStore.list = NoteStore.list.filter((i) => {
           return i.id !== id;
         });
       })

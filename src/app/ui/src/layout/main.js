@@ -4,7 +4,7 @@ import Flash from "@/component/flash";
 
 var View = () => {
   return {
-    view: function (vnode) {
+    view: (vnode) => {
       return m("main.layout", [
         m(Menu),
         m("section", vnode.children),

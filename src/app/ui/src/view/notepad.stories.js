@@ -3,7 +3,7 @@ import { withKnobs } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import NotepadPage from "@/view/notepad";
 import Flash from "@/component/flash";
-import MockRequest from "@/component/mockrequest";
+import MockRequest from "@/module/mockrequest";
 import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
 import "~/style/main.scss";
 

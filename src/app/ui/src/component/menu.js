@@ -2,7 +2,7 @@ import m from "mithril"; // eslint-disable-line no-unused-vars
 import CookieStore from "@/module/cookiestore";
 
 var View = () => {
-  let logout = function () {
+  let logout = () => {
     CookieStore.clear();
     m.route.set("/");
   };

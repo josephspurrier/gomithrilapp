@@ -14,61 +14,61 @@ m.route.prefix = "";
 
 m.route(document.body, "/", {
   "/": {
-    onmatch: function () {
+    onmatch: () => {
       if (CookieStore.isLoggedIn()) return Index;
       else m.route.set("/login");
     },
   },
   "/notepad": {
-    onmatch: function () {
+    onmatch: () => {
       if (CookieStore.isLoggedIn()) return Notepad;
       else m.route.set("/login");
     },
   },
   "/login": {
-    onmatch: function () {
+    onmatch: () => {
       if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Login;
     },
   },
   "/register": {
-    onmatch: function () {
+    onmatch: () => {
       if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Register;
     },
   },
   "/about": {
-    render: function () {
+    render: () => {
       return m(LayoutMain, m(AboutPage));
     },
   },
   "/:404...": {
-    view: function () {
+    view: () => {
       return m(LayoutMain, m(ErrorPage));
     },
   },
 });
 
 var Index = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(HomePage));
   },
 };
 
 var Notepad = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(NotepadPage));
   },
 };
 
 var Login = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(LoginPage));
   },
 };
 
 var Register = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(RegisterPage));
   },
 };

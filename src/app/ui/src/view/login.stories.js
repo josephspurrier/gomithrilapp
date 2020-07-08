@@ -3,7 +3,7 @@ import { withKnobs, select, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import LoginPage from "@/view/login";
 import Flash from "@/component/flash";
-import MockRequest from "@/component/mockrequest";
+import MockRequest from "@/module/mockrequest";
 import "~/style/main.scss";
 
 export default {

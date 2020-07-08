@@ -30,7 +30,7 @@ import Path from "path";
 // YOU NEED TO FIX THE WAY THE MIGRATIONS ARE RUN - THE DOCKER WILL NOT EXIST SO RESET WON'T WORK.
 // IF IT'S on mac, it should load the stuff and it would work, if it's in travis, the DB will always be clea
 
-Cypress.Commands.add("resetDB", function () {
+Cypress.Commands.add("resetDB", () => {
   return cy
     .exec("MYSQL_ROOT_PASSWORD=password bash ./bash/reset-db.sh", {
       env: { CYPRESS: Path.resolve(__dirname) },
