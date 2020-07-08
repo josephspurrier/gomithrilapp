@@ -23,8 +23,9 @@ func main() {
 	config.LoadRoutes(core)
 
 	// Start the web server.
-	l.Printf("Server started.")
-	err := http.ListenAndServe(fmt.Sprintf(":%v", settings.Port), config.Middleware(core))
+	socket := fmt.Sprintf(":%v", settings.Port)
+	l.Printf("Server started on %v", socket)
+	err := http.ListenAndServe(socket, config.Middleware(core))
 	if err != nil {
 		l.Printf(err.Error())
 	}

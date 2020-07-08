@@ -1,21 +1,21 @@
 /* eslint-disable no-undef */
 
-describe("test the basic functionality", function () {
-  before(function () {
+describe("test the basic functionality", () => {
+  before(() => {
     cy.resetDB();
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     Cypress.Cookies.preserveOnce("auth");
   });
 
-  it("loads the home page", function () {
+  it("loads the home page", () => {
     cy.clearCookie("auth");
     cy.visit("http://localhost:8080");
     cy.contains("Login");
   });
 
-  it("registers a new user", function () {
+  it("registers a new user", () => {
     cy.visit("/register");
 
     cy.get("[data-cy=first_name]").type("John").should("have.value", "John");
@@ -25,7 +25,7 @@ describe("test the basic functionality", function () {
     cy.get("[data-cy=submit]").click();
   });
 
-  it("login with the user", function () {
+  it("login with the user", () => {
     cy.visit("/");
 
     cy.contains("Login");
@@ -35,7 +35,7 @@ describe("test the basic functionality", function () {
     cy.contains("Login successful.");
   });
 
-  it("navigate to note page", function () {
+  it("navigate to note page", () => {
     cy.visit("/");
 
     cy.contains("Welcome");
@@ -45,7 +45,7 @@ describe("test the basic functionality", function () {
     cy.contains("To Do");
   });
 
-  it("add a note", function () {
+  it("add a note", () => {
     cy.visit("/notepad");
 
     cy.get("[data-cy=note-text]")
@@ -58,7 +58,7 @@ describe("test the basic functionality", function () {
     cy.get("#listTodo").find("li").should("have.length", 1);
   });
 
-  it("add a 2nd note", function () {
+  it("add a 2nd note", () => {
     cy.visit("/notepad");
 
     cy.get("[data-cy=note-text]")
@@ -81,7 +81,7 @@ describe("test the basic functionality", function () {
       .should("have.value", "hello world");
   });
 
-  it("edit the 2nd note", function () {
+  it("edit the 2nd note", () => {
     cy.visit("/notepad");
 
     cy.get("#listTodo>li")
@@ -91,14 +91,14 @@ describe("test the basic functionality", function () {
       .should("have.value", "hello world foo");
   });
 
-  it("delete the 1st note", function () {
+  it("delete the 1st note", () => {
     cy.visit("/notepad");
     cy.wait(500);
     cy.get("#listTodo>li").eq(1).find("[data-cy=delete-note-link]").click();
     cy.get("#listTodo").find("li").should("have.length", 1);
   });
 
-  it("delete the last note", function () {
+  it("delete the last note", () => {
     cy.visit("/notepad");
     cy.wait(500);
     cy.get("#listTodo>li").eq(0).find("[data-cy=delete-note-link]").click();

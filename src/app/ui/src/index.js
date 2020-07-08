@@ -1,74 +1,74 @@
-import m from "mithril";
-import AboutPage from "./page/about";
-import LoginPage from "./page/login";
-import RegisterPage from "./page/register";
-import HomePage from "./page/home";
-import NotepadPage from "./page/notepad";
-import ErrorPage from "./page/error";
-import LayoutMain from "./page/layout/main";
-import Auth from "./module/auth";
-import "../node_modules/@fortawesome/fontawesome-free/js/all.js";
-import "../style/main.scss";
+import m from "mithril"; // eslint-disable-line no-unused-vars
+import AboutPage from "@/view/about";
+import LoginPage from "@/view/login";
+import RegisterPage from "@/view/register";
+import HomePage from "@/view/home";
+import NotepadPage from "@/view/notepad";
+import ErrorPage from "@/view/error";
+import LayoutMain from "@/layout/main";
+import CookieStore from "@/module/cookiestore";
+import "~/node_modules/@fortawesome/fontawesome-free/js/all.js";
+import "~/style/main.scss";
 
 m.route.prefix = "";
 
 m.route(document.body, "/", {
   "/": {
-    onmatch: function () {
-      if (Auth.isLoggedIn()) return Index;
+    onmatch: () => {
+      if (CookieStore.isLoggedIn()) return Index;
       else m.route.set("/login");
     },
   },
   "/notepad": {
-    onmatch: function () {
-      if (Auth.isLoggedIn()) return Notepad;
+    onmatch: () => {
+      if (CookieStore.isLoggedIn()) return Notepad;
       else m.route.set("/login");
     },
   },
   "/login": {
-    onmatch: function () {
-      if (Auth.isLoggedIn()) m.route.set("/");
+    onmatch: () => {
+      if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Login;
     },
   },
   "/register": {
-    onmatch: function () {
-      if (Auth.isLoggedIn()) m.route.set("/");
+    onmatch: () => {
+      if (CookieStore.isLoggedIn()) m.route.set("/");
       else return Register;
     },
   },
   "/about": {
-    render: function () {
+    render: () => {
       return m(LayoutMain, m(AboutPage));
     },
   },
   "/:404...": {
-    view: function () {
+    view: () => {
       return m(LayoutMain, m(ErrorPage));
     },
   },
 });
 
 var Index = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(HomePage));
   },
 };
 
 var Notepad = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(NotepadPage));
   },
 };
 
 var Login = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(LoginPage));
   },
 };
 
 var Register = {
-  view: function () {
+  view: () => {
     return m(LayoutMain, m(RegisterPage));
   },
 };

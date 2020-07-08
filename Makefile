@@ -56,7 +56,7 @@ endif
 .PHONY: npm
 npm:
 	# Run the NPM commands from the UI folder.
-	cd ${GOPATH}/src/app/ui && npm run $(ARGS)
+	cd ${GOPATH}/src/app/ui && npm $(ARGS)
 
 .PHONY: api-dep
 api-dep:

@@ -18,7 +18,7 @@ You should install [NodeJS and npm](https://nodejs.org/).
 These are the current versions on the front-end components:
 
 - Mithril [v2.0.4](https://github.com/MithrilJS/mithril.js/releases/tag/v2.0.4) - [docs](https://mithril.js.org/)
-- Bulma [v0.8.1](https://www.npmjs.com/package/bulma/v/0.8.1) - [docs](https://bulma.io/documentation/)
+- Bulma [v0.8.2](https://www.npmjs.com/package/bulma/v/0.8.2) - [docs](https://bulma.io/documentation/)
 
 ## Visual Studio Code (VSCode) Setup
 

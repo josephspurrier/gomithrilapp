@@ -1,13 +1,13 @@
-import { resolve } from "path";
-import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import CopyWebpackPlugin from "copy-webpack-plugin";
+const { resolve } = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // Try the environment variable, otherwise use root.
 const ASSET_PATH = process.env.ASSET_PATH || "/";
 
-var Webpack = {
+module.exports = {
   entry: "./src/index.js",
   plugins: [
     new CleanWebpackPlugin(),
@@ -26,6 +26,12 @@ var Webpack = {
       { copyUnmodified: true }
     ),
   ],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src"),
+      "~": resolve(__dirname),
+    },
+  },
   output: {
     path: resolve(__dirname, "./dist"),
     filename: "static/[name].[contenthash].js",
@@ -70,5 +76,3 @@ var Webpack = {
     ],
   },
 };
-
-export default Webpack;
