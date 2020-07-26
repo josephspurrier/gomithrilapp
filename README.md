@@ -27,3 +27,10 @@ Below are links to various section of the documentation.
 - [Swagger](https://josephspurrier.github.io/gomithrilapp/docs/swagger)
 - [Docker Compose](https://josephspurrier.github.io/gomithrilapp/docs/docker-compose)
 - [Documentation](https://josephspurrier.github.io/gomithrilapp/docs/documentation)
+
+This is one repository of a few that demonstrate with different front-end frameworks how to build a notepad application with authentication. A few of the other repositories are:
+
+- [Vue and Go](https://github.com/josephspurrier/govueapp)
+- [Mithril and Go](https://github.com/josephspurrier/gomithrilapp)
+- [Mithril (TypeScript) and Go](https://github.com/josephspurrier/gomithriltsapp)
+- [React (TypeScript) and Go](https://github.com/josephspurrier/goreactapp)
