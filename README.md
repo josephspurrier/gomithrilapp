@@ -6,7 +6,7 @@
 
 [![Swagger Validator](https://online.swagger.io/validator?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/ui/static/swagger.json)](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/josephspurrier/gomithrilapp/master/src/app/ui/static/swagger.json)
 
-This is a sample notepad application that uses Mithril on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools.
+This is a sample notepad application that uses Mithril with JSX on the front-end (UI) and Go on the back-end (API). This project is designed to show good development and CI/CD practices as well as integrations between modern development tools.
 
 [Documentation](https://josephspurrier.github.io/gomithrilapp/) is generated using [Docusaurus](https://docusaurus.io/) and hosted using [GitHub Pages](https://pages.github.com/). This project uses a [Makefile](Makefile) to centralize frequently used commands. The code coverage badge above is only for the back-end API - not the front-end.
 
