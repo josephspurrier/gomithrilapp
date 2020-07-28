@@ -15,27 +15,27 @@ m.route.prefix = "";
 m.route(document.body, "/", {
   "/": {
     onmatch: () => {
-      if (CookieStore.isLoggedIn()) return Index;
-      else m.route.set("/login");
+      if (!CookieStore.isLoggedIn()) m.route.set("/login");
     },
+    render: () => m(LayoutMain, m(HomePage)),
   },
   "/notepad": {
     onmatch: () => {
-      if (CookieStore.isLoggedIn()) return Notepad;
-      else m.route.set("/login");
+      if (!CookieStore.isLoggedIn()) m.route.set("/login");
     },
+    render: () => m(LayoutMain, m(NotepadPage)),
   },
   "/login": {
     onmatch: () => {
       if (CookieStore.isLoggedIn()) m.route.set("/");
-      else return Login;
     },
+    render: () => m(LayoutMain, m(LoginPage)),
   },
   "/register": {
     onmatch: () => {
       if (CookieStore.isLoggedIn()) m.route.set("/");
-      else return Register;
     },
+    render: () => m(LayoutMain, m(RegisterPage)),
   },
   "/about": {
     render: () => {
@@ -48,27 +48,3 @@ m.route(document.body, "/", {
     },
   },
 });
-
-var Index = {
-  view: () => {
-    return m(LayoutMain, m(HomePage));
-  },
-};
-
-var Notepad = {
-  view: () => {
-    return m(LayoutMain, m(NotepadPage));
-  },
-};
-
-var Login = {
-  view: () => {
-    return m(LayoutMain, m(LoginPage));
-  },
-};
-
-var Register = {
-  view: () => {
-    return m(LayoutMain, m(RegisterPage));
-  },
-};
