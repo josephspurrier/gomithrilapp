@@ -2,7 +2,6 @@ import m from "mithril"; // eslint-disable-line no-unused-vars
 import { withKnobs, text, select } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import Input from "./input";
-import "~/style/main.scss";
 
 export default {
   title: "Component/Input",

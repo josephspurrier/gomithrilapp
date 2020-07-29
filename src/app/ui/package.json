@@ -10,7 +10,7 @@
     "test": "cypress run",
     "test-debug": "DEBUG=cypress:* cypress run",
     "cypress": "cypress open",
-    "storybook": "start-storybook -p 9090"
+    "storybook": "start-storybook -p 9090 -s .storybook/static"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.6.0",
-    "cypress": "^4.9.0",
+    "cypress": "^4.11.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-loader": "^3.0.4",
@@ -48,6 +48,7 @@
     "js-cookie": "^2.2.1",
     "mini-css-extract-plugin": "^0.9.0",
     "mithril": "^2.0.4",
+    "msw": "^0.19.5",
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
     "sass-loader": "^8.0.2",

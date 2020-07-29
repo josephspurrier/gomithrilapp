@@ -2,7 +2,6 @@ import m from "mithril"; // eslint-disable-line no-unused-vars
 import { withKnobs, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import SimplePage from "@/component/simple-page";
-import "~/style/main.scss";
 
 export default {
   title: "Component/Simple Page",

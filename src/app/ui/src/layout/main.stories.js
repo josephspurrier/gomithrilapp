@@ -3,7 +3,6 @@ import { withKnobs, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import LayoutMain from "./main";
 import SimplePage from "@/component/simple-page";
-import "~/style/main.scss";
 
 export default {
   title: "Component/Layout Main",

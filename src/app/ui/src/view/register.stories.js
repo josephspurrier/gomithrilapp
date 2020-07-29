@@ -1,10 +1,10 @@
 import m from "mithril"; // eslint-disable-line no-unused-vars
-import { withKnobs, select, text } from "@storybook/addon-knobs";
+import { withKnobs, boolean, text } from "@storybook/addon-knobs";
 import { withA11y } from "@storybook/addon-a11y";
 import RegisterPage from "@/view/register";
 import Flash from "@/component/flash";
-import MockRequest from "@/module/mockrequest";
-import "~/style/main.scss";
+import { rest } from "msw";
+import { worker } from "@/mock/browser";
 
 export default {
   title: "View/Register",
@@ -14,24 +14,29 @@ export default {
 
 export const register = () => ({
   oninit: () => {
-    let s = select(
-      "Operation",
-      {
-        UserRegistered: "opt1",
-        UserAlreadyExists: "opt2",
-      },
-      "opt1"
+    const shouldFail = boolean("Fail", false);
+
+    worker.use(
+      ...[
+        rest.post("/api/v1/register", (req, res, ctx) => {
+          if (shouldFail) {
+            return res(
+              ctx.status(400),
+              ctx.json({
+                message: "There was an error.",
+              })
+            );
+          } else {
+            return res(
+              ctx.status(201),
+              ctx.json({
+                message: "ok",
+              })
+            );
+          }
+        }),
+      ]
     );
-    switch (s) {
-      case "opt1":
-        MockRequest.ok({});
-        break;
-      case "opt2":
-        MockRequest.badRequest("The user already exists.");
-        break;
-      default:
-        MockRequest.badRequest("There is a problem with the storybook.");
-    }
   },
   view: () => (
     <main>
