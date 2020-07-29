@@ -20,10 +20,7 @@ var CookieStore = {
   isLoggedIn: () => {
     try {
       let auth = Cookie.get(CookieStore.cookieName);
-      if (auth === undefined) {
-        return false;
-      }
-      return true;
+      return auth !== undefined;
     } catch (err) {
       console.log(err);
     }

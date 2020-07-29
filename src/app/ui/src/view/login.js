@@ -2,12 +2,12 @@ import m from "mithril"; // eslint-disable-line no-unused-vars
 import UserLogin from "@/store/userlogin";
 import Input from "@/component/input";
 
-var data = {
-  title: "Login",
-  subtitle: "Enter your login information below.",
-};
+var Page = ({ attrs }) => {
+  var data = {
+    title: "Login",
+    subtitle: "Enter your login information below.",
+  };
 
-var Page = (vnodeInitial) => {
   let user = {};
 
   var clear = () => {
@@ -15,11 +15,11 @@ var Page = (vnodeInitial) => {
   };
 
   // Prefill the fields.
-  if (vnodeInitial.attrs.email) {
-    user.email = vnodeInitial.attrs.email;
+  if (attrs.email) {
+    user.email = attrs.email;
   }
-  if (vnodeInitial.attrs.password) {
-    user.password = vnodeInitial.attrs.password;
+  if (attrs.password) {
+    user.password = attrs.password;
   }
 
   return {

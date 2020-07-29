@@ -1,24 +1,19 @@
 import m from "mithril"; // eslint-disable-line no-unused-vars
 import UserRegister from "@/store/userregister";
 
-var data = {
-  title: "Register",
-  subtitle: "Enter your information below.",
-};
-
-var Page = (vnodeInitial) => {
+var Page = ({ attrs }) => {
   // Prefill the fields.
-  if (vnodeInitial.attrs.firstName) {
-    UserRegister.user.first_name = vnodeInitial.attrs.firstName;
+  if (attrs.firstName) {
+    UserRegister.user.first_name = attrs.firstName;
   }
-  if (vnodeInitial.attrs.lastName) {
-    UserRegister.user.last_name = vnodeInitial.attrs.lastName;
+  if (attrs.lastName) {
+    UserRegister.user.last_name = attrs.lastName;
   }
-  if (vnodeInitial.attrs.email) {
-    UserRegister.user.email = vnodeInitial.attrs.email;
+  if (attrs.email) {
+    UserRegister.user.email = attrs.email;
   }
-  if (vnodeInitial.attrs.password) {
-    UserRegister.user.password = vnodeInitial.attrs.password;
+  if (attrs.password) {
+    UserRegister.user.password = attrs.password;
   }
 
   return {
@@ -28,8 +23,8 @@ var Page = (vnodeInitial) => {
           <div>
             <section class="section">
               <div class="container">
-                <h1 class="title">{data.title}</h1>
-                <h2 class="subtitle">{data.subtitle}</h2>
+                <h1 class="title">Register</h1>
+                <h2 class="subtitle">Enter your information below.</h2>
               </div>
 
               <div class="container" style="margin-top: 1em;">

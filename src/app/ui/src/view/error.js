@@ -1,22 +1,12 @@
 import m from "mithril"; // eslint-disable-line no-unused-vars
+import SimplePage from "@/component/simple-page";
 
-var data = {
-  title: "Error",
-};
-
-var Page = {
-  view: () =>
-    m(
-      "error",
-      <div>
-        <section class="section">
-          <div class="container">
-            <h1 class="title">{data.title}</h1>
-            <h2 class="subtitle">The page is not found.</h2>
-          </div>
-        </section>
-      </div>
+var Page = () => {
+  return {
+    view: () => (
+      <SimplePage title="Error" description="The page is not found." />
     ),
+  };
 };
 
 export default Page;
