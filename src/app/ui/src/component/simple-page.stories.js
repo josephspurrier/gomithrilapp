@@ -15,8 +15,9 @@ export const populated = () => ({
     <SimplePage
       title={text("Title", "This is the Title")}
       description={text("Description", "This is a subtitle or description.")}
-      content={text("Content", "This is the content.")}
-    />
+    >
+      {text("Content", "This is the content.")}
+    </SimplePage>
   ),
 });
 populated.story = {
