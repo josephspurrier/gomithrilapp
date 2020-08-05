@@ -8,13 +8,7 @@ var Submit = {
   finish: () => {
     Submit.disabled = false;
   },
-  text: (s) => {
-    if (!Submit.disabled) {
-      return s;
-    } else {
-      return Submit.submitText;
-    }
-  },
+  text: (s) => (!Submit.disabled ? s : Submit.submitText),
 };
 
 export default Submit;
